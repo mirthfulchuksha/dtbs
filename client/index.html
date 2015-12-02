@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="styles/styles.css" rel="stylesheet" type="text/css">
-
+  <link href="styles/styles.css" rel="stylesheet" type="text/css">
+  <script src="lib/angular/angular.min.js"></script>
+  <script src="lib/angular-route/angular-route.min.js"></script>
+  <script src="app.js"></script>
 <title>DTBS</title>
 </head>
-<body>
+<body ng-app="DTBS">
+  <h2>DTBS<h2>
+  <div ng-view></div>
 </body>
 </html>
