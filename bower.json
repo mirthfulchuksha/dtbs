@@ -1,0 +1,19 @@
+{
+  "name": "DTBS",
+  "description": "",
+  "main": "server/server.js",
+  "authors": [
+    "Cheyenne Kellis <cheyenne.kellis@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/lib",
+    "test",
+    "tests"
+  ]
+}
