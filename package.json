@@ -1,0 +1,24 @@
+{
+  "name": "DTBS",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "postinstall": "bower install"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-uglify": "^0.10.1",
+    "grunt-exec": "^0.4.6",
+    "grunt-mocha-test": "^0.12.7",
+    "jshint": "^2.8.0",
+    "mocha": "^2.3.3",
+    "supertest": "^1.1.0"
+  }
+}
