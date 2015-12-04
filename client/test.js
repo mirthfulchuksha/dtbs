@@ -78,4 +78,3 @@ angular.module('DTBS.test', [])
       $scope.keys = [];
     };
   }]);
-

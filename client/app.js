@@ -1,4 +1,10 @@
-angular.module('DTBS', ['ngRoute', 'DTBS.test', 'DTBS.modal'])
+angular.module('DTBS', [
+  'DTBS.test',
+  'DTBS.modal',
+  'DTBS.directives',
+  'DTBS.d3',
+  'ngRoute'
+  ])
 .config(function ($routeProvider, $httpProvider) {
   $routeProvider
     .when('/', {
