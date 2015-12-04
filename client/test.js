@@ -46,7 +46,7 @@ angular.module('DTBS.test', [])
     $scope.$watch('tableStorage', debounceUpdate, true);
 
   }])
-  .controller('TableController', ['$scope', '$timeout', function ($scope, $timeout) {
+  .controller('TableController', ['$scope', function ($scope) {
     var secondsToWaitBeforeSave = 3;
     $scope.table = {};
     //Table save function that clears form and pushes up to the parent
@@ -56,6 +56,7 @@ angular.module('DTBS.test', [])
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
       $scope.table = {};
+      // AddTable.new();
     };
 
   }])
