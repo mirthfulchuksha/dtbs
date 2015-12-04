@@ -12,8 +12,15 @@ angular.module('DTBS.test', [])
     };
 
     //parent scope function to add keys to tables
-    $scope.addTableAttr = function (key, table) {
-      $scope.tableStorage[table.name].attrs.push(key);
+    $scope.addTableAttr = function (keys, table) {
+      keys.forEach(function (key){
+        $scope.tableStorage[table.name].attrs.push(key);
+      });
+    };
+
+    $scope.removeKeyFromTable = function (index, table) {
+      $scope.tableStorage[table.name].attrs.splice(index,1);
+      console.log("deleted!");
     };
 
     var timeout = null;
@@ -51,25 +58,24 @@ angular.module('DTBS.test', [])
       $scope.table = {};
     };
 
-    /*
-    var timeout = null;
-    var saveUpdates = function() {
-     if ($scope['table_' + $scope.table.id + '_form'].$valid) {
-       console.log("Saving updates to item #" + ($scope.table.id) + "...", $scope.table);
-     } else {
-       console.log("Tried to save updates to item #" + ($scope.table.id) + " but the form is invalid.");
-     }
-    };
-
-    $scope.$watch('table.name', debounceUpdate);
-    $scope.$watch('table.info', debounceUpdate);
-    */
   }])
   .controller('TableViewController', ['$scope', function ($scope) {
     //child scope function needed to clear the forms on submit
-    $scope.addTableAttrChildScope = function (key, table) {
-      $scope.addTableAttr(key, table);
-      $scope.key = {};
+    $scope.keys = [];
+
+    $scope.addField = function () {
+      $scope.keys.push({});
+    };
+
+    $scope.removeKey = function (indexToDelete, table){
+      console.log(indexToDelete);
+      $scope.removeKeyFromTable(indexToDelete, table);
+    };
+
+    $scope.addTableAttrChildScope = function (keyArr, table) {
+      $scope.addTableAttr(keyArr, table);
+      //is this the desired behavior
+      $scope.keys = [];
     };
   }]);
 

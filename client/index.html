@@ -24,18 +24,22 @@
     <div>
       <div ng-repeat="table in tableStorage" ng-controller="TableViewController">
         INFO: {{ table.name }}
-        <form ng-submit="addTableAttrChildScope(key, table)">
-          <button type="submit">Create Key</button>
-          <select ng-model="key.type">
-            <option>Int</option>
-            <option>Char</option>
-          </select>
-          <input ng-model="key.name" placeholder="Key Name">
-          <input ng-model="key.value" placeholder="Key Value">
+        <form>
+          <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
+          <button ng-click="addField()"> Add Key </button>
+          <div ng-repeat="key in keys track by $index">
+            <select ng-model="keys[$index].type">
+              <option>Int</option>
+              <option>Char</option>
+            </select>
+            <input ng-model="keys[$index].name" placeholder="Key Name">
+            <input ng-model="keys[$index].value" placeholder="Key Value">
+
+          </div>
         </form>
         
         <ul>
-          <li ng-repeat="key in table.attrs">{{key.name}} : {{key.value}}</li>
+          <li ng-repeat="key in table.attrs">{{key.name}} : {{key.value}}<button ng-click="removeKey($index, table)">Remove Key</button></li>
         </ul>
       </div>
     </div>
