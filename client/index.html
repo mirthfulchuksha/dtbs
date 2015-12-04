@@ -5,10 +5,34 @@
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular-route/angular-route.min.js"></script>
   <script src="app.js"></script>
+  <script src="test.js"></script>
 <title>DTBS</title>
 </head>
 <body ng-app="DTBS">
   <h2>DTBS<h2>
   <div ng-view></div>
+
+  <div ng-controller='ParentController'>
+    <div ng-controller="TableController">
+      <form ng-submit="save()" name="table_{{table.id}}_form">
+        <button type="submit">Create Table</button>
+        <input ng-model="table.name" type"text"/>
+      </form>
+    </div>
+
+    <div ng-controller="TableController">
+      <form ng-submit="save()" name="table_{{table.id}}_form">
+        <button type="submit">Create Table</button>
+        <input ng-model="table.name" type"text"/>
+      </form>
+    </div>
+
+    <div ng-controller="TableViewController">
+      <div ng-repeat="table in tableStorage">
+        INFO: {{ table.name }}
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

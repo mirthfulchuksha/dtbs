@@ -1,4 +1,4 @@
-angular.module('DTBS', ['ngRoute'])
+angular.module('DTBS', ['ngRoute', 'DTBS.test',])
   .config(function ($routeProvider, $httpProvider) {
 
     $routeProvider
