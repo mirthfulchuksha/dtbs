@@ -67,9 +67,9 @@ angular.module('DTBS.test', [])
       $scope.keys.push({});
     };
 
-    $scope.removeKey = function (indexToDelete, table){
+    $scope.cancelAdd = function (indexToDelete){
       console.log(indexToDelete);
-      $scope.removeKeyFromTable(indexToDelete, table);
+      $scope.keys.splice(indexToDelete, 1);
     };
 
     $scope.addTableAttrChildScope = function (keyArr, table) {

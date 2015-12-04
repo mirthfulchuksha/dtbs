@@ -34,12 +34,12 @@
             </select>
             <input ng-model="keys[$index].name" placeholder="Key Name">
             <input ng-model="keys[$index].value" placeholder="Key Value">
-
+            <button ng-click="cancelAdd($index)">Cancel Add</button>
           </div>
         </form>
         
         <ul>
-          <li ng-repeat="key in table.attrs">{{key.name}} : {{key.value}}<button ng-click="removeKey($index, table)">Remove Key</button></li>
+          <li ng-repeat="key in table.attrs">{{key.name}} : {{key.value}}<button ng-click="removeKeyFromTable($index, table)">Remove Key</button></li>
         </ul>
       </div>
     </div>
