@@ -1,9 +1,10 @@
-// angular.module('DTBS.services', [])
-// .factory('AddTable', function () {
-//   var new = function ($scope) {
-//     console.log('new table');
-//   };
-//   return {
-//     new: new
-//   };
-// });
+angular.module('DTBS.services', [])
+.factory('AddTable', function () {
+  var newTable = function ($scope) {
+    $scope.added = true;
+    console.log('new table added');
+  };
+  return {
+    newTable: newTable
+  };
+});

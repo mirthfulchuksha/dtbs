@@ -27,10 +27,12 @@ angular.module('DTBS.d3', [])
 }]);
 
 angular.module('DTBS.directives', [])
-  .directive('d3Bars', ['d3Service', function(d3Service) {
+  .directive('d3Bars', ['d3Service', 'AddTable', function (d3Service, AddTable) {
     return {
       restrict: 'EA',
-      scope: {},
+      scope: {
+        data: '='
+      },
       link: function(scope, element, attrs) {
         d3Service.d3().then(function(d3) {
           // d3 code goes here
@@ -38,6 +40,11 @@ angular.module('DTBS.directives', [])
           .append("svg")
           .style('width', '100%')
           .style('background-color', 'blue');
+
+          window.onresize = function() {
+            scope.$apply();
+          };
+          // set up watch to see if button clicked; add div
         });
       }};
   }]);
