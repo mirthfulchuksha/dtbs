@@ -23,7 +23,7 @@
 
     <div>
       <div ng-repeat="table in tableStorage" ng-controller="TableViewController">
-        INFO: {{ table.name }}
+        Table Name: {{ table.name }}
         <form>
           <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
           <button ng-click="addField()"> Add Key </button>
@@ -37,10 +37,25 @@
             <button ng-click="cancelAdd($index)">Cancel Add</button>
           </div>
         </form>
-        
+        <!--
         <ul>
           <li ng-repeat="key in table.attrs">{{key.name}} : {{key.value}}<button ng-click="removeKeyFromTable($index, table)">Remove Key</button></li>
         </ul>
+        -->
+        <div class="display">
+        <p>This will be the template for the Create Table line with a name of: {{ table.name }}</p>
+          <div ng-repeat="key in table.attrs">
+            <div ng-switch on="key.type">
+              <div ng-switch-when="Int">
+                <p>This will be the template for Int Column with name of: {{key.name}}</p>
+              </div>
+              <div ng-switch-when="Char">
+                <p>This will be the template for the Char Column with name of: {{key.name}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+          
       </div>
     </div>
   </div>
