@@ -4,11 +4,6 @@ angular.module('DTBS.test', [])
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
     $scope.id = 0;
-    $scope.locations = [
-      {x: 10, title: 'table1'},
-      {x: 210, title: 'table2'},
-      {x: 410, title: 'table3'}
-    ];
 
     var secondsToWaitBeforeSave = 3;
 
@@ -55,14 +50,15 @@ angular.module('DTBS.test', [])
     var secondsToWaitBeforeSave = 3;
     $scope.table = {};
     //Table save function that clears form and pushes up to the parent
-    $scope.save = function () {
+    $scope.save = function (name) {
       $scope.id++;
       $scope.table.id = $scope.id;
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
       $scope.table = {};
-      data = angular.copy($scope.locations);
+      data = angular.copy(name);
       d3Data.push(data);
+      // $scope.table = {};
     };
 
   }])
@@ -141,13 +137,15 @@ angular.module('DTBS.test', [])
           var svg = d3.select(element[0])
           .append("svg")
           .style('width', '100%');
-          scope.render = function (locations) {
+
+          scope.render = function (name) {
             // d3 code goes here
             var svg = d3.select('svg');
-            svg.selectAll('rect')
-            .data(locations)
-            .enter().append('rect')
-            .attr("x", function (d) { return d.x; })
+            // svg.selectAll('rect')
+            // .data(locations)
+            // .enter().append('rect')
+            svg.append("rect")
+            .attr("x", 10)
             .attr("y", 30)
             .attr("width", 50)
             .attr("height", 50)
@@ -155,14 +153,14 @@ angular.module('DTBS.test', [])
             .attr("id", "rectLabel");
 
             svg.selectAll('text')
-            .data(locations)
+            .data(name)
             .enter().append('text')
             .attr("y", 30)
-            .attr("x", function (d) {return d.x; })
+            .attr("x", 10)
             .attr("fill", 'black')
             .style({"font-size":"18px","z-index":"999999999"})
             .style("text-anchor", "middle")
-            .text(function(d) { return d.title; });
+            .text(function(d) { return d; });
 
             var rect = d3.selectAll('rect')
             var drag = d3.behavior.drag();
