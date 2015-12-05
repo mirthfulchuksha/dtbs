@@ -17,15 +17,14 @@
     <div ng-controller="TableController">
       <form ng-submit="save()" name="table_{{table.id}}_form">
         <button type="submit">Create Table</button>
-        <input ng-model="table.name" type"text"/>
+        <input ng-model="table.name" placeholder="Table Name" required/>
       </form>
     </div>
-
+    <br>
     <div>
       <div ng-repeat="table in tableStorage" ng-controller="TableViewController">
-        Table Name: {{ table.name }}
         <form>
-          <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
+          <input ng-model="table.name" placeholder="Table Name" class="edit" style="width:50px"/>
           <button ng-click="addField()"> Add Key </button>
           <div ng-repeat="key in keys track by $index">
             <select ng-model="keys[$index].type">
@@ -36,10 +35,14 @@
             <input ng-model="keys[$index].value" placeholder="Key Value">
             <button ng-click="cancelAdd($index)">Cancel Add</button>
           </div>
+          <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
         </form>
         <!--
         <ul>
-          <li ng-repeat="key in table.attrs">{{key.name}} : {{key.value}}<button ng-click="removeKeyFromTable($index, table)">Remove Key</button></li>
+          <li ng-repeat="key in table.attrs">
+            <input ng-model="key.name" type"text" class="edit"/> : <input ng-model="key.value" type"text" class="edit"/>
+            <button ng-click="removeKeyFromTable($index, table)">Remove Key</button>
+          </li>
         </ul>
         -->
         <div class="display">
@@ -55,7 +58,7 @@
             </div>
           </div>
         </div>
-          
+
       </div>
     </div>
   </div>

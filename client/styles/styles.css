@@ -8,3 +8,11 @@ p {
 canvas {
   background-color: blue;
 }
+
+input {
+  border-style: none;
+  border-color: Transparent;
+  overflow: auto;
+  outline: none;
+  font-size: 14px;
+}

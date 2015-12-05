@@ -8,18 +8,18 @@ angular.module('DTBS.test', [])
     var secondsToWaitBeforeSave = 3;
 
     $scope.addTable = function (table) {
-      $scope.tableStorage[table.name] = table;
+      $scope.tableStorage[table.id] = table;
     };
 
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){
-        $scope.tableStorage[table.name].attrs.push(key);
+	$scope.tableStorage[table.id].attrs.push(key);
       });
     };
 
     $scope.removeKeyFromTable = function (index, table) {
-      $scope.tableStorage[table.name].attrs.splice(index,1);
+      $scope.tableStorage[table.id].attrs.splice(index,1);
       console.log("deleted!");
     };
 
