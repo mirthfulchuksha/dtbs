@@ -1,5 +1,4 @@
-
-angular.module('DTBS.d3', [])
+angular.module('DTBS.main')
   .factory('d3Service', ['$document', '$q', '$rootScope',
     function($document, $q, $rootScope) {
       var d = $q.defer();
@@ -25,59 +24,51 @@ angular.module('DTBS.d3', [])
       return {
         d3: function() { return d.promise; }
       };
-}]);
-
-angular.module('DTBS.directives', [])
-  .directive('d3Bars', ['d3Service', function (d3Service) {
-    return {
-      restrict: 'EA',
-      scope: {
-        // locations: '=locations'
-      },
-      link: function(scope, element, attrs) {
-        d3Service.d3().then(function (d3) {
-          // d3 code goes here
-          var svg = d3.select(element[0])
-          .append("svg")
-          .style('width', '100%');
-        });
-      }};
-  }])
-  .directive('d3Schema', ['d3Service', function (d3Service) {
+}])
+  .service('d3Data', ['$rootScope', function($rootScope) {
+      var data = [];
+      var emit = function(data) { $rootScope.$broadcast('d3:new-data', data); }
+      var api = {
+        get: function() {
+          return data;
+        },
+        set: function(data) {
+          data = data;
+          emit(data);
+          return data;
+        },
+        push: function(datum) {
+          data.push(datum);
+          emit(data);
+          return data;
+        }
+      }
+      return api;
+    }])
+  .directive('d3Bars', ['d3Service', 'd3Data', function (d3Service, d3Data) {
     return {
       restrict: 'EA',
       scope: {},
       link: function(scope, element, attrs) {
         d3Service.d3().then(function (d3) {
-          scope.locations = [
-            {x: 10, title: 'table1'},
-            {x: 210, title: 'table2'},
-            {x: 410, title: 'table3'}
-          ];
-          scope.render = function (locations) {
-            // d3 code goes here
+          var svg = d3.select(element[0])
+          .append("svg")
+          .style('width', '100%');
+
+          scope.render = function (name) {
             var svg = d3.select('svg');
-            svg.selectAll('rect')
-            .data(locations)
-            .enter().append('rect')
-            .attr("x", function (d) { return d.x; })
-            .attr("y", 30)
-            .attr("width", 50)
-            .attr("height", 50)
-            .attr("fill", "red")
-            .attr("id", "rectLabel");
 
             svg.selectAll('text')
-            .data(locations)
+            .data(name)
             .enter().append('text')
             .attr("y", 30)
-            .attr("x", function (d) {return d.x; })
-            .attr("fill", 'black')
+            .attr("x", 100)
+            .attr("fill", 'grey')
             .style({"font-size":"18px","z-index":"999999999"})
             .style("text-anchor", "middle")
-            .text(function(d) { return d.title; });
+            .text(function(d) { return d; });
 
-            var rect = d3.selectAll('rect')
+            var table = d3.selectAll('text')
             var drag = d3.behavior.drag();
 
             drag.on('dragstart', function(){
@@ -91,12 +82,11 @@ angular.module('DTBS.directives', [])
               d3.select(this).attr('x', x).attr('y', y);
             });
 
-            rect.call(drag);
+            table.call(drag);
           };
-          scope.$watch('locations', function(newVals, oldVals) {
-            console.log("table data changed")
-            return scope.render(scope.locations);
-          }, true);
+          scope.$on('d3:new-data', function(e, data) {
+            scope.render(data);
+          });
         });
       }};
   }]);
