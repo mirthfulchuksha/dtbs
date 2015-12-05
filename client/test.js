@@ -11,6 +11,10 @@ angular.module('DTBS.test', [])
       $scope.tableStorage[table.id] = table;
     };
 
+    $scope.generateDiv = function () {
+      $('<d3-bars info="test">Jess</d3-bars>').appendTo('.parent');
+    };
+
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){
@@ -46,7 +50,7 @@ angular.module('DTBS.test', [])
     $scope.$watch('tableStorage', debounceUpdate, true);
 
   }])
-  .controller('TableController', ['$scope', 'AddTable', function ($scope, AddTable) {
+  .controller('TableController', ['$scope', function ($scope) {
     var secondsToWaitBeforeSave = 3;
     $scope.table = {};
     //Table save function that clears form and pushes up to the parent
@@ -56,7 +60,7 @@ angular.module('DTBS.test', [])
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
       $scope.table = {};
-      AddTable.newTable($scope);
+      $scope.generateDiv();
     };
 
   }])

@@ -1,5 +1,4 @@
 angular.module('DTBS', [
-  'DTBS.services',
   'DTBS.test',
   'DTBS.modal',
   'DTBS.directives',

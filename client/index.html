@@ -11,7 +11,6 @@
   <script src="controllers/d3layout.js"></script>
   <script src="app.js"></script>
   <script src="test.js"></script>
-  <script src="testFactory.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <title>DTBS</title>
 </head>
@@ -19,7 +18,7 @@
   <h2>DTBS<h2>
   <div ng-view></div>
 
-  <div ng-controller='ParentController'>
+  <div ng-controller='ParentController' class='parent'>
 
     <div ng-controller="TableController">
       <form ng-submit="save()" name="table_{{table.id}}_form">

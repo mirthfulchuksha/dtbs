@@ -27,22 +27,34 @@ angular.module('DTBS.d3', [])
 }]);
 
 angular.module('DTBS.directives', [])
-  .directive('d3Bars', ['d3Service', 'AddTable', function (d3Service, AddTable) {
+  .directive('d3Bars', ['d3Service', function (d3Service) {
     return {
       restrict: 'EA',
       scope: {
-        data: '='
+        data: '=info'
       },
       link: function(scope, element, attrs) {
         d3Service.d3().then(function(d3) {
           // d3 code goes here
           var svg = d3.select(element[0])
           .append("svg")
-          .style('width', '100%')
-          .style('background-color', 'blue');
+          .style('width', '100%');
+          scope.$watch('data', function(newVals, oldVals) {
+            console.log("hey")
+            return scope.render(newVals);
+          }, true);
 
-          window.onresize = function() {
-            scope.$apply();
+          scope.render = function (data) {
+            // remove all previous items before render
+            svg.selectAll('*').remove();
+            // If we don't pass any data, return out of the element
+            if (!data) return;
+            svg.selectAll('rect')
+            .data(data).enter()
+            .append('rect')
+            .attr('height', 50)
+            .attr('width', 50)
+            .style('background-color', red)
           };
           // set up watch to see if button clicked; add div
         });
