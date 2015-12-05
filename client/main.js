@@ -1,4 +1,4 @@
-angular.module('DTBS.test', [])
+angular.module('DTBS.main', [])
   .controller('ParentController', ['$scope', '$timeout', function ($scope, $timeout) {
     //object for table storage
     $scope.tableStorage = {};
@@ -139,30 +139,19 @@ angular.module('DTBS.test', [])
           .style('width', '100%');
 
           scope.render = function (name) {
-            // d3 code goes here
             var svg = d3.select('svg');
-            // svg.selectAll('rect')
-            // .data(locations)
-            // .enter().append('rect')
-            svg.append("rect")
-            .attr("x", 10)
-            .attr("y", 30)
-            .attr("width", 50)
-            .attr("height", 50)
-            .attr("fill", "red")
-            .attr("id", "rectLabel");
 
             svg.selectAll('text')
             .data(name)
             .enter().append('text')
             .attr("y", 30)
-            .attr("x", 10)
-            .attr("fill", 'black')
+            .attr("x", 100)
+            .attr("fill", 'grey')
             .style({"font-size":"18px","z-index":"999999999"})
             .style("text-anchor", "middle")
             .text(function(d) { return d; });
 
-            var rect = d3.selectAll('rect')
+            var table = d3.selectAll('text')
             var drag = d3.behavior.drag();
 
             drag.on('dragstart', function(){
@@ -176,7 +165,7 @@ angular.module('DTBS.test', [])
               d3.select(this).attr('x', x).attr('y', y);
             });
 
-            rect.call(drag);
+            table.call(drag);
           };
           scope.$on('d3:new-data', function(e, data) {
             scope.render(data);
