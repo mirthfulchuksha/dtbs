@@ -15,8 +15,10 @@
 <title>DTBS</title>
 </head>
 <body ng-app="DTBS">
-  <h2>DTBS<h2>
   <div ng-view></div>
+  <d3-schema>
+    <button on-click="render()">Create D3 Table</button>
+  </d3-schema>
 
   <div ng-controller='ParentController' class='parent'>
 
