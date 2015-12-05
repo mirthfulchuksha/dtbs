@@ -4,6 +4,11 @@ angular.module('DTBS.test', [])
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
     $scope.id = 0;
+    // $scope.locations = [
+    //   {x: 10, title: 'table1'},
+    //   {x: 210, title: 'table2'},
+    //   {x: 410, title: 'table3'}
+    // ];
 
     var secondsToWaitBeforeSave = 3;
 
@@ -11,10 +16,14 @@ angular.module('DTBS.test', [])
       $scope.tableStorage[table.id] = table;
     };
 
+    // $scope.generateDiv = function () {
+    //   $('<d3-bars info="test">TEST</d3-bars>').appendTo('.parent');
+    // };
+
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){
-	$scope.tableStorage[table.id].attrs.push(key);
+	     $scope.tableStorage[table.id].attrs.push(key);
       });
     };
 
@@ -46,7 +55,7 @@ angular.module('DTBS.test', [])
     $scope.$watch('tableStorage', debounceUpdate, true);
 
   }])
-  .controller('TableController', ['$scope', '$timeout', function ($scope, $timeout) {
+  .controller('TableController', ['$scope', function ($scope) {
     var secondsToWaitBeforeSave = 3;
     $scope.table = {};
     //Table save function that clears form and pushes up to the parent
@@ -56,6 +65,7 @@ angular.module('DTBS.test', [])
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
       $scope.table = {};
+      // $scope.generateDiv();
     };
 
   }])
@@ -78,4 +88,3 @@ angular.module('DTBS.test', [])
       $scope.keys = [];
     };
   }]);
-
