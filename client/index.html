@@ -16,11 +16,8 @@
 </head>
 <body ng-app="DTBS">
   <div ng-view></div>
-  <d3-schema>
-    <button on-click="render()">Create D3 Table</button>
-  </d3-schema>
 
-  <div ng-controller='ParentController' class='parent'>
+  <div ng-controller='ParentController'>
 
     <div ng-controller="TableController">
       <form ng-submit="save()" name="table_{{table.id}}_form">

@@ -1,3 +1,4 @@
+
 angular.module('DTBS.d3', [])
   .factory('d3Service', ['$document', '$q', '$rootScope',
     function($document, $q, $rootScope) {
@@ -30,47 +31,75 @@ angular.module('DTBS.directives', [])
   .directive('d3Bars', ['d3Service', function (d3Service) {
     return {
       restrict: 'EA',
-      scope: {},
+      scope: {
+        // locations: '=locations'
+      },
       link: function(scope, element, attrs) {
         d3Service.d3().then(function (d3) {
           // d3 code goes here
           var svg = d3.select(element[0])
           .append("svg")
           .style('width', '100%');
-
         });
       }};
   }])
-.directive('d3Schema', ['d3Service', function (d3Service) {
-  return {
-    restrict: 'EA',
-    scope: {},
-    link: function (scope, element, attrs) {
-      d3Service.d3().then(function (d3) {
-        scope.render = function (data) {
-          // remove all previous items before render
-          var svg = d3.selectAll('svg');
-          svg.selectAll('*').remove();
-          // If we don't pass any data, return out of the element
-          if (!data) return;
-          svg.selectAll('rect')
-          .data(data).enter()
-          .append('rect')
-          .attr('height', 50)
-          .attr('width', 50)
-          .style('background-color', red)
-        };
+  .directive('d3Schema', ['d3Service', function (d3Service) {
+    return {
+      restrict: 'EA',
+      scope: {},
+      link: function(scope, element, attrs) {
+        d3Service.d3().then(function (d3) {
+          scope.locations = [
+            {x: 10, title: 'table1'},
+            {x: 210, title: 'table2'},
+            {x: 410, title: 'table3'}
+          ];
+          scope.render = function (locations) {
+            // d3 code goes here
+            var svg = d3.select('svg');
+            svg.selectAll('rect')
+            .data(locations)
+            .enter().append('rect')
+            .attr("x", function (d) { return d.x; })
+            .attr("y", 30)
+            .attr("width", 50)
+            .attr("height", 50)
+            .attr("fill", "red")
+            .attr("id", "rectLabel");
 
-        // set up watch to see if button clicked; add rectangle with render func
-        scope.$watch('data', function(newVals, oldVals) {
-          console.log("hey")
-          return scope.render(newVals);
-        }, true);
+            svg.selectAll('text')
+            .data(locations)
+            .enter().append('text')
+            .attr("y", 30)
+            .attr("x", function (d) {return d.x; })
+            .attr("fill", 'black')
+            .style({"font-size":"18px","z-index":"999999999"})
+            .style("text-anchor", "middle")
+            .text(function(d) { return d.title; });
 
-      })
-    }
-  }
-}]);
+            var rect = d3.selectAll('rect')
+            var drag = d3.behavior.drag();
+
+            drag.on('dragstart', function(){
+              d3.event.sourceEvent.stopPropagation(); 
+              d3.event.sourceEvent.preventDefault(); 
+            }); 
+
+            drag.on('drag', function(d){
+              var x = d3.event.x; 
+              var y = d3.event.y; 
+              d3.select(this).attr('x', x).attr('y', y);
+            });
+
+            rect.call(drag);
+          };
+          scope.$watch('locations', function(newVals, oldVals) {
+            console.log("table data changed")
+            return scope.render(scope.locations);
+          }, true);
+        });
+      }};
+  }]);
 
 
 
