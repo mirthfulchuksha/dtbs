@@ -1,0 +1,38 @@
+<div ng-repeat="table in tableStorage" ng-controller="OutputController">
+        <form>
+          <input ng-model="table.name" placeholder="Table Name" class="edit" style="width:50px"/>
+          <button ng-click="addField()"> Add Key </button>
+          <div ng-repeat="key in keys track by $index">
+            <select ng-model="keys[$index].type">
+              <option>Int</option>
+              <option>Char</option>
+            </select>
+            <input ng-model="keys[$index].name" placeholder="Key Name">
+            <input ng-model="keys[$index].value" placeholder="Key Value">
+            <button ng-click="cancelAdd($index)">Cancel Add</button>
+          </div>
+          <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
+        </form>
+        <!--
+        <ul>
+          <li ng-repeat="key in table.attrs">
+            <input ng-model="key.name" type"text" class="edit"/> : <input ng-model="key.value" type"text" class="edit"/>
+            <button ng-click="removeKeyFromTable($index, table)">Remove Key</button>
+          </li>
+        </ul>
+        -->
+        <div class="display">
+        <p>This will be the template for the Create Table line with a name of: {{ table.name }}</p>
+          <div ng-repeat="key in table.attrs">
+            <div ng-switch on="key.type">
+              <div ng-switch-when="Int">
+                <p>This will be the template for Int Column with name of: {{key.name}}</p>
+              </div>
+              <div ng-switch-when="Char">
+                <p>This will be the template for the Char Column with name of: {{key.name}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>

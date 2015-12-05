@@ -6,67 +6,18 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular-route/angular-route.min.js"></script>
-  <script src="controllers/modal.js"></script>
-  <script src="controllers/d3layout.js"></script>
-  <script src="app.js"></script>
-  <script src="main.js"></script>
+  <script src="app.module.js"></script>
+  <script src="app.routes.js"></script>
+  <script src="shared/modal/modal.module.js"></script>
+  <script src="components/form/formController.js"></script>
+  <script src="components/output/outputController.js"></script>
+  <script src="components/designer/designerDirectives.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <title>DTBS</title>
 </head>
 <body ng-app="DTBS">
+  <div ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div>
+  <div ng-include="'/components/designer/designerView.html'"></div>
   <div ng-view></div>
-  <d3-bars></d3-bars>
-
-  <div ng-controller='ParentController'>
-
-    <div ng-controller="TableController">
-      <form ng-submit="save(table.name)" name="table_{{table.id}}_form">
-        <button type="submit">Create Table</button>
-        <input ng-model="table.name" placeholder="Table Name" required/>
-      </form>
-    </div>
-    <br>
-    <div>
-      <div ng-repeat="table in tableStorage" ng-controller="TableViewController">
-        <form>
-          <input ng-model="table.name" placeholder="Table Name" class="edit" style="width:50px"/>
-          <button ng-click="addField()"> Add Key </button>
-          <div ng-repeat="key in keys track by $index">
-            <select ng-model="keys[$index].type">
-              <option>Int</option>
-              <option>Char</option>
-            </select>
-            <input ng-model="keys[$index].name" placeholder="Key Name">
-            <input ng-model="keys[$index].value" placeholder="Key Value">
-            <button ng-click="cancelAdd($index)">Cancel Add</button>
-          </div>
-          <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
-        </form>
-        <!--
-        <ul>
-          <li ng-repeat="key in table.attrs">
-            <input ng-model="key.name" type"text" class="edit"/> : <input ng-model="key.value" type"text" class="edit"/>
-            <button ng-click="removeKeyFromTable($index, table)">Remove Key</button>
-          </li>
-        </ul>
-        -->
-        <div class="display">
-        <p>This will be the template for the Create Table line with a name of: {{ table.name }}</p>
-          <div ng-repeat="key in table.attrs">
-            <div ng-switch on="key.type">
-              <div ng-switch-when="Int">
-                <p>This will be the template for Int Column with name of: {{key.name}}</p>
-              </div>
-              <div ng-switch-when="Char">
-                <p>This will be the template for the Char Column with name of: {{key.name}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
