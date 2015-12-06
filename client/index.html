@@ -3,6 +3,7 @@
 <head>
   <link href="styles/styles.css" rel="stylesheet" type="text/css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+  <script src="https://ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular-route/angular-route.min.js"></script>
@@ -19,5 +20,18 @@
   <div ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div>
   <div ng-include="'/components/designer/designerView.html'"></div>
   <div ng-view></div>
+  <div class="editor-wrapper">
+    <div class="navbar-header">
+      <a class="navbar-brand editor-head">Your DB Code!</a>
+    </div>
+    <div id="editor">/* Your Output will appear here! */
+  </div>
+</div>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/sql");
+    editor.$blockScrolling = Infinity;
+</script>
 </body>
 </html>
