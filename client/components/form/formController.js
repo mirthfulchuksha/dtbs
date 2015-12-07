@@ -11,6 +11,10 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id] = table;
     };
 
+    $scope.deleteTable = function (table) {
+      delete $scope.tableStorage[table.id];
+    }
+    
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){

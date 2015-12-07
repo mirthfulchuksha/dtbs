@@ -1,6 +1,7 @@
 <div ng-repeat="table in tableStorage" ng-controller="OutputController">
   <form>
-    <input ng-model="table.name" placeholder="Table Name" class="edit" style="width:50px"/>
+    <label>Table Name: {{table.name}}</label>
+    <button ng-click="deleteTable(table)">Delete Table</button></br>
     <button ng-click="addField()"> Add Field </button>
     <div ng-repeat="key in keys track by $index">
 
