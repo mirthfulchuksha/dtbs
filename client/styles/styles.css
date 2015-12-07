@@ -12,8 +12,11 @@ svg {
 }
 input {
   border-style: none;
-  border-color: Transparent;
+  border-color: #ccc;
+  background-color: #eee;
+  width: 100px;
+  height: 30px;
   overflow: auto;
   outline: none;
-  font-size: 14px;
+  font-size: 10px;
 }
