@@ -30,8 +30,10 @@ module.exports = {
         }
 
         //Auto incrementing keys
-        for(var quality = 0; quality < keys[key].attributes.length; quality++) {
-          schema += " " + keys[key].attributes[quality];
+        if(keys[key].attributes) {
+          for(var quality = 0; quality < keys[key].attributes.length; quality++) {
+            schema += " " + keys[key].attributes[quality];
+          }
         }
         //add comma if there are more keys
         if(key !== keys.length -1){
