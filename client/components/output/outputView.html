@@ -1,26 +1,47 @@
 <div ng-repeat="table in tableStorage" ng-controller="OutputController">
-        <form>
-          <input ng-model="table.name" placeholder="Table Name" class="edit" style="width:50px"/>
-          <button ng-click="addField()"> Add Key </button>
-          <div ng-repeat="key in keys track by $index">
-            <select ng-model="keys[$index].type">
-              <option>Int</option>
-              <option>Char</option>
-            </select>
-            <input ng-model="keys[$index].name" placeholder="Key Name">
-            <input ng-model="keys[$index].value" placeholder="Key Value">
-            <button ng-click="cancelAdd($index)">Cancel Add</button>
-          </div>
-          <button ng-click="addTableAttrChildScope(keys, table)"> Done </button>
-        </form>
-        <!--
-        <ul>
-          <li ng-repeat="key in table.attrs">
-            <input ng-model="key.name" type"text" class="edit"/> : <input ng-model="key.value" type"text" class="edit"/>
-            <button ng-click="removeKeyFromTable($index, table)">Remove Key</button>
-          </li>
-        </ul>
-        -->
+  <form>
+    <input ng-model="table.name" placeholder="Table Name" class="edit" style="width:50px"/>
+    <button ng-click="addField()"> Add Field </button>
+    <div ng-repeat="key in keys track by $index">
+
+      <label>Column ID</label>
+        <input ng-model="keys[$index].id" type="text" placeholder="Column id here..."/>
+
+      <label>Basic Type</label>
+        <select ng-model="keys[$index].basicType"> 
+          <option>Numeric</option>
+          <option>String</option>
+          <option>DateTime</option>
+          <option>Bit</option>
+        </select>
+
+      <label ng-if="keys[$index].basicType">Type</label>
+        <select ng-model="keys[$index].type" ng-if="keys[$index].basicType">
+          <option ng-repeat="option in options[keys[$index].basicType]">{{option.name}}</option>
+        </select>
+
+      <label ng-if="keys[$index].basicType">Size</label>
+        <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
+
+      <label ng-if="attributes[keys[$index].type]">Attributes</label>
+        <select ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes" multiple>
+          <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
+        </select>
+
+      <label ng-if="keys[$index].type">Default</label>
+        <select ng-if="keys[$index].type" ng-model="keys[$index].default">
+          <option>Null</option>
+          <option>Not Null</option>
+        </select>
+
+        <button ng-click="cancelAdd($index)">Delete Field</button>
+
+    </div>
+
+    <button ng-click="addTableAttrChildScope(keys, table)">Done</button>
+  </form>
+</div>
+<!--- Not using this currently for display of code
         <div class="display">
         <p>This will be the template for the Create Table line with a name of: {{ table.name }}</p>
           <div ng-repeat="key in table.attrs">
@@ -33,6 +54,4 @@
               </div>
             </div>
           </div>
-        </div>
-
-      </div>
+        </div> -->
