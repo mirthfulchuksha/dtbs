@@ -1,8 +1,4 @@
 
-* {
-  font-family: 'Helvetica Neue', Helvetica;
-}
-
 p {
   font-size: 15px;
 }
@@ -21,14 +17,18 @@ input {
   font-size: 10px;
 }
 
+.standardFont, .navbar-header {
+  font-family: 'Helvetica Neue', Helvetica;
+}
+
 .editor-wrapper {
   position: absolute;
   right: 0px;
   top: 0px;
   bottom: 0px;
-  height: 500px;
+  /*height: 500px;*/
   width: 350px;
-  opacity: .75;
+  opacity: .85;
 }
 
 .editor-head {
