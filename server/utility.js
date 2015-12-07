@@ -16,7 +16,7 @@ module.exports = {
       for(var key = 0; key < keys.length; key++){
         //Build structured string of SQL table's keys
         schema += "\
-        " + keys[key].name + " " + keys[key].type;
+        " + keys[key].id + " " + keys[key].type;
 
         //NOTE: the order of these checks is important
         //size of key's value
@@ -25,13 +25,13 @@ module.exports = {
         }
 
         //NOT NULL for required keys
-        if(keys[key].required) {
-          schema += " NOT NULL"
+        if(keys[key].default === "NOT NULL") {
+          schema += " " + keys[key].default;
         }
 
         //Auto incrementing keys
-        if(keys[key].autoInc) {
-          schema += " AUTO_INCREMENT"
+        for(var quality = 0; quality < keys[key].attributes.length; quality++) {
+          schema += " " + keys[key].attributes[quality];
         }
         //add comma if there are more keys
         if(key !== keys.length -1){

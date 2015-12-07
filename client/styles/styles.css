@@ -28,6 +28,7 @@ input {
   bottom: 0px;
   height: 500px;
   width: 350px;
+  opacity: .75;
 }
 
 .editor-head {

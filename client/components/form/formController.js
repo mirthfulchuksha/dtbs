@@ -25,7 +25,7 @@ angular.module('DTBS.main')
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
-       console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...", $scope.tableStorage);
+       console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
        CodeParser.fetchCode($scope.tableStorage);
      } else {
        console.log("Tried to save updates to item #" + ($scope.tableStorage.length) + " but the form is invalid.");
@@ -34,7 +34,7 @@ angular.module('DTBS.main')
     var debounceUpdate = function(newVal, oldVal) {
       console.log("debouncing");
      if (newVal != oldVal) {
-      console.log("val is different");
+      //waits for timeout to apply the changes on the server side
        if (timeout) {
          $timeout.cancel(timeout);
        }
@@ -77,9 +77,8 @@ angular.module('DTBS.main')
       }).then(function (res) {
         //places data on editor
         var editor = ace.edit("editor");
-        editor.setValue(res.data);
-        //still highlights the text on addition, why u no maintain ur library :(
-        editor.$blockScrolling = Infinity;
+        //sets the value to the parsed code and places the cursor at the end
+        editor.setValue(res.data, 1);
         return res.data;
       });
     };
