@@ -10,13 +10,13 @@ module.exports = {
     var schema = "";
     for(var i = 0; i < tables.length; i++){
       schema += "\
-      CREATE TABLE " + tables[i].name + " (\n";
+  CREATE TABLE " + tables[i].name + " (\n";
 
       var keys = tables[i].attrs;
       for(var key = 0; key < keys.length; key++){
         //Build structured string of SQL table's keys
         schema += "\
-        " + keys[key].name + " " + keys[key].type;
+    " + keys[key].id + " " + keys[key].type;
 
         //NOTE: the order of these checks is important
         //size of key's value
@@ -25,13 +25,15 @@ module.exports = {
         }
 
         //NOT NULL for required keys
-        if(keys[key].required) {
-          schema += " NOT NULL"
+        if(keys[key].default === "NOT NULL") {
+          schema += " " + keys[key].default;
         }
 
         //Auto incrementing keys
-        if(keys[key].autoInc) {
-          schema += " AUTO_INCREMENT"
+        if(keys[key].attributes) {
+          for(var quality = 0; quality < keys[key].attributes.length; quality++) {
+            schema += " " + keys[key].attributes[quality];
+          }
         }
         //add comma if there are more keys
         if(key !== keys.length -1){
@@ -43,7 +45,7 @@ module.exports = {
         PRIMARY KEY (uID)\n\
         */
       schema += "\
-      );\n\n";
+  );\n\n";
     }
 
     res.send(schema, 200);
