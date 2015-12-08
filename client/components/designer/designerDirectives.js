@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3Data', function (d3Service, d3Data) {
+.directive('d3Bars', ['d3Service', 'd3UpdateTable', function (d3Service, d3UpdateTable) {
   return {
     restrict: 'EA',
     scope: {},
@@ -36,11 +36,10 @@ angular.module('DTBS.main')
         scope.render = function (tableData, tableExists) {
           // if the table already exists, delete that table
           if (tableExists) {
-            console.log("DELETING EXISTING");
             d3.select("#tableID"+tableData.id).remove();
           }
 
-          var dummy = dataBuilder(tableData);
+          var formattedData = dataBuilder(tableData);
 
           var svg = d3.select("svg");
           // svg.selectAll("*").remove();
@@ -60,7 +59,7 @@ angular.module('DTBS.main')
           // append body rows
           table.append('tbody')
             .selectAll('tr')
-            .data(dummy).enter()
+            .data(formattedData).enter()
             .append('tr')
             .selectAll('td')
             .data(function(row, i) {
@@ -96,7 +95,7 @@ angular.module('DTBS.main')
           });
           table.call(drag);
         };
-        scope.$on('d3:new-data', function(e, data) {
+        scope.$on('d3:update-table', function (e, data) {
           // when new data comes in, check array of all the table ids
           // if new table (i.e. id is not in the array), draw new table
           if (scope.schemaIds.indexOf(data.id) === -1) {
@@ -109,6 +108,9 @@ angular.module('DTBS.main')
             // pass true, data
             scope.render(data, true);
           }
+        });
+        scope.$on('d3:delete-table', function (e, data) {
+          d3.select("#tableID"+data).remove();
         });
       });
     }};

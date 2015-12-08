@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.controller('FormController', ['$scope', '$timeout', 'CodeParser', function ($scope, $timeout, CodeParser) {
+.controller('FormController', ['$scope', '$timeout', 'CodeParser', 'd3DeleteTable', function ($scope, $timeout, CodeParser, d3DeleteTable) {
     //object for table storage
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
@@ -12,6 +12,8 @@ angular.module('DTBS.main')
     };
 
     $scope.deleteTable = function (table) {
+      var idToDelete = angular.copy(table.id);
+      d3DeleteTable.push(idToDelete);
       delete $scope.tableStorage[table.id];
     }
     
@@ -50,7 +52,7 @@ angular.module('DTBS.main')
     $scope.$watch('tableStorage', debounceUpdate, true);
 
   }])
-  .controller('TableController', ['$scope', 'd3Data', function ($scope, d3Data) {
+  .controller('TableController', ['$scope', function ($scope) {
     $scope.table = {};
     //Table save function that clears form and pushes up to the parent
     $scope.save = function (name) {
