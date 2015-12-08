@@ -8,7 +8,7 @@ angular.module('DTBS.main')
       d3Service.d3().then(function (d3) {
         var width = 640,
         height = 350;
-        scope.counter = 0;
+        scope.schemaIds = [];
 
         var svg = d3.select(element[0])
         .append("svg")
@@ -33,16 +33,19 @@ angular.module('DTBS.main')
         };
 
         
-        scope.render = function (tableData) {
-          scope.counter++;
+        scope.render = function (tableData, tableExists) {
+          // if the table already exists, delete that table
+          if (tableExists) {
+            console.log("DELETING EXISTING");
+            d3.select("#tableID"+tableData.id).remove();
+          }
 
           var dummy = dataBuilder(tableData);
 
           var svg = d3.select("svg");
-          svg.selectAll("*").remove();
+          // svg.selectAll("*").remove();
           var table = svg.append("foreignObject")
-            .attr("width", 200)
-            .attr('class', "table" + scope.counter)
+            .attr('id', "tableID"+tableData.id)
             .append("xhtml:body");
           table.append("table");
             // append header row
@@ -50,9 +53,6 @@ angular.module('DTBS.main')
             .selectAll('th')
             .data(scope.columns).enter()
             .append('th')
-            .attr('class', function(d) {
-              return d.cl;
-            })
             .text(function(d) {
               return d.head;
             });
@@ -76,11 +76,11 @@ angular.module('DTBS.main')
             .append('td')
             .html(function (d) {
               return d.html;
-            })
-            .attr('class', function(d) {
-              return d.cl;
             });
+          scope.dragTable();
+        };
 
+        scope.dragTable = function () {
           var table = d3.selectAll('foreignObject')
           var drag = d3.behavior.drag();
 
@@ -94,13 +94,21 @@ angular.module('DTBS.main')
             var y = d3.event.y; 
             d3.select(this).attr('x', x).attr('y', y);
           });
-
           table.call(drag);
-          
         };
         scope.$on('d3:new-data', function(e, data) {
-          console.log(data);
-          scope.render(data);
+          // when new data comes in, check array of all the table ids
+          // if new table (i.e. id is not in the array), draw new table
+          if (scope.schemaIds.indexOf(data.id) === -1) {
+            // push id onto ids array
+            scope.schemaIds.push(data.id);
+            // pass false, data into render function
+            scope.render(data, false);
+          } else {
+            // if existing table (id is already in the array), delete then re-draw that table
+            // pass true, data
+            scope.render(data, true);
+          }
         });
       });
     }};
