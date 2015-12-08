@@ -60,7 +60,9 @@ module.exports = {
   parseORMSequelize: function (req, res, next) {
     console.log(req.body.data);
 
-    var scheme = '';
+    var scheme = 'var Sequelize = require("sequelize"); \n';
+    scheme += 'var sequelize = new Sequelize("DB_name", "username", "DB_password");\n\n';
+
     var tables = req.body.data;
     for(var i = 0; i < tables.length; i++){
       scheme += 'var ' + tables[i].name + ' = sequelize.define("' + tables[i].name + '", {\n';
