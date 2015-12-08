@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         var width = 640,
-        height = 480;
+        height = 350;
         scope.counter = 0;
 
         var svg = d3.select(element[0])
