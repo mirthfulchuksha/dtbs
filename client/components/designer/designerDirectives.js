@@ -9,14 +9,14 @@ angular.module('DTBS.main')
 
         var dummyData = {
           "nodes":[
-            {"name": "Users", "group": 1},
-            {"name": "id", "group": 1},
-            {"name": "name", "group": 1},
-            {"name": "subject_id", "group": 2},
-            {"name": "Subjects", "group": 2},
-            {"name": "id", "group": 2},
-            {"name": "name", "group": 2},
-            {"name": "teacher", "group": 2}
+            {"name": "Users", "group": 1, "size": 32},
+            {"name": "id", "group": 1, "size": 16},
+            {"name": "name", "group": 1, "size": 16},
+            {"name": "subject_id", "group": 2, "size": 16},
+            {"name": "Subjects", "group": 2, "size": 32},
+            {"name": "id", "group": 2, "size": 16},
+            {"name": "name", "group": 2, "size": 16},
+            {"name": "teacher", "group": 2, "size": 16}
             ],
           "links": [
             {"source": 0, "target": 1, "value": 40},
@@ -25,7 +25,7 @@ angular.module('DTBS.main')
             {"source": 4, "target": 5, "value": 40},
             {"source": 4, "target": 6, "value": 40},
             {"source": 4, "target": 7, "value": 40},
-            {"source": 0, "target": 4, "value": 150}
+            {"source": 3, "target": 5, "value": 150}
             ]
         }
         // Constants for the SVG
@@ -46,7 +46,7 @@ angular.module('DTBS.main')
         var force = d3.layout.force()
             .charge(-500)
             //.linkDistance(80)
-            .linkDistance(function(d) { return  d.value; }) 
+            .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
         
@@ -79,7 +79,7 @@ angular.module('DTBS.main')
               .call(force.drag);
 
           node.append("circle")
-              .attr("r", 8)
+              .attr("r", function (d) { return d.size/2; })
               .style("fill", function (d) {
               return color(d.group);
           })
