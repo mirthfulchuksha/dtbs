@@ -1,96 +1,110 @@
 angular.module('DTBS.main')
-  .factory('d3Service', ['$document', '$q', '$rootScope',
-    function($document, $q, $rootScope) {
-      var d = $q.defer();
-      function onScriptLoad() {
-        // Load client in the browser
-        $rootScope.$apply(function() { d.resolve(window.d3); });
-      }
-      // Create a script tag with d3 as the source
-      // and call our onScriptLoad callback when it
-      // has been loaded
-      var scriptTag = $document[0].createElement('script');
-      scriptTag.type = 'text/javascript'; 
-      scriptTag.async = true;
-      scriptTag.src = 'http://d3js.org/d3.v3.min.js';
-      scriptTag.onreadystatechange = function () {
-        if (this.readyState == 'complete') onScriptLoad();
-      }
-      scriptTag.onload = onScriptLoad;
- 
-      var s = $document[0].getElementsByTagName('body')[0];
-      s.appendChild(scriptTag);
- 
-      return {
-        d3: function() { return d.promise; }
-      };
-}])
-  .service('d3Data', ['$rootScope', function($rootScope) {
-      var data = [];
-      var emit = function(data) { $rootScope.$broadcast('d3:new-data', data); }
-      var api = {
-        get: function() {
-          return data;
-        },
-        set: function(data) {
-          data = data;
-          emit(data);
-          return data;
-        },
-        push: function(datum) {
-          data.push(datum);
-          emit(data);
-          return data;
-        }
-      }
-      return api;
-    }])
-  .directive('d3Bars', ['d3Service', 'd3Data', function (d3Service, d3Data) {
-    return {
-      restrict: 'EA',
-      scope: {},
-      link: function(scope, element, attrs) {
-        d3Service.d3().then(function (d3) {
-          var svg = d3.select(element[0])
-          .append("svg")
-          .style('width', '100%');
 
-          scope.render = function (name) {
-            var svg = d3.select('svg');
+.directive('d3Bars', ['d3Service', 'd3Data', function (d3Service, d3Data) {
+  return {
+    restrict: 'EA',
+    scope: {},
+    link: function(scope, element, attrs) {
+      d3Service.d3().then(function (d3) {
+        var width = 640,
+        height = 480;
+        scope.counter = 0;
 
-            svg.selectAll('text')
-            .data(name)
-            .enter().append('text')
-            .attr("y", 30)
-            .attr("x", 100)
-            .attr("fill", 'grey')
-            .style({"font-size":"18px","z-index":"999999999"})
-            .style("text-anchor", "middle")
-            .text(function(d) { return d; });
+        var svg = d3.select(element[0])
+        .append("svg")
+        .style('width', '100%')
+        .style('height', height);
+        
+        scope.columns = [
+            { head: 'Field',
+              html: function(r) { return r.id; } },
+            { head: 'Type',
+              html: function(r) { return r.type; } }
+        ];
+        var dataBuilder = function (data) {
+          var cols = [];
+          data.attrs.forEach(function (col) {
+            var row = {};
+            row["id"] = col.id;
+            row["type"] = col.type;
+            cols.push(row);
+          });
+          return cols;
+        };
 
-            var table = d3.selectAll('text')
-            var drag = d3.behavior.drag();
+        
+        scope.render = function (tableData) {
+          scope.counter++;
 
-            drag.on('dragstart', function(){
-              d3.event.sourceEvent.stopPropagation(); 
-              d3.event.sourceEvent.preventDefault(); 
-            }); 
+          var dummy = dataBuilder(tableData);
 
-            drag.on('drag', function(d){
-              var x = d3.event.x; 
-              var y = d3.event.y; 
-              d3.select(this).attr('x', x).attr('y', y);
+          var svg = d3.select("svg");
+          svg.selectAll("*").remove();
+          var table = svg.append("foreignObject")
+            .attr("width", 200)
+            .attr('class', "table" + scope.counter)
+            .append("xhtml:body");
+          table.append("table");
+            // append header row
+          table.append('thead').append('tr')
+            .selectAll('th')
+            .data(scope.columns).enter()
+            .append('th')
+            .attr('class', function(d) {
+              return d.cl;
+            })
+            .text(function(d) {
+              return d.head;
             });
 
-            table.call(drag);
-          };
-          scope.$on('d3:new-data', function(e, data) {
-            scope.render(data);
-          });
-        });
-      }};
-  }]);
+          // append body rows
+          table.append('tbody')
+            .selectAll('tr')
+            .data(dummy).enter()
+            .append('tr')
+            .selectAll('td')
+            .data(function(row, i) {
+              // evaluate column objects against the current row
+              return scope.columns.map(function (c) {
+                var cell = {};
+                d3.keys(c).forEach(function(k) {
+                  cell[k] = typeof c[k] == 'function' ? c[k](row, i) : c[k];
+                });
+                return cell;
+              });
+            }).enter()
+            .append('td')
+            .html(function (d) {
+              return d.html;
+            })
+            .attr('class', function(d) {
+              return d.cl;
+            });
 
+          var table = d3.selectAll('foreignObject')
+          var drag = d3.behavior.drag();
+
+          drag.on('dragstart', function(){
+            d3.event.sourceEvent.stopPropagation(); 
+            d3.event.sourceEvent.preventDefault(); 
+          }); 
+
+          drag.on('drag', function(d){
+            var x = d3.event.x; 
+            var y = d3.event.y; 
+            d3.select(this).attr('x', x).attr('y', y);
+          });
+
+          table.call(drag);
+          
+        };
+        scope.$on('d3:new-data', function(e, data) {
+          console.log(data);
+          scope.render(data);
+        });
+      });
+    }};
+}]);
 
 
 
