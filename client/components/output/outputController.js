@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.controller('OutputController', ['$scope', 'd3Data', function ($scope, d3Data) {
+.controller('OutputController', ['$scope', 'd3UpdateTable', function ($scope, d3UpdateTable) {
     //child scope function needed to clear the forms on submit
     $scope.keys = [];
 
@@ -129,6 +129,6 @@ angular.module('DTBS.main')
       //is this the desired behavior
       $scope.keys = [];
       var data = angular.copy(table);
-      d3Data.push(data);
+      d3UpdateTable.push(data);
     };
   }])
