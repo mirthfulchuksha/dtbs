@@ -59,8 +59,14 @@ module.exports = {
     var tables = req.body.data;
     for(var i = 0; i < tables.length; i++){
       scheme += 'var ' + tables[i].name + ' = sequalize.define("' + tables[i].name + '", {';
-        //TODO: keys here
-      scheme += '});';
+      
+      //TODO: keys here
+      var keys = tables[i].attrs;
+      for(var key = 0; key < keys.length; key++){
+
+      }
+      //close statement
+      scheme += '});\n';
     }
 
     res.send(scheme, 200);
