@@ -7,23 +7,23 @@
     <form class="navbar-form navbar-left" role="search">
       <button ng-click="toggleModal()" class="btn btn-default">Get Started</button>
     </form>
-      
-    <modal title="Page Setup" visible="showModal">
-      <form role="form">
+
+    <modal title="Page Setup" visible="showModal" >
+      <form role="form" ng-submit="updateFactory()">
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="title" class="form-control" id="title" placeholder="Database title goes here">
+	    <input type="title" class="form-control" id="title" ng-model="db.name" placeholder="Database title goes here">
           </div>
         <div class="form-group">
           <label for="type">Database Type</label>
           <div class="dropdown">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Database Type
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-              <li><a>SQL - MySQL</a></li>
-            </ul>
+	    <select ng-model='db.lang' class="form-control">
+	      <option value="mySQL">mySQL</option>
+	      <option value="Bookshelf">mySQL - Bookshelf</option>
+	      <option value="Sequelize">mySQL - Sequelize</option>
+	      <option value="Mongo">Mongo</option>
+	      <option value="Mongoose">Mongo - Mongoose</option>
+	    </select>
           </div>
         </div>
         <button type="submit" class="btn btn-default">Submit</button>

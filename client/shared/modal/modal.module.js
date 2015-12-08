@@ -1,24 +1,28 @@
 var mymodal = angular.module('DTBS.modal', []);
 
-mymodal.controller('ModalCtrl', function ($scope) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeParser) {
   $scope.showModal = false;
   $scope.toggleModal = function(){
       $scope.showModal = !$scope.showModal;
   };
-});
+  $scope.db = {};
+  $scope.updateFactory = function () {
+    CodeParser.setDb($scope.db);
+  };
+}]);
 
 mymodal.directive('modal', function () {
     return {
-      template: '<div class="modal fade">' + 
-          '<div class="modal-dialog">' + 
-            '<div class="modal-content">' + 
-              '<div class="modal-header">' + 
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
-                '<h4 class="modal-title">{{ title }}</h4>' + 
-              '</div>' + 
-              '<div class="modal-body" ng-transclude></div>' + 
-            '</div>' + 
-          '</div>' + 
+      template: '<div class="modal fade">' +
+	  '<div class="modal-dialog">' +
+	    '<div class="modal-content">' +
+	      '<div class="modal-header">' +
+		'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+		'<h4 class="modal-title">{{ title }}</h4>' +
+	      '</div>' +
+	      '<div class="modal-body" ng-transclude></div>' +
+	    '</div>' +
+	  '</div>' +
         '</div>',
       restrict: 'E',
       transclude: true,
