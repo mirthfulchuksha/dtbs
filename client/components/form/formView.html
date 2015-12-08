@@ -1,10 +1,18 @@
 <div ng-controller='FormController'>
 
-    <div ng-controller="TableController">
-      <form ng-submit="save(table.name)" name="table_{{table.id}}_form">
-        <button type="submit">Create Table</button>
-        <input ng-model="table.name" placeholder="Table Name" required/>
-      </form>
+    <div ng-controller="TableController" class="container">
+      <h1>Make a Table</h1>
+      <button ng-click="toggleMyModal()" class="btn btn-default">Create</button>
+        
+      <tablemodal title="Table Create Form" visible="seeModal">
+        <form role="form" ng-submit="save(table.name)" name="table_{{table.id}}_form">
+          <div class="form-group">
+            <label for="email">Table Name</label>
+            <input class="form-control" ng-model="table.name" placeholder="Enter table name" />
+          </div>
+          <button type="submit" class="btn btn-default">Go</button>
+        </form>
+      </tablemodal>
     </div>
     <br>
     <div ng-include="'/components/output/outputView.html'">
