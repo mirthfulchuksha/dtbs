@@ -13,12 +13,12 @@ app.post('/update', function (req, res, next) {
   util.parseTable(req, res, next);
 });
 
-app.post('/parse', function (req, res, next) {
-  util.parseORMSequelize(req, res, next);
-});
-
 app.post('/bookshelf', function (req, res, next) {
   util.parseORMBookshelf(req, res, next);
+});
+
+app.post('/sequelize', function (req, res, next){
+  util.parseORMSequelize(req, res, next);
 });
 
 app.listen(port);

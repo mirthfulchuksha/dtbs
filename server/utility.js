@@ -1,6 +1,11 @@
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
+var sequelizeTypeDict = {
+  'Int': 'INTEGER',
+  'Char': 'STRING'
+};
+
 module.exports = {
 
   parseTable: function (req, res, next) {
@@ -16,7 +21,7 @@ module.exports = {
       for(var key = 0; key < keys.length; key++){
         //Build structured string of SQL table's keys
         schema += "\
-    " + keys[key].id + " " + keys[key].type;
+    " + keys[key].name + " " + keys[key].type;
 
         //NOTE: the order of these checks is important
         //size of key's value
@@ -54,11 +59,30 @@ module.exports = {
 
   parseORMSequelize: function (req, res, next) {
     console.log(req.body.data);
-    var expr = req.body.data;
 
-    var lineArray = expr.split('\n');
+    var scheme = 'var Sequelize = require("sequelize"); \n';
+    scheme += 'var sequelize = new Sequelize("DB_name", "username", "DB_password");\n\n';
 
-    res.send(lineArray[0], 200);
+    var tables = req.body.data;
+    for(var i = 0; i < tables.length; i++){
+      scheme += 'var ' + tables[i].name + ' = sequelize.define("' + tables[i].name + '", {\n';
+      
+      //TODO: keys here
+      var keys = tables[i].attrs;
+      for(var key = 0; key < keys.length; key++){
+        scheme += '\
+  ' + keys[key].name + ': Sequelize.' + sequelizeTypeDict[keys[key].type];
+
+        if(key !== keys.length - 1) {
+          scheme += ',';
+        }
+        scheme += '\n';
+      }
+      //close statement
+      scheme += '});\n\n';
+    }
+
+    res.send(scheme, 200);
   },
 
   parseORMBookshelf: function (req, res, next) {
