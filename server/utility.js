@@ -54,11 +54,16 @@ module.exports = {
 
   parseORMSequelize: function (req, res, next) {
     console.log(req.body.data);
-    var expr = req.body.data;
 
-    var lineArray = expr.split('\n');
+    var scheme = '';
+    var tables = req.body.data;
+    for(var i = 0; i < tables.length; i++){
+      scheme += 'var ' + tables[i].name + ' = sequalize.define("' + tables[i].name + '", {';
+        //TODO: keys here
+      scheme += '});';
+    }
 
-    res.send(lineArray[0], 200);
+    res.send(scheme, 200);
   },
 
   parseORMBookshelf: function (req, res, next) {
