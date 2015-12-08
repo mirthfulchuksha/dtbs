@@ -58,10 +58,7 @@ angular.module('DTBS.main')
       $scope.table.id = $scope.id;
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
-      $scope.table = {};
-      data = angular.copy(name);
-      d3Data.push(data);
-      // $scope.table = {};
+      $scope.table = {};      
     };
 
   }])
