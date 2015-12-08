@@ -1,3 +1,5 @@
+var http = require('http');
+var fs = require('fs');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
@@ -58,7 +60,7 @@ module.exports = {
   },
 
   parseORMSequelize: function (req, res, next) {
-    console.log(req.body.data);
+    var expr = req.body.data;
 
     var scheme = 'var Sequelize = require("sequelize"); \n';
     scheme += 'var sequelize = new Sequelize("DB_name", "username", "DB_password");\n\n';
@@ -66,7 +68,7 @@ module.exports = {
     var tables = req.body.data;
     for(var i = 0; i < tables.length; i++){
       scheme += 'var ' + tables[i].name + ' = sequelize.define("' + tables[i].name + '", {\n';
-      
+
       //TODO: keys here
       var keys = tables[i].attrs;
       for(var key = 0; key < keys.length; key++){
@@ -123,6 +125,18 @@ module.exports = {
     }, "");
 
     res.send(requires + bookshelfStr, 200);
+  },
+
+  download: function (req, res, next) {
+    var body = req.body.code;
+    file = req.body.codeType + "_Schema" + req.body.ext;
+
+    var stream = fs.createWriteStream(file);
+    stream.once('open', function(fd) {
+      stream.write(body);
+      stream.end();
+    });
+    res.download(file);
   }
 
 

@@ -21,6 +21,10 @@ app.post('/sequelize', function (req, res, next){
   util.parseORMSequelize(req, res, next);
 });
 
+app.post('/download', function (req, res, next) {
+  util.download(req, res, next);
+});
+
 app.listen(port);
 
 console.log('Server listening on port: ' + port);

@@ -4,8 +4,13 @@ angular.module('DTBS.main')
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
     $scope.id = 0;
+    $scope.db = {};
 
     var secondsToWaitBeforeSave = 0;
+
+    $scope.downloadCode = function () {
+      CodeParser.saveCode();
+    };
 
     $scope.addTable = function (table) {
       $scope.tableStorage[table.id] = table;
@@ -65,7 +70,9 @@ angular.module('DTBS.main')
 
   }])
   .factory('CodeParser', function ($http) {
-    
+    var dbName = "";
+    var dbLang = "";
+
     var fetchCode = function (tables) {
       var dataObj = {data: []};
       for(var table in tables) {
@@ -74,7 +81,7 @@ angular.module('DTBS.main')
       console.log(dataObj);
 
       return $http({
-        method: 'POST', 
+	method: 'POST',
         url: '/update',
         data : dataObj
       }).then(function (res) {
@@ -86,7 +93,48 @@ angular.module('DTBS.main')
       });
     };
 
+    var saveCode = function () {
+      var editor = ace.edit("editor");
+      var codeBase = {};
+      var extension;
+
+      switch (dbLang) {
+	case "mySQL":
+	  extension = '.sql';
+	  break;
+	case "Bookshelf":
+	  extension = '.js';
+	  break;
+	case "Sequelize":
+	  extension = '.js';
+	  break;
+	default:
+	  extension = '.sql';
+      }
+
+      codeBase.code = editor.getValue();
+      codeBase.codeType = dbLang;
+      codeBase.ext = extension;
+
+      return $http({
+	method: 'POST',
+	url: '/download',
+	data: codeBase
+      }).then(function (res) {
+	return res.data;
+      });
+    }
+
+    var setDb = function (db) {
+      dbName = db.name;
+      dbLang = db.lang;
+    };
+
     return {
-      fetchCode: fetchCode
+      fetchCode: fetchCode,
+      saveCode: saveCode,
+      setDb: setDb,
+      dbLang: dbLang,
+      dbName: dbName
     };
   });
