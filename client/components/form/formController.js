@@ -33,6 +33,12 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id].attrs.splice(index,1);
     };
 
+
+    $scope.seeKeyModal = false;
+    $scope.toggleKeyModal = function(){
+      $scope.seeKeyModal = !$scope.seeKeyModal;
+    };
+
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
@@ -65,10 +71,59 @@ angular.module('DTBS.main')
       $scope.table.id = $scope.id;
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
-      $scope.table = {};      
+      $scope.table = {};     
+      //close window 
+      $scope.toggleMyModal();
+      $scope.toggleKeyModal();
+    };
+
+    $scope.seeModal = false;
+    $scope.toggleMyModal = function(){
+        $scope.seeModal = !$scope.seeModal;
     };
 
   }])
+  .directive('tablemodal', function () {
+    return {
+      template: '<div class="modal fade">' + 
+          '<div class="modal-dialog">' + 
+            '<div class="modal-content">' + 
+              '<div class="modal-header">' + 
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
+                '<h4 class="modal-title">{{ title }}</h4>' + 
+              '</div>' + 
+              '<div class="modal-body" ng-transclude></div>' + 
+            '</div>' + 
+          '</div>' + 
+        '</div>',
+      restrict: 'E',
+      transclude: true,
+      replace:true,
+      scope:true,
+      link: function postLink(scope, element, attrs) {
+        scope.title = attrs.title;
+
+        scope.$watch(attrs.visible, function(value){
+          if(value == true)
+            $(element).modal('show');
+          else
+            $(element).modal('hide');
+        });
+
+        $(element).on('shown.bs.modal', function(){
+          scope.$apply(function(){
+            scope.$parent[attrs.visible] = true;
+          });
+        });
+
+        $(element).on('hidden.bs.modal', function(){
+          scope.$apply(function(){
+            scope.$parent[attrs.visible] = false;
+          });
+        });
+      }
+    };
+  })
   .factory('CodeParser', function ($http) {
     var dbName = "";
     var dbLang = "";
