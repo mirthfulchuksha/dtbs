@@ -1,6 +1,11 @@
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
+var sequelizeTypeDict = {
+  'Int': 'INTEGER',
+  'Char': 'STRING'
+};
+
 module.exports = {
 
   parseTable: function (req, res, next) {
@@ -58,15 +63,21 @@ module.exports = {
     var scheme = '';
     var tables = req.body.data;
     for(var i = 0; i < tables.length; i++){
-      scheme += 'var ' + tables[i].name + ' = sequalize.define("' + tables[i].name + '", {';
+      scheme += 'var ' + tables[i].name + ' = sequelize.define("' + tables[i].name + '", {\n';
       
       //TODO: keys here
       var keys = tables[i].attrs;
       for(var key = 0; key < keys.length; key++){
+        scheme += '\
+  ' + keys[key].name + ': Sequelize.' + sequelizeTypeDict[keys[key].type];
 
+        if(key !== keys.length - 1) {
+          scheme += ',';
+        }
+        scheme += '\n';
       }
       //close statement
-      scheme += '});\n';
+      scheme += '});\n\n';
     }
 
     res.send(scheme, 200);
