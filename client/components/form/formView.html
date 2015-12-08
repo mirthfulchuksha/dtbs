@@ -15,6 +15,50 @@
       </tablemodal>
     </div>
     <br>
-    <div ng-include="'/components/output/outputView.html'">
-    </div>
+    <keymodal title="Login form" visible="seeKeyModal">
+      <div ng-repeat="table in tableStorage" ng-controller="OutputController">
+        <form>
+          <label>Table Name: {{table.name}}</label>
+          <button ng-click="deleteTable(table)">Delete Table</button></br>
+          <button ng-click="addField()"> Add Field </button>
+          <div ng-repeat="key in keys track by $index">
+
+            <label>Column ID</label>
+              <input ng-model="keys[$index].id" type="text" placeholder="Column id here..."/>
+
+            <label>Basic Type</label>
+              <select ng-model="keys[$index].basicType"> 
+                <option>Numeric</option>
+                <option>String</option>
+                <option>DateTime</option>
+                <option>Bit</option>
+              </select>
+
+            <label ng-if="keys[$index].basicType">Type</label>
+              <select ng-model="keys[$index].type" ng-if="keys[$index].basicType">
+                <option ng-repeat="option in options[keys[$index].basicType]">{{option.name}}</option>
+              </select>
+
+            <label ng-if="keys[$index].basicType">Size</label>
+              <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
+
+            <label ng-if="attributes[keys[$index].type]">Attributes</label>
+              <select ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes" multiple>
+                <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
+              </select>
+
+            <label ng-if="keys[$index].type">Default</label>
+              <select ng-if="keys[$index].type" ng-model="keys[$index].default">
+                <option>NULL</option>
+                <option>NOT NULL</option>
+              </select>
+
+              <button ng-click="cancelAdd($index)">Delete Field</button>
+
+          </div>
+
+          <button ng-click="addTableAttrChildScope(keys, table)">Done</button>
+        </form>
+      </div>
+    </keymodal>
   </div>

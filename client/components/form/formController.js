@@ -33,6 +33,12 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id].attrs.splice(index,1);
     };
 
+
+    $scope.seeKeyModal = false;
+    $scope.toggleKeyModal = function(){
+      $scope.seeKeyModal = !$scope.seeKeyModal;
+    };
+
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
@@ -68,6 +74,7 @@ angular.module('DTBS.main')
       $scope.table = {};     
       //close window 
       $scope.toggleMyModal();
+      $scope.toggleKeyModal();
     };
 
     $scope.seeModal = false;
