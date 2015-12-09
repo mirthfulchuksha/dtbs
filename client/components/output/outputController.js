@@ -136,17 +136,18 @@ angular.module('DTBS.main')
 
       $scope.addTableAttr(keyArr.concat(foreignKeyArr), table);
 
-      if(!table.primaryKey) {
+      //if(!table.primaryKey) {
         keyArr.forEach( function (newKey){
           console.log(newKey);
           if(newKey.id === primaryKey){
             $scope.addPrimaryKey(newKey, table);  
           }
         });
-      } else if(table.primaryKey.name !== primaryKey) {
-        console.log("new keyyyyyyy!", primaryKey);
-        $scope.changePrimaryKey(primaryKey, table);
-      }
+      // } else if(table.primaryKey.id !== primaryKey) {
+      //   console.log(table.primaryKey.id);
+      //   console.log("new keyyyyyyy!", $scope.primaryKey);
+      //   $scope.changePrimaryKey($scope.primaryKey, table);
+      // }
       //is this the desired behavior
       $scope.keys = [];
       $scope.foreignKeys =[];
