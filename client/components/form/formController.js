@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.controller('FormController', ['$scope', '$timeout', 'CodeParser', 'd3DeleteTable', 'd3Data', function ($scope, $timeout, CodeParser, d3DeleteTable, d3Data) {
+.controller('FormController', ['$scope', '$timeout', 'CodeParser', 'd3Data', function ($scope, $timeout, CodeParser, d3Data) {
     //object for table storage
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
@@ -27,7 +27,6 @@ angular.module('DTBS.main')
        $scope.tableStorage[table.id].attrs.push(key);
        var updatedData = angular.copy($scope.tableStorage);
        d3Data.push(updatedData);
-       console.log($scope.tableStorage, "table storage");
       });
     };
 

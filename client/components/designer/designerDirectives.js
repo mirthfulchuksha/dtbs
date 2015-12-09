@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3UpdateTable', 'd3Data', function (d3Service, d3UpdateTable, d3Data) {
+.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', function (d3Service, d3TableClass, d3Data) {
   return {
     restrict: 'EA',
     scope: {},
@@ -10,16 +10,17 @@ angular.module('DTBS.main')
         var width = 640, height = 350;
 
         // Function to format incoming data into nodes and links
-        var dataBuilder = function (data, groupNumber) {
+        var dataBuilder = function (data) {
           // initialize empty graph
           var graph = {nodes: [], links: []};
+          var groupNumber = 1;
           // loop through tables
           for (var i = 0; i < data.length; i++) {
             var table = data[i];
             // build up the central table node
             var centralNode = {
               name: table.name,
-              group: groupNumber++,
+              group: groupNumber,
               size: 32,
               id: table.id
             };
@@ -42,7 +43,8 @@ angular.module('DTBS.main')
               // push the table/field link onto the graph
               var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
               graph.links.push(fieldToTableLink);
-            } 
+            }
+            groupNumber++; 
           }
           return graph;
         };
@@ -58,8 +60,6 @@ angular.module('DTBS.main')
           // Global array to track table classes for deletion
           scope.schemas = [];
 
-          // Grouping variable for table clusters
-          var groupNumber = 0;
           // Set up the colour scale
           var color = d3.scale.category20();
           //Set up the force layout
@@ -69,7 +69,7 @@ angular.module('DTBS.main')
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
-          var graph = dataBuilder(tableData, groupNumber);
+          var graph = dataBuilder(tableData);
           var svg = d3.select("svg");
 
           //Creates the graph data structure out of the json data
@@ -87,7 +87,11 @@ angular.module('DTBS.main')
               .data(graph.nodes)
               .enter().append("g")
               .attr("class", "node")
-              .attr("class", tableData.name)
+              .attr("class", function (d) { return d.group; })
+              .on("click", function () {
+                click(this);
+              })
+              .on("dblclick", dblclick)
               .call(force.drag);
 
           // append the node
@@ -115,6 +119,14 @@ angular.module('DTBS.main')
             d3.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
           });
+        };
+        var click = function (node) {
+          var className = $(node).attr('class');
+          var classToSend = angular.copy(className);
+          d3TableClass.push(classToSend);
+        };
+        var dblclick = function (d) {
+          d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('d3:new-data', function (e, data) {
           // re do force layout with new data

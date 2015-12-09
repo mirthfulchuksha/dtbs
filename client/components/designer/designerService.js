@@ -21,10 +21,10 @@ angular.module('DTBS.main')
   }
   return api;
 }])
-.service('d3DeleteTable', ['$rootScope', function($rootScope) {
+.service('d3TableClass', ['$rootScope', function($rootScope) {
   var data;
 
-  var emit = function(data) { $rootScope.$broadcast('d3:delete-table', data); }
+  var emit = function(data) { $rootScope.$broadcast('d3:table-class', data); }
   var api = {
     get: function() {
       return data;
