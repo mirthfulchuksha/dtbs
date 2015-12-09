@@ -7,7 +7,7 @@
         <h3>Edit a Table</h3>
         <button ng-click="toggleKeyModal()" class="btn btn-default">Edit Selected</button>
       </div>
-        
+
       <tablemodal title="Table Create Form" visible="seeModal">
         <form role="form" ng-submit="save(table.name)" name="table_{{table.id}}_form">
           <div class="form-group">
@@ -24,16 +24,16 @@
         <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
           <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
         </div>
-        <form>
+        <form name="tableForm">
           <button ng-click="addField()"> Add Field </button></br>
           <button ng-click="addForeignKey()">Add Foreign Key</button>
           <div ng-repeat="key in keys track by $index" class="border">
-          
+
             <label>Column ID</label>
               <input ng-model="keys[$index].id" type="text" placeholder="Column id here..." required/>
 
             <label>Basic Type</label>
-              <select ng-model="keys[$index].basicType"> 
+              <select ng-model="keys[$index].basicType" required>
                 <option>Numeric</option>
                 <option>String</option>
                 <option>DateTime</option>
@@ -41,7 +41,7 @@
               </select>
 
             <label ng-if="keys[$index].basicType">Type</label>
-              <select ng-model="keys[$index].type" ng-if="keys[$index].basicType">
+              <select ng-model="keys[$index].type" ng-if="keys[$index].basicType" required>
                 <option ng-repeat="option in options[keys[$index].basicType]">{{option.name}}</option>
               </select>
 
@@ -77,7 +77,7 @@
             </select>
           </div>
 
-          <button ng-click="addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
+          <button ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
           <button ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
         </form>
       </div>

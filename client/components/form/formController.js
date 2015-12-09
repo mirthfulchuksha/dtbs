@@ -1,10 +1,10 @@
 angular.module('DTBS.main')
 .controller('FormController', [
-  '$scope', 
-  '$timeout', 
-  'CodeParser', 
-  'd3Data', 
-  'd3TableClass', 
+  '$scope',
+  '$timeout',
+  'CodeParser',
+  'd3Data',
+  'd3TableClass',
   function ($scope, $timeout, CodeParser, d3Data, d3TableClass) {
     //object for table storage
     $scope.tableStorage = {};
@@ -18,6 +18,11 @@ angular.module('DTBS.main')
       CodeParser.saveCode();
     };
 
+    $scope.updateFactory = function (language) {
+      $scope.db.lang = language;
+      CodeParser.update($scope.db);
+    };
+
     $scope.addTable = function (table) {
       $scope.tableStorage[table.id] = table;
       //set selected table to allow for correcting editing window
@@ -27,7 +32,7 @@ angular.module('DTBS.main')
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
       $scope.toggleKeyModal();
-    }
+    };
 
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
@@ -58,23 +63,23 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id].attrs.splice(index,1);
     };
 
-
     $scope.seeKeyModal = false;
-    $scope.toggleKeyModal = function(){
+    $scope.toggleKeyModal = function () {
       $scope.seeKeyModal = !$scope.seeKeyModal;
     };
 
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
-       //console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
-       CodeParser.fetchCode($scope.tableStorage);
+       // console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
+       CodeParser.update($scope.db, $scope.tableStorage);
+       CodeParser.fetchCode();
      } else {
        console.log("Tried to save updates to item #" + ($scope.tableStorage.length) + " but the form is invalid.");
      }
     };
     var debounceUpdate = function(newVal, oldVal) {
-     if (newVal != oldVal) {
+     if (newVal !== oldVal) {
       //waits for timeout to apply the changes on the server side
        if (timeout) {
          $timeout.cancel(timeout);
@@ -107,7 +112,7 @@ angular.module('DTBS.main')
     };
 
     $scope.seeModal = false;
-    $scope.toggleMyModal = function(){
+    $scope.toggleMyModal = function () {
         $scope.seeModal = !$scope.seeModal;
     };
 
@@ -129,24 +134,24 @@ angular.module('DTBS.main')
       transclude: true,
       replace:true,
       scope:true,
-      link: function postLink(scope, element, attrs) {
+      link: function postLink (scope, element, attrs) {
         scope.title = attrs.title;
 
-        scope.$watch(attrs.visible, function(value){
-          if(value == true)
+        scope.$watch(attrs.visible, function (value) {
+          if (value === true)
             $(element).modal('show');
           else
             $(element).modal('hide');
         });
 
-        $(element).on('shown.bs.modal', function(){
-          scope.$apply(function(){
+        $(element).on('shown.bs.modal', function () {
+          scope.$apply(function () {
             scope.$parent[attrs.visible] = true;
           });
         });
 
-        $(element).on('hidden.bs.modal', function(){
-          scope.$apply(function(){
+        $(element).on('hidden.bs.modal', function () {
+          scope.$apply(function () {
             scope.$parent[attrs.visible] = false;
           });
         });
@@ -154,20 +159,35 @@ angular.module('DTBS.main')
     };
   })
   .factory('CodeParser', function ($http) {
-    var dbName = "";
-    var dbLang = "";
-    var dbFilename = "";
+    var dbName = "",
+        dbLang = "",
+        dbFilename = "",
+        dbStorage;
 
-    var fetchCode = function (tables) {
-      var dataObj = {data: []};
-      for(var table in tables) {
-        dataObj.data.push(tables[table]);
+    var fetchCode = function () {
+      var dataObj = {data: []}
+      for (table in dbStorage) {
+        dataObj.data.push(dbStorage[table]);
       }
-      console.log(dataObj);
+
+      var url;
+      switch (dbLang) {
+        case "mySQL":
+          url = '/update';
+          break;
+        case "Bookshelf":
+          url = '/bookshelf';
+          break;
+        case "Sequelize":
+          url = '/sequelize';
+          break;
+        default:
+          url = '/update';
+      }
 
       return $http({
-	method: 'POST',
-        url: '/update',
+        method: 'POST',
+        url: url,
         data : dataObj
       }).then(function (res) {
         //places data on editor
@@ -192,15 +212,17 @@ angular.module('DTBS.main')
       document.getElementById("download").download = dbFilename;
     };
 
-    var setDb = function (db) {
+    var update = function (db, storage) {
       dbName = db.name;
       dbLang = db.lang;
       dbFilename = db.fileName;
+      if (dbStorage) fetchCode();
+      else if (storage) dbStorage = storage;
     };
 
     return {
       fetchCode: fetchCode,
       saveCode: saveCode,
-      setDb: setDb
+      update: update
     };
   });

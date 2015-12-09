@@ -8,6 +8,13 @@ var sequelizeTypeDict = {
   'Char': 'STRING'
 };
 
+var bookshelfTypeDict = {
+  'Numeric': 'integer',
+  'String': 'string',
+  'DateTime': 'integer',
+  'Bit': 'integer'
+}
+
 module.exports = {
 
   parseTable: function (req, res, next) {
@@ -20,36 +27,36 @@ module.exports = {
   CREATE TABLE " + tables[i].name + " (\n";
 
       var keys = tables[i].attrs;
-      for(var key = 0; key < keys.length; key++){
+      for (var key = 0; key < keys.length; key++) {
         //Build structured string of SQL table's keys
         schema += "\
     " + keys[key].id + " " + keys[key].type;
 
         //NOTE: the order of these checks is important
         //size of key's value
-        if(keys[key].size) {
+        if (keys[key].size) {
           schema += "(" + keys[key].size + ")";
         }
 
         //primary key tracking
         console.log(keys[key]);
-        if(tables[i].primaryKey && tables[i].primaryKey.id === keys[key].id) {
+        if (tables[i].primaryKey && tables[i].primaryKey.id === keys[key].id) {
           schema += " PRIMARY KEY";
         }
 
         //NOT NULL for required keys
-        if(keys[key].default === "NOT NULL") {
+        if (keys[key].default === "NOT NULL") {
           schema += " " + keys[key].default;
         }
 
         //Auto incrementing keys
-        if(keys[key].attributes) {
-          for(var quality = 0; quality < keys[key].attributes.length; quality++) {
+        if (keys[key].attributes) {
+          for (var quality = 0; quality < keys[key].attributes.length; quality++) {
             schema += " " + keys[key].attributes[quality];
           }
         }
         //add comma if there are more keys
-        if(key !== keys.length -1){
+        if (key !== keys.length -1) {
           schema +=",";
         }
         schema += "\n";
@@ -72,16 +79,16 @@ module.exports = {
     scheme += 'var sequelize = new Sequelize("DB_name", "username", "DB_password");\n\n';
 
     var tables = req.body.data;
-    for(var i = 0; i < tables.length; i++){
+    for (var i = 0; i < tables.length; i++) {
       scheme += 'var ' + tables[i].name + ' = sequelize.define("' + tables[i].name + '", {\n';
 
       //TODO: keys here
       var keys = tables[i].attrs;
-      for(var key = 0; key < keys.length; key++){
+      for (var key = 0; key < keys.length; key++) {
         scheme += '\
   ' + keys[key].name + ': Sequelize.' + sequelizeTypeDict[keys[key].type];
 
-        if(key !== keys.length - 1) {
+        if (key !== keys.length - 1) {
           scheme += ',';
         }
         scheme += '\n';
@@ -94,42 +101,37 @@ module.exports = {
   },
 
   parseORMBookshelf: function (req, res, next) {
-    var tableList = req.body, relationship;
+    var tables = req.body.data, relationship;
 
-    var requires = "\
-      var knex = require('knex')({client: 'mysql', connection: process.env.MYSQL_DATABASE_CONNECTION }); \n\
-      var bookshelf = require('bookshelf')(knex);\n \n";
+    var schema = "var knex = require('knex')({client: 'mysql', connection: process.env.MYSQL_DATABASE_CONNECTION });\n";
+    schema += "var bookshelf = require('bookshelf')(knex);\n\n";
 
-    var bookshelfStr = _.reduce(tableList, function (str, item) {
-      relationship = item.hasMany ? "this.hasMany(" + item.hasMany + ")" : item.belongsToMany ?
-        "this.belongsToMany(" + item.belongsToMany + ")" : "this.belongsTo(" + item.belongsTo + ")";
-      return str + "\
-      db.knex.schema.hasTable('" + item.name.toLowerCase() + "').then(function(exists) { \n\
-        if (!exists) { \n\
-          db.knex.schema.createTable('" + item.name.toLowerCase() + "', function (table) { \n"
-           + _.reduce(item.attrs, function (str, attr) {
-                if (attr.primary) {
-                  return str + "            table." + attr.type.toLowerCase()
-                   + "('" + attr.name.toLowerCase() + "', " + attr.size + ").primary();" + "\n";
-                } else {
-                  return str + "            table." + attr.type.toLowerCase()
-                   + "('" + attr.name.toLowerCase() + "', " + attr.size + ");" + "\n";
-                }
-              }, "") + "\
-          }).then(function (table) { \n\
-            console.log('Created Table', table); \n\
-          }); \n\
-        } \n\
-      }); \n \n\
-      var " + item.name + " = bookshelf.Model.extend({ \n\
-        tableName: '" + item.name.toLowerCase() + "', \n\
-        " + (item.hasMany ? item.hasMany.toLowerCase() : item.belongsToMany ?
-              item.belongsToMany.toLowerCase() : item.belongsTo.toLowerCase()) +": function() { \n\
-            return " + relationship + "; \n\
-          } \n\
-        });\n \n";
-    }, "");
+    _.each(tables, function (table) {
+      schema += "db.knex.schema.hasTable('" + table.name.toLowerCase() + "').then(function(exists) {\n" +
+        "\tif (!exists) { \n\t\tdb.knex.schema.createTable('" + table.name.toLowerCase() + "', function (table) { \n";
+      _.each(table.attrs, function (attr) {
+        schema += "\t\t\ttable." + bookshelfTypeDict[attr.basicType] +  "('" + attr.id.toLowerCase() +
+          "', " + Number(attr.size) + ")";
+        if (attr.primary) schema += ".primary()";
+        schema += ";\n";
+      });
+      schema += "\t\t}).then(function (table) {\n\t\t\tconsole.log('Created Table', table);\n\t\t});\n\t}\n});\n\n";
+    });
 
-    res.send(requires + bookshelfStr, 200);
+    _.each(tables, function (table) {
+      relationship = table.hasMany ? "this.hasMany(" + table.hasMany + ")" :
+        table.belongsToMany ? "this.belongsToMany(" + table.belongsToMany + ")" :
+          table.belongsTo ? "this.belongsTo(" + table.belongsTo + ")" : null;
+
+      schema += "var " + table.name + " = bookshelf.Model.extend({\n\ttableName: '" + table.name.toLowerCase() + "'";
+      if (relationship !== null) {
+        schema += ",\n\t" + (table.hasMany ? table.hasMany.toLowerCase() :
+          table.belongsToMany ? table.belongsToMany.toLowerCase() : table.belongsTo.toLowerCase()) +
+          ": function () {\n\t\treturn " + relationship + "; \n\t}";
+      }
+      schema += "\n});\n\n";
+    });
+
+    res.send(schema, 200);
   }
 };

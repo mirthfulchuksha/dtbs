@@ -23,13 +23,22 @@
     <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
     <div class="standardFont" ng-view></div>
   <div class="super-wrap">
-    <div class="editor-wrapper grey">
+    <div class="editor-wrapper grey" ng-controller="FormController">
       <div class="navbar-header">
-	<a class="navbar-brand editor-head grey" href="#">your db code:</a>
+        <a class="navbar-brand editor-head grey" href="#">db code:</a>
       </div>
-      <form class="navbar-form navbar-left grey" role="search">
-	<a class="btn btn-default" role="button" id="download" ng-controller="FormController"
-	target="_self" href="" download="" ng-click="downloadCode()">Download</a>
+      <form class="navbar-form navbar-left grey dropdown" role="search">
+        <a class="btn btn-default" role="button" id="download"
+        target="_self" href="" download="" ng-click="downloadCode()">Download</a>
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          Output
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li><a href="#" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
+          <li><a href="#" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
+          <li><a href="#" ng-click="updateFactory('mySQL')">mySQL </a></li>
+        </ul>
       </form>
       <div id="editor">/* Your Output will appear here! */</div>
     </div>
@@ -39,11 +48,19 @@
       var editor = ace.edit("editor");
       editor.setTheme("ace/theme/monokai");
       editor.getSession().setMode("ace/mode/sql");
+      editor.session.setOptions({
+        tabSize: 2,
+        useSoftTabs: true
+      });
 
       $('#code_button').on('click', function(){
-	var state = parseInt($('.super-wrap').css('right'), 10) > -1;
-	$('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
-	$('#code_button').text((state ? '<<': '>>'));
+        var state = parseInt($('.super-wrap').css('right'), 10) > -1;
+        $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
+        $('#code_button').text((state ? '<<': '>>'));
+      });
+      $(".dropdown-menu li a").click(function(){
+        $(".dropdown-toggle").text($(this).text());
+        $(".dropdown-toggle").append('<span class="caret"></span>');
       });
   </script>
   </body>

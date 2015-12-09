@@ -11,32 +11,24 @@
     <modal title="Page Setup" visible="showModal" >
       <form role="form" ng-submit="updateFactory()">
         <div class="form-group">
-	  <label for="title">Title</label>
-	  <input type="title" class="form-control" id="title" ng-model="db.name"
-	  placeholder="Database title goes here">
-	</div>
+          <label for="title">Title</label>
+          <input type="title" class="form-control" id="title" ng-model="db.name"
+          placeholder="Database title goes here">
+        </div>
         <div class="form-group">
           <label for="type">Database Type</label>
           <div class="dropdown">
-	    <select ng-model='db.lang' class="form-control">
-	      <option value="mySQL">mySQL</option>
-	      <option value="Bookshelf">mySQL - Bookshelf</option>
-	      <option value="Sequelize">mySQL - Sequelize</option>
-	      <option value="Mongo">Mongo</option>
-	      <option value="Mongoose">Mongo - Mongoose</option>
-	    </select>
+            <select ng-model='db.lang' class="form-control">
+              <option value="mySQL">mySQL</option>
+              <option value="Bookshelf">mySQL - Bookshelf</option>
+              <option value="Sequelize">mySQL - Sequelize</option>
+              <option value="Mongo">Mongo</option>
+              <option value="Mongoose">Mongo - Mongoose</option>
+            </select>
           </div>
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
-    <script>
-    $(function(){
-      $(".dropdown-menu li a").click(function(){
-        $(".btn-info:first-child").text($(this).text());
-        $(".btn-info:first-child").val($(this).text());
-     });
-    });
-    </script>
     </modal>
   </div>
 </nav>
