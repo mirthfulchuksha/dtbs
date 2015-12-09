@@ -42,7 +42,6 @@ angular.module('DTBS.main')
               // push the table/field link onto the graph
               var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
               graph.links.push(fieldToTableLink);
-              console.log(graph.links);
             } 
           }
           return graph;
@@ -105,16 +104,16 @@ angular.module('DTBS.main')
 
           //Give the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
           force.on("tick", function () {
-              link.attr("x1", function (d) { return d.source.x; })
-                  .attr("y1", function (d) { return d.source.y; })
-                  .attr("x2", function (d) { return d.target.x; })
-                  .attr("y2", function (d) { return d.target.y; });
+            link.attr("x1", function (d) { return d.source.x; })
+                .attr("y1", function (d) { return d.source.y; })
+                .attr("x2", function (d) { return d.target.x; })
+                .attr("y2", function (d) { return d.target.y; });
 
-              d3.selectAll("circle").attr("cx", function (d) { return d.x; })
-                  .attr("cy", function (d) { return d.y; });
+            d3.selectAll("circle").attr("cx", function (d) { return d.x; })
+                .attr("cy", function (d) { return d.y; });
 
-              d3.selectAll("text").attr("x", function (d) { return d.x; })
-                  .attr("y", function (d) { return d.y; });
+            d3.selectAll("text").attr("x", function (d) { return d.x; })
+                .attr("y", function (d) { return d.y; });
           });
         };
         scope.$on('d3:new-data', function (e, data) {
