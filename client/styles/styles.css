@@ -27,6 +27,14 @@ input {
   z-index: 0;
 }
 
+.primaryKey {
+  color: red;
+}
+
+.editButtonContainer {
+  display: inline-block;
+}
+
 
 /*Editor Styles*/
 .super-wrap {

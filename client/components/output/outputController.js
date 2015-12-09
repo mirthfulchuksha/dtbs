@@ -130,10 +130,19 @@ angular.module('DTBS.main')
     };
 
     $scope.addTableAttrChildScope = function (keyArr, table, primaryKey) {
+      console.log($scope.selectedTable);
+      console.log(table);
       $scope.addTableAttr(keyArr, table);
       console.log("PK: ", primaryKey);
+
+      if(table.primaryKey !== primaryKey) {
+        $scope.changePrimaryKey(primaryKey, table);
+      }
       //is this the desired behavior
       $scope.keys = [];
+
+
+      //close window
       $scope.toggleKeyModal();
     };
 

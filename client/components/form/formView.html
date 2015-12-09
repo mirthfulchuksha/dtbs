@@ -1,10 +1,12 @@
 <div ng-controller='FormController'>
 
     <div ng-controller="TableController" class="container">
-      <h3>Make a Table</h3>
-      <button ng-click="toggleMyModal()" class="btn btn-default">Create</button>
-      <h3>Edit a Table</h3>
-      <button ng-click="toggleKeyModal()" class="btn btn-default">Edit Selected</button>
+      <div class="editButtonContainer">
+        <h3>Make a Table</h3>
+        <button ng-click="toggleMyModal()" class="btn btn-default">Create</button>
+        <h3>Edit a Table</h3>
+        <button ng-click="toggleKeyModal()" class="btn btn-default">Edit Selected</button>
+      </div>
         
       <tablemodal title="Table Create Form" visible="seeModal">
         <form role="form" ng-submit="save(table.name)" name="table_{{table.id}}_form">
@@ -19,7 +21,7 @@
     <br>
     <keymodal title="Add/Edit Fields" visible="seeKeyModal">
       <div ng-controller="OutputController">
-        <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">{{existingKey.id}}</div>
+        <div ng-repeat="existingKey in tableStorage[selectedTable].attrs" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">{{existingKey.id}}</div>
         <form>
           <button ng-click="addField()"> Add Field </button></br>
           <button ng-click="addForeignKey()">Add Foreign Key</button>

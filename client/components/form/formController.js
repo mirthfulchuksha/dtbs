@@ -34,6 +34,11 @@ angular.module('DTBS.main')
        var updatedData = angular.copy($scope.tableStorage);
        d3Data.push(updatedData);
       });
+      $scope.selectedTable = 0;
+    };
+
+    $scope.changePrimaryKey = function (newPK, table) {
+      $scope.tableStorage[table.id].primaryKey = newPK;
     };
 
     $scope.removeKeyFromTable = function (index, table) {
