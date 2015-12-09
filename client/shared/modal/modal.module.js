@@ -5,8 +5,22 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeP
   $scope.toggleModal = function(){
       $scope.showModal = !$scope.showModal;
   };
+
   $scope.db = {};
   $scope.updateFactory = function () {
+    switch ($scope.db.lang) {
+      case "mySQL":
+	$scope.db.fileName = $scope.db.lang + '_Schema.sql';
+	break;
+      case "Bookshelf":
+	$scope.db.fileName = $scope.db.lang + '_Schema.js';
+	break;
+      case "Sequelize":
+	$scope.db.fileName = $scope.db.lang + '_Schema.js';
+	break;
+      default:
+	$scope.db.fileName = $scope.db.lang + '_Schema.sql';
+    }
     CodeParser.setDb($scope.db);
   };
 }]);

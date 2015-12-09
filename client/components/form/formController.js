@@ -19,7 +19,7 @@ angular.module('DTBS.main')
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
     }
-    
+
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){
@@ -72,8 +72,8 @@ angular.module('DTBS.main')
       $scope.table.id = $scope.id;
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
-      $scope.table = {};     
-      //close window 
+      $scope.table = {};
+      //close window
       $scope.toggleMyModal();
       $scope.toggleKeyModal();
     };
@@ -86,16 +86,16 @@ angular.module('DTBS.main')
   }])
   .directive('tablemodal', function () {
     return {
-      template: '<div class="modal fade">' + 
-          '<div class="modal-dialog">' + 
-            '<div class="modal-content">' + 
-              '<div class="modal-header">' + 
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
-                '<h4 class="modal-title">{{ title }}</h4>' + 
-              '</div>' + 
-              '<div class="modal-body" ng-transclude></div>' + 
-            '</div>' + 
-          '</div>' + 
+      template: '<div class="modal fade">' +
+          '<div class="modal-dialog">' +
+            '<div class="modal-content">' +
+              '<div class="modal-header">' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                '<h4 class="modal-title">{{ title }}</h4>' +
+              '</div>' +
+              '<div class="modal-body" ng-transclude></div>' +
+            '</div>' +
+          '</div>' +
         '</div>',
       restrict: 'E',
       transclude: true,
@@ -128,6 +128,7 @@ angular.module('DTBS.main')
   .factory('CodeParser', function ($http) {
     var dbName = "";
     var dbLang = "";
+    var dbFilename = "";
 
     var fetchCode = function (tables) {
       var dataObj = {data: []};
@@ -154,43 +155,24 @@ angular.module('DTBS.main')
       var codeBase = {};
       var extension;
 
-      switch (dbLang) {
-	case "mySQL":
-	  extension = '.sql';
-	  break;
-	case "Bookshelf":
-	  extension = '.js';
-	  break;
-	case "Sequelize":
-	  extension = '.js';
-	  break;
-	default:
-	  extension = '.sql';
-      }
-
       codeBase.code = editor.getValue();
       codeBase.codeType = dbLang;
       codeBase.ext = extension;
 
-      return $http({
-	method: 'POST',
-	url: '/download',
-	data: codeBase
-      }).then(function (res) {
-	return res.data;
-      });
-    }
+      var formBlob = new Blob([codeBase.code], { type: 'text/plain'});
+      document.getElementById("download").href = window.URL.createObjectURL(formBlob);
+      document.getElementById("download").download = dbFilename;
+    };
 
     var setDb = function (db) {
       dbName = db.name;
       dbLang = db.lang;
+      dbFilename = db.fileName;
     };
 
     return {
       fetchCode: fetchCode,
       saveCode: saveCode,
-      setDb: setDb,
-      dbLang: dbLang,
-      dbName: dbName
+      setDb: setDb
     };
   });
