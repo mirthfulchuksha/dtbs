@@ -21,14 +21,16 @@
     <br>
     <keymodal title="Add/Edit Fields" visible="seeKeyModal">
       <div ng-controller="OutputController">
-        <div ng-repeat="existingKey in tableStorage[selectedTable].attrs" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">{{existingKey.id}}</div>
+        <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
+          <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
+        </div>
         <form>
           <button ng-click="addField()"> Add Field </button></br>
           <button ng-click="addForeignKey()">Add Foreign Key</button>
           <div ng-repeat="key in keys track by $index" class="border">
           
             <label>Column ID</label>
-              <input ng-model="keys[$index].id" type="text" placeholder="Column id here..."/>
+              <input ng-model="keys[$index].id" type="text" placeholder="Column id here..." required/>
 
             <label>Basic Type</label>
               <select ng-model="keys[$index].basicType"> 
@@ -63,8 +65,8 @@
 
           <div ng-repeat="fkey in foreignKeys track by $index" class="border">
             <h4>Select which table to connect:</h4>
-            <select>
-              <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
+            <select ng-model="foreignKeys[$index].origin">
+              <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.id}}</option>
             </select>
           </div>
 
@@ -75,7 +77,7 @@
             </select>
           </div>
 
-          <button ng-click="addTableAttrChildScope(keys, tableStorage[selectedTable], primaryKey)">Done</button>
+          <button ng-click="addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
           <button ng-click="deleteTable(table)" class="pull-right">Delete Table</button>
         </form>
       </div>

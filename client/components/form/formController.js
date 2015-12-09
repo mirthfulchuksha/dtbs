@@ -29,6 +29,7 @@ angular.module('DTBS.main')
 
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
+      console.log(table);
       keys.forEach(function (key){
        $scope.tableStorage[table.id].attrs.push(key);
        var updatedData = angular.copy($scope.tableStorage);
@@ -37,8 +38,19 @@ angular.module('DTBS.main')
       $scope.selectedTable = 0;
     };
 
-    $scope.changePrimaryKey = function (newPK, table) {
+    $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
+    };
+
+    $scope.changePrimaryKey = function (newPK, table) {
+      var foundKey;
+      $scope.tableStorage[table.id].attrs.forEach( function (key){
+        if(key.name === newPK){
+          foundKey = key;
+        }
+      });
+      console.log("newpk", foundKey);
+      $scope.tableStorage[table.id].primaryKey = foundKey;
     };
 
     $scope.removeKeyFromTable = function (index, table) {

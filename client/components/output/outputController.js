@@ -129,17 +129,29 @@ angular.module('DTBS.main')
       $scope.keys.splice(indexToDelete, 1);
     };
 
-    $scope.addTableAttrChildScope = function (keyArr, table, primaryKey) {
-      console.log($scope.selectedTable);
-      console.log(table);
-      $scope.addTableAttr(keyArr, table);
-      console.log("PK: ", primaryKey);
+    $scope.addTableAttrChildScope = function (keyArr, foreignKeyArr, table, primaryKey) {
+      console.log(arguments);
+      foreignKeyArr.forEach(function (fkey) {
+        fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey;
+        fkey.type = $scope.tableStorage[fkey.origin]
+      });
 
-      if(table.primaryKey !== primaryKey) {
+      $scope.addTableAttr(keyArr.concat(foreignKeyArr), table);
+
+      if(!table.primaryKey) {
+        keyArr.forEach( function (newKey){
+          console.log(newKey);
+          if(newKey.id === primaryKey){
+            $scope.addPrimaryKey(newKey, table);  
+          }
+        });
+      } else if(table.primaryKey.name !== primaryKey) {
+        console.log("new keyyyyyyy!", primaryKey);
         $scope.changePrimaryKey(primaryKey, table);
       }
       //is this the desired behavior
       $scope.keys = [];
+      $scope.foreignKeys =[];
 
 
       //close window
