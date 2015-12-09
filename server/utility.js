@@ -125,19 +125,5 @@ module.exports = {
     }, "");
 
     res.send(requires + bookshelfStr, 200);
-  },
-
-  download: function (req, res, next) {
-    var body = req.body.code;
-    file = req.body.codeType + "_Schema" + req.body.ext;
-
-    var stream = fs.createWriteStream(file);
-    stream.once('open', function(fd) {
-      stream.write(body);
-      stream.end();
-    });
-    res.download(file);
   }
-
-
 };
