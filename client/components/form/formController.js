@@ -90,8 +90,10 @@ angular.module('DTBS.main')
 
     //listener for selection event in d3 service to choose tables
     $scope.$on('d3:table-class', function (e, data) {
-      console.log("selecting ", data);
-      $scope.selectedTable = data;
+      //regex to extract the table number in case of additional classes
+      var parsedNum = data.match(/\d+/)[0];
+      console.log(parsedNum);
+      $scope.selectedTable = parsedNum;
     });
     //event listener for updating or server side calls on save (NOT WORKING)
     $scope.$watch('tableStorage', debounceUpdate, true);
