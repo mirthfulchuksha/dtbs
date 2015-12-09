@@ -11,18 +11,25 @@ angular.module('DTBS.main')
 
         // Function to format incoming data into nodes and links
         var dataBuilder = function (data, groupNumber) {
+          // initialize empty graph
           var graph = {nodes: [], links: []};
-          var tableCounter = 0;
-          data.forEach(function (table) {
+          // loop through tables
+          for (var i = 0; i < data.length; i++) {
+            var table = data[i];
+            // build up the central table node
             var centralNode = {
               name: table.name,
               group: groupNumber++,
               size: 32,
               id: table.id
             };
+            // push the central node onto the graph
             graph.nodes.push(centralNode);
-            var fieldCounter = 0;
-            table.attrs.forEach(function (field) {
+            var currentLength = graph.nodes.length-1;
+            var fieldCounter = i;
+            // loop through the current table's fields
+            for (var j = 0; j < table.attrs.length; j++) {
+              var field = table.attrs[j];
               fieldCounter++;
               var fieldNode = {
                 name: field.id,
@@ -30,13 +37,14 @@ angular.module('DTBS.main')
                 size: 16,
                 id: table.id
               };
+              // push the field node onto the graph
               graph.nodes.push(fieldNode);
-              var fieldToTableLink = {"source": tableCounter, "target": fieldCounter, "value": 40};
+              // push the table/field link onto the graph
+              var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
               graph.links.push(fieldToTableLink);
               console.log(graph.links);
-            });
-            tableCounter++;
-          });
+            } 
+          }
           return graph;
         };
 
