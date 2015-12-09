@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', function (d3Service, d3TableClass, d3Data) {
+.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', 'd3Save', function (d3Service, d3TableClass, d3Data, d3Save) {
   return {
     restrict: 'EA',
     scope: {},
@@ -54,6 +54,7 @@ angular.module('DTBS.main')
         // Create the SVG
         var svg = d3.select(element[0])
         .append("svg")
+        .attr('id', '#canvas')
         .style('width', '100%')
         .style('height', height);
         
@@ -123,8 +124,15 @@ angular.module('DTBS.main')
                 .attr("y", function (d) { return d.y; });
           });
         };
+        
         var click = function (node) {
+          // get the class name
           var className = $(node).attr('class');
+          // highlight all nodes of that class
+              d3.select(node).select("circle").transition()
+                  .duration(750)
+                  .attr("r", 16)
+                  .style("fill", "lightsteelblue");
           var classToSend = angular.copy(className);
           d3TableClass.push(classToSend);
         };
@@ -139,6 +147,9 @@ angular.module('DTBS.main')
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
+        });
+        scope.$on('d3:save-table', function (e, data) {
+          console.log("request to save!");
         });
       });
     }};
