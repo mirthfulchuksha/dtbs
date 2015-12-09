@@ -60,7 +60,12 @@ input {
   width: 100%;
   height: 100%;
 }
-.link {
+.border {
+  border: solid #ccc 1px;
+  border-radius: 5px;
+  margin: 5px
+  padding: 5px;
+}.link {
   stroke: #ccc;
 }
 
