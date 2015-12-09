@@ -17,8 +17,6 @@ angular.module('DTBS.main')
     };
 
     $scope.deleteTable = function (table) {
-      var tableToDelete = angular.copy(table.name);
-      d3DeleteTable.push(tableToDelete);
       delete $scope.tableStorage[table.id];
     }
     
@@ -26,7 +24,7 @@ angular.module('DTBS.main')
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){
        $scope.tableStorage[table.id].attrs.push(key);
-       var updatedData = angular.copy(tableStorage);
+       var updatedData = angular.copy($scope.tableStorage);
        d3Data.push(updatedData);
        console.log($scope.tableStorage, "table storage");
       });

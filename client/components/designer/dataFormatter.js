@@ -1,39 +1,68 @@
-var data = {
-      "name": "Users",
-      "id": 1,
-      "attrs": [
-        {
-          "id": "user_id",
-          "basicType": "Numeric",
-          "type": "INT",
-          "size": "10",
-          "attributes": [
-            "AUTO_INCREMENT"
-          ],
-          "default": "NOT NULL"
-        },
-        {
-          "id": "user_name",
-          "basicType": "String",
-          "type": "VARCHAR",
-          "size": "15",
-          "attributes": [
-            "CHARACTER SET"
-          ],
-          "default": "NOT NULL"
-        },
-        {
-          "id": "subject_id",
-          "basicType": "Numeric",
-          "type": "INT",
-          "size": "25",
-          "attributes": [
-            "ZEROFILL"
-          ],
-          "default": "NULL"
-        }
-      ]
-    };
+var data = 
+[
+  {
+    "name": "Users",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "user_id",
+        "basicType": "Numeric",
+        "type": "INT",
+        "size": "10",
+        "attributes": [
+          "AUTO_INCREMENT"
+        ],
+        "default": "NOT NULL"
+      },
+      {
+        "id": "user_name",
+        "basicType": "String",
+        "type": "VARCHAR",
+        "size": "15",
+        "attributes": [
+          "CHARACTER SET"
+        ],
+        "default": "NOT NULL"
+      },
+      {
+        "id": "subject_id",
+        "basicType": "Numeric",
+        "type": "INT",
+        "size": "25",
+        "attributes": [
+          "ZEROFILL"
+        ],
+        "default": "NULL"
+      }
+    ]
+  },
+  {
+    "name": "Classes",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "class_id",
+        "basicType": "Numeric",
+        "type": "INT",
+        "size": "10",
+        "attributes": [
+          "AUTO_INCREMENT"
+        ],
+        "default": "NOT NULL"
+      },
+      {
+        "id": "class_name",
+        "basicType": "String",
+        "type": "VARCHAR",
+        "size": "15",
+        "attributes": [
+          "CHARACTER SET"
+        ],
+        "default": "NOT NULL"
+      }
+    ]
+  }
+];
 var dummyData = {
           "nodes":[
             {"name": "Users", "group": 1, "size": 32},
@@ -59,25 +88,27 @@ var dummyData = {
 var allTables = {nodes: [], links: []};
 var groupNumber = 0;
 var dataBuilder = function (data) {
-  var centralNode = {
-    name: data.name,
-    group: groupNumber++,
-    size: 32,
-    id: data.id
-  };
-  allTables.nodes.push(centralNode);
-  var fieldCounter = 0;
-  data.attrs.forEach(function (field) {
-    fieldCounter++;
-    var fieldNode = {
-      name: field.id,
-      group: groupNumber,
-      size: 16,
-      id: data.id
+  data.forEach(function (table) {
+    var centralNode = {
+      name: table.name,
+      group: groupNumber++,
+      size: 32,
+      id: table.id
     };
-    allTables.nodes.push(fieldNode);
-      var fieldToTableLink = {"source": 0, "target": fieldCounter, "value": 40};
-    allTables.links.push(fieldToTableLink);
+    allTables.nodes.push(centralNode);
+    var fieldCounter = 0;
+    table.attrs.forEach(function (field) {
+      fieldCounter++;
+      var fieldNode = {
+        name: field.id,
+        group: groupNumber,
+        size: 16,
+        id: table.id
+      };
+      allTables.nodes.push(fieldNode);
+        var fieldToTableLink = {"source": 0, "target": fieldCounter, "value": 40};
+      allTables.links.push(fieldToTableLink);
+    });
   });
 };
 

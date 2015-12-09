@@ -9,44 +9,33 @@ angular.module('DTBS.main')
         // Constants for the SVG
         var width = 640, height = 350;
 
-        // Global array to track table classes for deletion
-        scope.schemas = [];
-
-        // Global object to track items within the layout
-        var graph = {nodes: [], links: []};
-
-        // Grouping variable for table clusters
-        var groupNumber = 0;
-
         // Function to format incoming data into nodes and links
-        var dataBuilder = function (data) {
-          // Creates the larger table node
-          var centralNode = {
-            name: data.name,
-            group: groupNumber++,
-            size: 32,
-            id: data.id
-          };
-          graph.nodes.push(centralNode);
-
-          // Index of where to place the field nodes for the table
-          var fieldCounter = graph.nodes.length-1;
-          data.attrs.forEach(function (field) {
-            // Slot the field in the next node position
-            fieldCounter++;
-            // Build up the node
-            var fieldNode = {
-              name: field.id,
-              group: groupNumber,
-              size: 16,
-              id: data.id
+        var dataBuilder = function (data, graph, groupNumber) {
+          var tableCounter = 0;
+          data.forEach(function (table) {
+            var centralNode = {
+              name: table.name,
+              group: groupNumber++,
+              size: 32,
+              id: table.id
             };
-
-            graph.nodes.push(fieldNode);
-            // Create the child links for the table
-              var fieldToTableLink = {"source": 0, "target": fieldCounter, "value": 40};
-            graph.links.push(fieldToTableLink);
+            graph.nodes.push(centralNode);
+            var fieldCounter = 0;
+            table.attrs.forEach(function (field) {
+              fieldCounter++;
+              var fieldNode = {
+                name: field.id,
+                group: groupNumber,
+                size: 16,
+                id: table.id
+              };
+              graph.nodes.push(fieldNode);
+              var fieldToTableLink = {"source": tableCounter, "target": fieldCounter, "value": 40};
+              graph.links.push(fieldToTableLink);
+            });
+            tableCounter++;
           });
+          console.log(graph);
         };
 
         // Create the SVG
@@ -55,22 +44,26 @@ angular.module('DTBS.main')
         .style('width', '100%')
         .style('height', height);
         
-        // Set up the colour scale
-        var color = d3.scale.category20();
-        //Set up the force layout
-        var force = d3.layout.force()
+       
+        scope.render = function (tableData) {
+          // Global array to track table classes for deletion
+          scope.schemas = [];
+
+          // Global object to track items within the layout
+          var graph = {nodes: [], links: []};
+
+          // Grouping variable for table clusters
+          var groupNumber = 0;
+          // Set up the colour scale
+          var color = d3.scale.category20();
+          //Set up the force layout
+          var force = d3.layout.force()
             .charge(-500)
             //.linkDistance(80)
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
-       
-        scope.render = function (tableData, tableExists) {
-          // if the table already exists, delete that table from the graph
-          if (tableExists) {
-            // Reset graph
-          }
 
-          dataBuilder(tableData);
+          dataBuilder(tableData, graph, groupNumber);
           var svg = d3.select("svg");
 
           //Creates the graph data structure out of the json data
@@ -117,26 +110,14 @@ angular.module('DTBS.main')
                   .attr("y", function (d) { return d.y; });
           });
         };
-        scope.$on('d3:update-table', function (e, data) {
-          // when new data comes in, check array of all the table names
-          // if new table (i.e. table is not in the array), draw new table
-          if (scope.schemas.indexOf(data.name) === -1) {
-            // push table onto schemas array
-            scope.schemas.push(data.name);
-            // pass false, data into render function
-            scope.render(data, false);
-          } else {
-            // if existing table (name is already in the array), delete then re-draw that table
-            // pass true, data
-            scope.render(data, true);
-          }
-        });
-        scope.$on('d3:delete-table', function (e, data) {
-          d3.selectAll(data).remove();
-        });
         scope.$on('d3:new-data', function (e, data) {
           // re do force layout with new data
-          scope.render(data);
+          var dataArr = [];
+          for (var key in data) {
+            dataArr.push(data[key]);
+          }
+          svg.selectAll("*").remove();
+          scope.render(dataArr);
         });
       });
     }};
