@@ -1,116 +1,122 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3UpdateTable', function (d3Service, d3UpdateTable) {
+.directive('d3Bars', ['d3Service', 'd3UpdateTable', 'd3Data', function (d3Service, d3UpdateTable, d3Data) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
-        var width = 640,
-        height = 350;
-        scope.schemaIds = [];
+        // Constants for the SVG
+        var width = 640, height = 350;
 
+        // Function to format incoming data into nodes and links
+        var dataBuilder = function (data, groupNumber) {
+          var graph = {nodes: [], links: []};
+          var tableCounter = 0;
+          data.forEach(function (table) {
+            var centralNode = {
+              name: table.name,
+              group: groupNumber++,
+              size: 32,
+              id: table.id
+            };
+            graph.nodes.push(centralNode);
+            var fieldCounter = 0;
+            table.attrs.forEach(function (field) {
+              fieldCounter++;
+              var fieldNode = {
+                name: field.id,
+                group: groupNumber,
+                size: 16,
+                id: table.id
+              };
+              graph.nodes.push(fieldNode);
+              var fieldToTableLink = {"source": tableCounter, "target": fieldCounter, "value": 40};
+              graph.links.push(fieldToTableLink);
+              console.log(graph.links);
+            });
+            tableCounter++;
+          });
+          return graph;
+        };
+
+        // Create the SVG
         var svg = d3.select(element[0])
         .append("svg")
         .style('width', '100%')
         .style('height', height);
         
-        scope.columns = [
-            { head: 'Field',
-              html: function(r) { return r.id; } },
-            { head: 'Type',
-              html: function(r) { return r.type; } }
-        ];
-        var dataBuilder = function (data) {
-          var cols = [];
-          data.attrs.forEach(function (col) {
-            var row = {};
-            row["id"] = col.id;
-            row["type"] = col.type;
-            cols.push(row);
-          });
-          return cols;
-        };
+       
+        scope.render = function (tableData) {
+          // Global array to track table classes for deletion
+          scope.schemas = [];
 
-        
-        scope.render = function (tableData, tableExists) {
-          // if the table already exists, delete that table
-          if (tableExists) {
-            d3.select("#tableID"+tableData.id).remove();
-          }
+          // Grouping variable for table clusters
+          var groupNumber = 0;
+          // Set up the colour scale
+          var color = d3.scale.category20();
+          //Set up the force layout
+          var force = d3.layout.force()
+            .charge(-500)
+            //.linkDistance(80)
+            .linkDistance(function(d) { return  d.value/2; }) 
+            .size([width, height]);
 
-          var formattedData = dataBuilder(tableData);
-
+          var graph = dataBuilder(tableData, groupNumber);
           var svg = d3.select("svg");
-          // svg.selectAll("*").remove();
-          var table = svg.append("foreignObject")
-            .attr('id', "tableID"+tableData.id)
-            .append("xhtml:body");
-          table.append("table");
-            // append header row
-          table.append('thead').append('tr')
-            .selectAll('th')
-            .data(scope.columns).enter()
-            .append('th')
-            .text(function(d) {
-              return d.head;
-            });
 
-          // append body rows
-          table.append('tbody')
-            .selectAll('tr')
-            .data(formattedData).enter()
-            .append('tr')
-            .selectAll('td')
-            .data(function(row, i) {
-              // evaluate column objects against the current row
-              return scope.columns.map(function (c) {
-                var cell = {};
-                d3.keys(c).forEach(function(k) {
-                  cell[k] = typeof c[k] == 'function' ? c[k](row, i) : c[k];
-                });
-                return cell;
-              });
-            }).enter()
-            .append('td')
-            .html(function (d) {
-              return d.html;
-            });
-          scope.dragTable();
-        };
+          //Creates the graph data structure out of the json data
+          force.nodes(graph.nodes)
+              .links(graph.links)
+              .start();
 
-        scope.dragTable = function () {
-          var table = d3.selectAll('foreignObject')
-          var drag = d3.behavior.drag();
+          //Create all the line svgs but without locations yet
+          var link = svg.selectAll(".link")
+              .data(graph.links)
+              .enter().append("line")
+              .attr("class", "link");
 
-          drag.on('dragstart', function(){
-            d3.event.sourceEvent.stopPropagation(); 
-            d3.event.sourceEvent.preventDefault(); 
-          }); 
+          var node = svg.selectAll(".node")
+              .data(graph.nodes)
+              .enter().append("g")
+              .attr("class", "node")
+              .attr("class", tableData.name)
+              .call(force.drag);
 
-          drag.on('drag', function(d){
-            var x = d3.event.x; 
-            var y = d3.event.y; 
-            d3.select(this).attr('x', x).attr('y', y);
+          // append the node
+          node.append("circle")
+              .attr("r", function (d) { return d.size/2; })
+              .style("fill", function (d) {
+              return color(d.group);
+          })
+          // append the field/table name
+          node.append("text")
+                .attr("dx", 10)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.name });
+
+          //Give the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
+          force.on("tick", function () {
+              link.attr("x1", function (d) { return d.source.x; })
+                  .attr("y1", function (d) { return d.source.y; })
+                  .attr("x2", function (d) { return d.target.x; })
+                  .attr("y2", function (d) { return d.target.y; });
+
+              d3.selectAll("circle").attr("cx", function (d) { return d.x; })
+                  .attr("cy", function (d) { return d.y; });
+
+              d3.selectAll("text").attr("x", function (d) { return d.x; })
+                  .attr("y", function (d) { return d.y; });
           });
-          table.call(drag);
         };
-        scope.$on('d3:update-table', function (e, data) {
-          // when new data comes in, check array of all the table ids
-          // if new table (i.e. id is not in the array), draw new table
-          if (scope.schemaIds.indexOf(data.id) === -1) {
-            // push id onto ids array
-            scope.schemaIds.push(data.id);
-            // pass false, data into render function
-            scope.render(data, false);
-          } else {
-            // if existing table (id is already in the array), delete then re-draw that table
-            // pass true, data
-            scope.render(data, true);
+        scope.$on('d3:new-data', function (e, data) {
+          // re do force layout with new data
+          var dataArr = [];
+          for (var key in data) {
+            dataArr.push(data[key]);
           }
-        });
-        scope.$on('d3:delete-table', function (e, data) {
-          d3.select("#tableID"+data).remove();
+          svg.selectAll("*").remove();
+          scope.render(dataArr);
         });
       });
     }};

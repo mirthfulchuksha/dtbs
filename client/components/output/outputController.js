@@ -128,8 +128,6 @@ angular.module('DTBS.main')
       $scope.addTableAttr(keyArr, table);
       //is this the desired behavior
       $scope.keys = [];
-      var data = angular.copy(table);
-      d3UpdateTable.push(data);
     };
 
   }])
