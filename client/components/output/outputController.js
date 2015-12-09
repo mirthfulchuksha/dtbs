@@ -2,6 +2,7 @@ angular.module('DTBS.main')
 .controller('OutputController', ['$scope', 'd3UpdateTable', function ($scope, d3UpdateTable) {
     //child scope function needed to clear the forms on submit
     $scope.keys = [];
+    $scope.foreignKeys = [];
 
     $scope.options = { 
       Numeric: [
@@ -119,15 +120,21 @@ angular.module('DTBS.main')
       $scope.keys.push({});
     };
 
+    $scope.addForeignKey = function () {
+      $scope.foreignKeys.push({});
+    };
+
     $scope.cancelAdd = function (indexToDelete){
       console.log(indexToDelete);
       $scope.keys.splice(indexToDelete, 1);
     };
 
-    $scope.addTableAttrChildScope = function (keyArr, table) {
+    $scope.addTableAttrChildScope = function (keyArr, table, primaryKey) {
       $scope.addTableAttr(keyArr, table);
+      console.log("PK: ", primaryKey);
       //is this the desired behavior
       $scope.keys = [];
+      $scope.toggleKeyModal();
     };
 
   }])
