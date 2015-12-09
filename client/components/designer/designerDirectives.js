@@ -10,7 +10,8 @@ angular.module('DTBS.main')
         var width = 640, height = 350;
 
         // Function to format incoming data into nodes and links
-        var dataBuilder = function (data, graph, groupNumber) {
+        var dataBuilder = function (data, groupNumber) {
+          var graph = {nodes: [], links: []};
           var tableCounter = 0;
           data.forEach(function (table) {
             var centralNode = {
@@ -32,10 +33,11 @@ angular.module('DTBS.main')
               graph.nodes.push(fieldNode);
               var fieldToTableLink = {"source": tableCounter, "target": fieldCounter, "value": 40};
               graph.links.push(fieldToTableLink);
+              console.log(graph.links);
             });
             tableCounter++;
           });
-          console.log(graph);
+          return graph;
         };
 
         // Create the SVG
@@ -49,9 +51,6 @@ angular.module('DTBS.main')
           // Global array to track table classes for deletion
           scope.schemas = [];
 
-          // Global object to track items within the layout
-          var graph = {nodes: [], links: []};
-
           // Grouping variable for table clusters
           var groupNumber = 0;
           // Set up the colour scale
@@ -63,7 +62,7 @@ angular.module('DTBS.main')
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
-          dataBuilder(tableData, graph, groupNumber);
+          var graph = dataBuilder(tableData, groupNumber);
           var svg = d3.select("svg");
 
           //Creates the graph data structure out of the json data
