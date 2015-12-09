@@ -31,6 +31,12 @@ module.exports = {
           schema += "(" + keys[key].size + ")";
         }
 
+        //primary key tracking
+        console.log(keys[key]);
+        if(tables[i].primaryKey && tables[i].primaryKey.id === keys[key].id) {
+          schema += " PRIMARY KEY";
+        }
+
         //NOT NULL for required keys
         if(keys[key].default === "NOT NULL") {
           schema += " " + keys[key].default;

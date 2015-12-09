@@ -1,5 +1,11 @@
 angular.module('DTBS.main')
-.controller('FormController', ['$scope', '$timeout', 'CodeParser', 'd3Data', function ($scope, $timeout, CodeParser, d3Data) {
+.controller('FormController', [
+  '$scope', 
+  '$timeout', 
+  'CodeParser', 
+  'd3Data', 
+  'd3TableClass', 
+  function ($scope, $timeout, CodeParser, d3Data, d3TableClass) {
     //object for table storage
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
@@ -14,11 +20,13 @@ angular.module('DTBS.main')
 
     $scope.addTable = function (table) {
       $scope.tableStorage[table.id] = table;
+      //set selected table to allow for correcting editing window
       $scope.selectedTable = table.id;
     };
 
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
+      $scope.toggleKeyModal();
     }
 
     //parent scope function to add keys to tables
@@ -28,6 +36,22 @@ angular.module('DTBS.main')
        var updatedData = angular.copy($scope.tableStorage);
        d3Data.push(updatedData);
       });
+      $scope.selectedTable = 0;
+    };
+
+    $scope.addPrimaryKey = function (newPK, table){
+      $scope.tableStorage[table.id].primaryKey = newPK;
+    };
+
+    $scope.changePrimaryKey = function (newPK, table) {
+      var foundKey;
+      $scope.tableStorage[table.id].attrs.forEach( function (key){
+        if(key.name === newPK){
+          foundKey = key;
+        }
+      });
+      console.log("newpk", foundKey);
+      $scope.tableStorage[table.id].primaryKey = foundKey;
     };
 
     $scope.removeKeyFromTable = function (index, table) {
@@ -43,14 +67,13 @@ angular.module('DTBS.main')
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
-       console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
+       //console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
        CodeParser.fetchCode($scope.tableStorage);
      } else {
        console.log("Tried to save updates to item #" + ($scope.tableStorage.length) + " but the form is invalid.");
      }
     };
     var debounceUpdate = function(newVal, oldVal) {
-      console.log("debouncing");
      if (newVal != oldVal) {
       //waits for timeout to apply the changes on the server side
        if (timeout) {
@@ -60,6 +83,11 @@ angular.module('DTBS.main')
      }
     };
 
+    //listener for selection event in d3 service to choose tables
+    $scope.$on('d3:table-class', function (e, data) {
+      console.log("selecting ", data);
+      $scope.selectedTable = data;
+    });
     //event listener for updating or server side calls on save (NOT WORKING)
     $scope.$watch('tableStorage', debounceUpdate, true);
 
@@ -73,7 +101,7 @@ angular.module('DTBS.main')
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
       $scope.table = {};
-      //close window
+      //close window and open key modal
       $scope.toggleMyModal();
       $scope.toggleKeyModal();
     };

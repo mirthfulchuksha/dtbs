@@ -22,6 +22,9 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeP
 	$scope.db.fileName = $scope.db.lang + '_Schema.sql';
     }
     CodeParser.setDb($scope.db);
+
+    //close window : DOESNT WORK
+    $scope.toggleModal();
   };
 }]);
 

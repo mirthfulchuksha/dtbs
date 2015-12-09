@@ -2,6 +2,7 @@ angular.module('DTBS.main')
 .controller('OutputController', ['$scope', 'd3UpdateTable', function ($scope, d3UpdateTable) {
     //child scope function needed to clear the forms on submit
     $scope.keys = [];
+    $scope.foreignKeys = [];
 
     $scope.options = { 
       Numeric: [
@@ -119,15 +120,41 @@ angular.module('DTBS.main')
       $scope.keys.push({});
     };
 
+    $scope.addForeignKey = function () {
+      $scope.foreignKeys.push({});
+    };
+
     $scope.cancelAdd = function (indexToDelete){
-      console.log(indexToDelete);
       $scope.keys.splice(indexToDelete, 1);
     };
 
-    $scope.addTableAttrChildScope = function (keyArr, table) {
-      $scope.addTableAttr(keyArr, table);
+    $scope.addTableAttrChildScope = function (keyArr, foreignKeyArr, table, primaryKey) {
+      foreignKeyArr.forEach(function (fkey) {
+        fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey.id;
+        fkey.type = $scope.tableStorage[fkey.origin].primaryKey.type;
+      });
+
+      $scope.addTableAttr(keyArr.concat(foreignKeyArr), table);
+
+      //if(!table.primaryKey) {
+        keyArr.forEach( function (newKey){
+          console.log(newKey);
+          if(newKey.id === primaryKey){
+            $scope.addPrimaryKey(newKey, table);  
+          }
+        });
+      // } else if(table.primaryKey.id !== primaryKey) {
+      //   console.log(table.primaryKey.id);
+      //   console.log("new keyyyyyyy!", $scope.primaryKey);
+      //   $scope.changePrimaryKey($scope.primaryKey, table);
+      // }
       //is this the desired behavior
       $scope.keys = [];
+      $scope.foreignKeys =[];
+
+
+      //close window
+      $scope.toggleKeyModal();
     };
 
   }])
