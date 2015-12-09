@@ -125,15 +125,13 @@ angular.module('DTBS.main')
     };
 
     $scope.cancelAdd = function (indexToDelete){
-      console.log(indexToDelete);
       $scope.keys.splice(indexToDelete, 1);
     };
 
     $scope.addTableAttrChildScope = function (keyArr, foreignKeyArr, table, primaryKey) {
-      console.log(arguments);
       foreignKeyArr.forEach(function (fkey) {
-        fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey;
-        fkey.type = $scope.tableStorage[fkey.origin]
+        fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey.id;
+        fkey.type = $scope.tableStorage[fkey.origin].primaryKey.type;
       });
 
       $scope.addTableAttr(keyArr.concat(foreignKeyArr), table);

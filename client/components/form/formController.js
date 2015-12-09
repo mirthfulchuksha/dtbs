@@ -20,16 +20,17 @@ angular.module('DTBS.main')
 
     $scope.addTable = function (table) {
       $scope.tableStorage[table.id] = table;
+      //set selected table to allow for correcting editing window
       $scope.selectedTable = table.id;
     };
 
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
+      $scope.toggleKeyModal();
     }
 
     //parent scope function to add keys to tables
     $scope.addTableAttr = function (keys, table) {
-      console.log(table);
       keys.forEach(function (key){
        $scope.tableStorage[table.id].attrs.push(key);
        var updatedData = angular.copy($scope.tableStorage);
@@ -73,7 +74,6 @@ angular.module('DTBS.main')
      }
     };
     var debounceUpdate = function(newVal, oldVal) {
-      //console.log("debouncing");
      if (newVal != oldVal) {
       //waits for timeout to apply the changes on the server side
        if (timeout) {
@@ -83,7 +83,7 @@ angular.module('DTBS.main')
      }
     };
 
-
+    //listener for selection event in d3 service to choose tables
     $scope.$on('d3:table-class', function (e, data) {
       console.log("selecting ", data);
       $scope.selectedTable = data;
@@ -101,7 +101,7 @@ angular.module('DTBS.main')
       $scope.table.attrs = [];
       $scope.addTable($scope.table);
       $scope.table = {};
-      //close window
+      //close window and open key modal
       $scope.toggleMyModal();
       $scope.toggleKeyModal();
     };

@@ -73,12 +73,12 @@
           <div>
             <h4>Choose the table's primary key</h4>
             <select ng-model="primaryKey">
-              <option ng-repeat="existingKey in keys track by $index">{{existingKey.id}}</option>
+              <option ng-repeat="possibleKey in tableStorage[selectedTable].attrs.concat(keys) track by $index">{{possibleKey.id}}</option>
             </select>
           </div>
 
           <button ng-click="addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
-          <button ng-click="deleteTable(table)" class="pull-right">Delete Table</button>
+          <button ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
         </form>
       </div>
     </keymodal>
