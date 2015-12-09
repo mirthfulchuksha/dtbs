@@ -23,7 +23,7 @@ module.exports = {
       for(var key = 0; key < keys.length; key++){
         //Build structured string of SQL table's keys
         schema += "\
-    " + keys[key].name + " " + keys[key].type;
+    " + keys[key].id + " " + keys[key].type;
 
         //NOTE: the order of these checks is important
         //size of key's value

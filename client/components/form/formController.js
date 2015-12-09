@@ -5,7 +5,7 @@ angular.module('DTBS.main')
     //incrementing id for table creation in child scopes
     $scope.id = 0;
     $scope.db = {};
-
+    $scope.selectedTable = 0;
     var secondsToWaitBeforeSave = 0;
 
     $scope.downloadCode = function () {
@@ -14,6 +14,7 @@ angular.module('DTBS.main')
 
     $scope.addTable = function (table) {
       $scope.tableStorage[table.id] = table;
+      $scope.selectedTable = table.id;
     };
 
     $scope.deleteTable = function (table) {

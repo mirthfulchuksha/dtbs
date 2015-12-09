@@ -16,7 +16,8 @@
     </div>
     <br>
     <keymodal title="Add/Edit Fields" visible="seeKeyModal">
-      <div ng-repeat="table in tableStorage" ng-controller="OutputController">
+      <div ng-controller="OutputController">
+        <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">{{existingKey.id}}</div>
         <form>
           <button ng-click="addField()"> Add Field </button></br>
           <div ng-repeat="key in keys track by $index" class="border">
@@ -55,7 +56,7 @@
 
           </div>
 
-          <button ng-click="addTableAttrChildScope(keys, table)">Done</button>
+          <button ng-click="addTableAttrChildScope(keys, tableStorage[selectedTable])">Done</button>
           <button ng-click="deleteTable(table)" class="pull-right">Delete Table</button>
         </form>
       </div>
