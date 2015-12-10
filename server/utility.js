@@ -26,9 +26,16 @@ module.exports = {
       schema += "\
   CREATE TABLE " + tables[i].name + " (\n";
 
+      //need to keep track of foreign keys to add references at the end
       var keys = tables[i].attrs;
+      var foreignKeys = [];
       for (var key = 0; key < keys.length; key++) {
         //Build structured string of SQL table's keys
+        if(keys[key].origin){
+          foreignKeys.push(keys[key]);
+          console.log("found a fkey", foreignKeys);
+        }
+
         schema += "\
     " + keys[key].id + " " + keys[key].type;
 
@@ -39,7 +46,6 @@ module.exports = {
         }
 
         //primary key tracking
-        console.log(keys[key]);
         if (tables[i].primaryKey && tables[i].primaryKey.id === keys[key].id) {
           schema += " PRIMARY KEY";
         }
@@ -56,8 +62,17 @@ module.exports = {
           }
         }
         //add comma if there are more keys
-        if (key !== keys.length -1) {
+        if (key !== keys.length -1 || foreignKeys.length > 0) {
           schema +=",";
+        }
+        schema += "\n";
+      }
+
+      for(var j = 0; j < foreignKeys.length; j++){
+        schema += "\
+    FOREIGN KEY (" + foreignKeys[j].id + ") REFERENCES " + tables[+(foreignKeys[j].origin) - 1].name + "(" + tables[+(foreignKeys[j].origin) - 1].primaryKey.id + ")";
+        if(j !== foreignKeys.length - 1){
+          schema += ",";
         }
         schema += "\n";
       }

@@ -31,6 +31,10 @@ input {
   color: red;
 }
 
+.editTableTitle {
+  text-align: center;
+}
+
 .editButtonContainer {
   display: inline-block;
 }
