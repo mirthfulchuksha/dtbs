@@ -134,15 +134,16 @@ angular.module('DTBS.main')
         fkey.type = $scope.tableStorage[fkey.origin].primaryKey.type;
       });
 
-      console.log($scope.selectedTable);
-      console.log("old keys", $scope.tableStorage[$scope.selectedTable].attrs);
-        keyArr.forEach( function (newKey){
-          console.log(newKey);
-          if(newKey.id === primaryKey){
-            $scope.addPrimaryKey(newKey, table);  
-          }
-        });
-      $scope.addTableAttr(keyArr.concat(foreignKeyArr), table);
+      var pkeyIndex = 0;
+      $scope.tableStorage[$scope.selectedTable].attrs.concat(keyArr).forEach( function (newKey, index){
+        console.log(newKey);
+        if(newKey.id === primaryKey){
+          pkeyIndex = index;
+          $scope.addPrimaryKey(newKey, table);  
+        }
+      });
+      console.log($scope.tableStorage);
+      $scope.addTableAttr(keyArr.concat(foreignKeyArr), table, pkeyIndex);
       // } else if(table.primaryKey.id !== primaryKey) {
       //   console.log(table.primaryKey.id);
       //   console.log("new keyyyyyyy!", $scope.primaryKey);
