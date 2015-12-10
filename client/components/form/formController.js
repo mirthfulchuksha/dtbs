@@ -31,6 +31,7 @@ angular.module('DTBS.main')
 
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
+      $scope.interactd3();
       $scope.toggleKeyModal();
     };
 
@@ -41,11 +42,16 @@ angular.module('DTBS.main')
        // var updatedData = angular.copy($scope.tableStorage);
        // d3Data.push(updatedData);
       });
+      //updated rendering
+      $scope.interactd3();
       $scope.selectedTable = 0;
     };
 
     $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
+    };
+
+    $scope.interactd3 = function () {
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
     };
