@@ -141,6 +141,7 @@ angular.module('DTBS.main')
         };
         scope.$on('d3:new-data', function (e, data) {
           // re do force layout with new data
+          console.log(data);
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);

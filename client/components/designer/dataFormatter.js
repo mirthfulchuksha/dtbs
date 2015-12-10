@@ -49,6 +49,50 @@ var data =
     ]
   }
 ];
+var data2 = [
+  {
+    "name": "Courses",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "TINYINT"
+    }
+  },
+  {
+    "name": "Students",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      },
+      {
+        "origin": "1",
+        "id": "Courses_id",
+        "type": "TINYINT"
+      }
+    ]
+  }
+];
 var dummyData = {
           "nodes":[
             {"name": "Users", "group": 1, "size": 32, "type": "table"},
@@ -95,7 +139,7 @@ var dataBuilder = function (data) {
     // push the central node onto the graph
     graph.nodes.push(centralNode);
       //[tableid: index]
-    primaryKeys.push([table.id, graph.nodes.length]);
+    primaryKeys.push([table.id, graph.nodes.length-1]);
     var currentLength = graph.nodes.length-1;
     var fieldCounter = i;
     // loop through the current table's fields
@@ -133,6 +177,8 @@ var dataBuilder = function (data) {
 var fkLinks = function (graphContainer, data) {
   var primaryKeys = graphContainer.primaryKeys;
   var foreignKeys = graphContainer.foreignKeys;
+  console.log(primaryKeys, "PKS");
+  console.log(foreignKeys, "FKS")
   var graph = graphContainer.graph;
   var source, target;
   data.forEach(function (table) {
@@ -144,7 +190,7 @@ var fkLinks = function (graphContainer, data) {
           if (pk[0] === field.origin) {
             console.log(pk);
             source = pk[1];
-            return;
+            // return;
           }
         });
         // find the index in nodes of the foreign key for that field
@@ -153,7 +199,7 @@ var fkLinks = function (graphContainer, data) {
           if (field.id === fk[0]) {
             console.log(fk);
             target = fk[1];
-            return;
+            // return;
           }
         });
       }
