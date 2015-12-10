@@ -8,17 +8,17 @@
       <button ng-click="toggleModal()" class="btn btn-default">Get Started</button>
     </form>
 
-    <modal title="Page Setup" visible="showModal" >
+    <modal title="Page Setup" visible="!showModal" >
       <form role="form" ng-submit="updateFactory()">
         <div class="form-group">
           <label for="title">Title</label>
           <input type="title" class="form-control" id="title" ng-model="db.name"
-          placeholder="Database title goes here">
+	  placeholder="Database title goes here" required>
         </div>
         <div class="form-group">
           <label for="type">Database Type</label>
           <div class="dropdown">
-            <select ng-model='db.lang' class="form-control">
+	    <select ng-model='db.lang' class="form-control" required>
               <option value="mySQL">mySQL</option>
               <option value="Bookshelf">mySQL - Bookshelf</option>
               <option value="Sequelize">mySQL - Sequelize</option>

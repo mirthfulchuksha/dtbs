@@ -35,9 +35,9 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-          <li><a href="#" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
-          <li><a href="#" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
-          <li><a href="#" ng-click="updateFactory('mySQL')">mySQL </a></li>
+	  <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
+	  <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
+	  <li><a href="" ng-click="updateFactory('mySQL')">mySQL </a></li>
         </ul>
       </form>
       <div id="editor">/* Your Output will appear here! */</div>
@@ -53,12 +53,12 @@
         useSoftTabs: true
       });
 
-      $('#code_button').on('click', function(){
+      $('#code_button').on('click', function () {
         var state = parseInt($('.super-wrap').css('right'), 10) > -1;
         $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
         $('#code_button').text((state ? '<<': '>>'));
       });
-      $(".dropdown-menu li a").click(function(){
+      $(".dropdown-menu li a").click(function () {
         $(".dropdown-toggle").text($(this).text());
         $(".dropdown-toggle").append('<span class="caret"></span>');
       });

@@ -1,6 +1,7 @@
 <div ng-controller='FormController'>
 
     <div ng-controller="TableController" class="container">
+      <hr>
       <div class="editButtonContainer">
         <h3>Make a Table</h3>
         <button ng-click="toggleMyModal()" class="btn btn-default">Create</button>
@@ -26,8 +27,8 @@
           <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
         </div>
         <form name="tableForm">
-          <button ng-click="addField()"> Add Field </button></br>
-          <button ng-click="addForeignKey()">Add Foreign Key</button>
+	  <button class="btn btn-default" ng-click="addField()"> Add Field </button></br>
+	  <button class="btn btn-default" ng-click="addForeignKey()">Add Foreign Key</button>
           <div ng-repeat="key in keys track by $index" class="border">
 
             <label>Column ID</label>
@@ -60,7 +61,7 @@
                 <option>NOT NULL</option>
               </select>
 
-              <button ng-click="cancelAdd($index)">Delete Field</button>
+	      <button class="btn btn-default" ng-click="cancelAdd($index)">Delete Field</button>
 
           </div>
 
@@ -78,8 +79,8 @@
             </select>
           </div>
 
-          <button ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
-          <button ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
+	  <button class="btn btn-default" ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
+	  <button class="btn btn-default" ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
         </form>
       </div>
     </keymodal>

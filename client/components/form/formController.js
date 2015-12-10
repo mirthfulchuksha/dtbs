@@ -167,8 +167,8 @@ angular.module('DTBS.main')
         dbStorage;
 
     var fetchCode = function () {
-      var dataObj = {data: []}
-      for (table in dbStorage) {
+      var dataObj = {data: []};
+      for (var table in dbStorage) {
         dataObj.data.push(dbStorage[table]);
       }
 
@@ -209,7 +209,7 @@ angular.module('DTBS.main')
       codeBase.codeType = dbLang;
       codeBase.ext = extension;
 
-      var formBlob = new Blob([codeBase.code], { type: 'text/plain'});
+      var formBlob = new Blob([codeBase.code], {type: 'text/plain'});
       document.getElementById("download").href = window.URL.createObjectURL(formBlob);
       document.getElementById("download").download = dbFilename;
     };
