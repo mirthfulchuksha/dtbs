@@ -14,7 +14,8 @@
     "body-parser": "^1.14.1",
     "bower": "1.6.5",
     "express": "^4.13.3",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "webpage": "^0.3.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.controller('OutputController', ['$scope', 'd3UpdateTable', function ($scope, d3UpdateTable) {
+.controller('OutputController', ['$scope','d3Data', function ($scope, d3Data) {
     //child scope function needed to clear the forms on submit
     $scope.keys = [];
     $scope.foreignKeys = [];

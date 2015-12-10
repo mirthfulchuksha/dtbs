@@ -1,9 +1,12 @@
 var mymodal = angular.module('DTBS.modal', []);
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeParser) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', function ($scope, CodeParser, d3Save) {
   $scope.showModal = false;
-  $scope.toggleModal = function () {
+  $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
+  };
+  $scope.saveSVG = function () {
+    d3Save.push("save");
   };
 
   $scope.db = {};

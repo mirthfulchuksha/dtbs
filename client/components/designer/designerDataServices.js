@@ -1,9 +1,9 @@
 angular.module('DTBS.main')
 
-.service('d3UpdateTable', ['$rootScope', function($rootScope) {
+.service('d3Save', ['$rootScope', function($rootScope) {
   var data;
 
-  var emit = function(data) { $rootScope.$broadcast('d3:update-table', data); }
+  var emit = function(data) { $rootScope.$broadcast('d3:save-table', data); }
   var api = {
     get: function() {
       return data;

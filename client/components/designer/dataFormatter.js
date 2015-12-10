@@ -3,115 +3,513 @@ var data =
   {
     "name": "Users",
     "id": 1,
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    },
     "attrs": [
       {
-        "id": "user_id",
+        "id": "id",
         "basicType": "Numeric",
-        "type": "INT",
-        "size": "10",
-        "attributes": [
-          "AUTO_INCREMENT"
-        ],
-        "default": "NOT NULL"
+        "type": "INT"
       },
       {
-        "id": "user_name",
+        "id": "name",
         "basicType": "String",
-        "type": "VARCHAR",
-        "size": "15",
-        "attributes": [
-          "CHARACTER SET"
-        ],
-        "default": "NOT NULL"
+        "type": "VARCHAR"
       },
       {
         "id": "subject_id",
         "basicType": "Numeric",
         "type": "INT",
-        "size": "25",
-        "attributes": [
-          "ZEROFILL"
-        ],
-        "default": "NULL"
+        "origin": 2
       }
     ]
   },
   {
-    "name": "Classes",
+    "name": "Subjects",
     "id": 2,
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    },
     "attrs": [
       {
-        "id": "class_id",
+        "id": "id",
         "basicType": "Numeric",
-        "type": "INT",
-        "size": "10",
-        "attributes": [
-          "AUTO_INCREMENT"
-        ],
-        "default": "NOT NULL"
+        "type": "INT"
       },
       {
-        "id": "class_name",
+        "id": "name",
         "basicType": "String",
-        "type": "VARCHAR",
-        "size": "15",
-        "attributes": [
-          "CHARACTER SET"
-        ],
-        "default": "NOT NULL"
+        "type": "VARCHAR"
       }
     ]
   }
 ];
+var data2 = [
+  {
+    "name": "Courses",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "TINYINT"
+    }
+  },
+  {
+    "name": "Students",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      },
+      {
+        "origin": "1",
+        "id": "Courses_id",
+        "type": "TINYINT"
+      }
+    ]
+  }
+];
+var data3 = [
+  {
+    "name": "users",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "tweets",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      {
+        "origin": "1",
+        "id": "users_id",
+        "type": "INT"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "TINYINT"
+    }
+  },
+  {
+    "name": "messages",
+    "id": 3,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      {
+        "origin": "1",
+        "id": "users_id",
+        "type": "INT"
+      }
+    ]
+  }
+];
+var data4 = [
+  {
+    "name": "Users",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "Tweets",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "origin": "1",
+        "id": "Users_id",
+        "type": "INT"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "Boards",
+    "id": 3,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "origin": "2",
+        "id": "Tweets_id",
+        "type": "INT"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "Posts",
+    "id": 4,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "origin": "1",
+        "id": "Users_id",
+        "type": "INT"
+      },
+      {
+        "origin": "2",
+        "id": "Tweets_id",
+        "type": "INT"
+      }
+    ]
+  }
+];
+var graph1 = {
+  "nodes": [
+    {
+      "name": "table1",
+      "type": "title",
+      "pk": {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      "group": 1,
+      "size": 32,
+      "id": 1,
+      "index": 0,
+      "weight": 1
+    },
+    {
+      "name": "id",
+      "type": "field",
+      "group": 1,
+      "size": 16,
+      "id": 1,
+      "index": 1,
+      "weight": 2
+    },
+    {
+      "name": "table2",
+      "type": "title",
+      "pk": {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      },
+      "group": 2,
+      "size": 32,
+      "id": 2,
+      "index": 2,
+      "weight": 2
+    },
+    {
+      "name": "name",
+      "type": "field",
+      "group": 2,
+      "size": 16,
+      "id": 2,
+      "index": 3,
+      "weight": 1
+    },
+    {
+      "name": "table1_id",
+      "type": "field",
+      "origin": "1",
+      "group": 2,
+      "size": 16,
+      "id": 2,
+      "index": 4,
+      "weight": 1
+    }
+  ],
+  "links": [
+    {
+      "source": {
+        "name": "table1",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "basicType": "Numeric",
+          "type": "TINYINT"
+        },
+        "group": 1,
+        "size": 32,
+        "id": 1,
+        "index": 0,
+        "weight": 1
+      },
+      "target": {
+        "name": "id",
+        "type": "field",
+        "group": 1,
+        "size": 16,
+        "id": 1,
+        "index": 1,
+        "weight": 2
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "table2",
+        "type": "title",
+        "pk": {
+          "id": "name",
+          "basicType": "String",
+          "type": "CHAR"
+        },
+        "group": 2,
+        "size": 32,
+        "id": 2,
+        "index": 2,
+        "weight": 2
+      },
+      "target": {
+        "name": "name",
+        "type": "field",
+        "group": 2,
+        "size": 16,
+        "id": 2,
+        "index": 3,
+        "weight": 1
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "table2",
+        "type": "title",
+        "pk": {
+          "id": "name",
+          "basicType": "String",
+          "type": "CHAR"
+        },
+        "group": 2,
+        "size": 32,
+        "id": 2,
+        "index": 2,
+        "weight": 2
+      },
+      "target": {
+        "name": "table1_id",
+        "type": "field",
+        "origin": "1",
+        "group": 2,
+        "size": 16,
+        "id": 2,
+        "index": 4,
+        "weight": 1
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "id",
+        "type": "field",
+        "group": 1,
+        "size": 16,
+        "id": 1,
+        "index": 1,
+        "weight": 2
+      },
+      "target": "4",
+      "value": 40
+    }
+  ]
+}
 var dummyData = {
           "nodes":[
-            {"name": "Users", "group": 1, "size": 32},
-            {"name": "id", "group": 1, "size": 16},
-            {"name": "name", "group": 1, "size": 16},
-            {"name": "subject_id", "group": 2, "size": 16},
-            {"name": "Subjects", "group": 2, "size": 32},
-            {"name": "id", "group": 2, "size": 16},
-            {"name": "name", "group": 2, "size": 16},
-            {"name": "teacher", "group": 2, "size": 16}
+            {"name": "Users", "group": 1, "size": 32, "type": "table"},
+            {"name": "id", "group": 1, "size": 16, "type": "field"},
+            {"name": "name", "group": 1, "size": 16, "type": "field"},
+            {"name": "subject_id", "group": 2, "size": 16, "type": "field"},
+            {"name": "Subjects", "group": 2, "size": 32, "type": "table"},
+            {"name": "id", "group": 2, "size": 16, "type": "field"},
+            {"name": "name", "group": 2, "size": 16, "type": "field"}
             ],
           "links": [
+          // table links
             {"source": 0, "target": 1, "value": 40},
             {"source": 0, "target": 2, "value": 40},
             {"source": 0, "target": 3, "value": 40},
             {"source": 4, "target": 5, "value": 40},
             {"source": 4, "target": 6, "value": 40},
-            {"source": 4, "target": 7, "value": 40},
+          // foreign key links
             {"source": 3, "target": 5, "value": 150}
             ]
         };
 // function to transform data into dummyData format
-var allTables = {nodes: [], links: []};
-var groupNumber = 0;
 var dataBuilder = function (data) {
-  data.forEach(function (table) {
+  // initialize empty graph
+  var graph = {nodes: [], links: []};
+  // build up primary key field indices for linking reference
+  var primaryKeys = [];
+  // build up foreign key indexes
+  var foreignKeys = [];
+  // initialize group number
+  var groupNumber = 1;
+  // loop through tables
+  for (var i = 0; i < data.length; i++) {
+    var table = data[i];
+    // build up the central table node
     var centralNode = {
       name: table.name,
-      group: groupNumber++,
+      type: "title",
+      pk: table.primaryKey,
+      group: groupNumber,
       size: 32,
       id: table.id
     };
-    allTables.nodes.push(centralNode);
-    var fieldCounter = 0;
-    table.attrs.forEach(function (field) {
+    // push the central node onto the graph
+    graph.nodes.push(centralNode);
+      //[tableid: index]
+    primaryKeys.push([table.id, graph.nodes.length-1]);
+    var currentLength = graph.nodes.length-1;
+    var fieldCounter = i;
+    // loop through the current table's fields
+    for (var j = 0; j < table.attrs.length; j++) {
+      var field = table.attrs[j];
       fieldCounter++;
       var fieldNode = {
         name: field.id,
+        type: "field",
+        origin: field.origin,
         group: groupNumber,
         size: 16,
         id: table.id
       };
-      allTables.nodes.push(fieldNode);
-        var fieldToTableLink = {"source": 0, "target": fieldCounter, "value": 40};
-      allTables.links.push(fieldToTableLink);
+      // push the field node onto the graph
+      graph.nodes.push(fieldNode);
+      // push the table/field link onto the graph
+      var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
+      graph.links.push(fieldToTableLink);
+      // if the field has an origin property, then it must be a FK linked to a PK field
+      if (field.origin) {
+        // we want to store the current index to check after all tables have been parsed
+        // [fieldname: index]
+        console.log(field.id.toString()+"-"+(graph.nodes.length-1).toString());
+        foreignKeys.push([field.id.toString()+":"+(graph.nodes.length-1).toString(), (graph.nodes.length-1).toString()]);
+      }
+    }
+    groupNumber++; 
+  }
+  var container = {};
+  container.graph = graph;
+  container.primaryKeys = primaryKeys;
+  container.foreignKeys = foreignKeys;
+  return container;
+};
+var fkLinks = function (graphContainer, data) {
+  var primaryKeys = graphContainer.primaryKeys;
+  var foreignKeys = graphContainer.foreignKeys;
+  console.log(primaryKeys, "PKS");
+  console.log(foreignKeys, "FKS")
+  var graph = graphContainer.graph;
+  data.forEach(function (table) {
+    table.attrs.forEach(function (field) {
+      var source, target;
+      // if it has a defined origin, it is a foreign key to a primary key in another table
+      if (field.origin !== undefined) {
+        // find the index in nodes of the primary key for that table id
+        primaryKeys.forEach(function (pk) {
+          if (pk[0] === parseInt(field.origin)) {
+            source = pk[1] + 1;
+            return;
+          }
+        });
+        // find the index in nodes of the foreign key for that field
+        var counter = 0;
+        foreignKeys.forEach(function (fk) {
+          // [fieldname: index]
+          if (field.id.toString()+":"+(fk[1]).toString() === fk[0]) {
+            console.log(fk, "FK Match");
+            target = fk[1];
+            foreignKeys.splice(counter,1);
+            counter++;
+            return;
+          }
+        });
+      var fieldToFKLink = {"source": source, "target": target, "value": 40};
+      graph.links.push(fieldToFKLink);
+      }
     });
   });
+  return graph;
 };
-
-
-
 
