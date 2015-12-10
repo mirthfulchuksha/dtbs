@@ -1,9 +1,9 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeParser) {
-  $scope.showModal = false;
+  $scope.showModal = true;
   $scope.toggleModal = function () {
-      $scope.showModal = !$scope.showModal;
+    $scope.showModal = !$scope.showModal;
   };
 
   $scope.db = {};
@@ -21,6 +21,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeP
       default:
         $scope.db.fileName = $scope.db.lang + '_Schema.sql';
     }
+    $scope.toggleModal();
     CodeParser.update($scope.db);
   };
 }]);

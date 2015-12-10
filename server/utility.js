@@ -126,7 +126,7 @@ module.exports = {
         "\tif (!exists) { \n\t\tdb.knex.schema.createTable('" + table.name.toLowerCase() + "', function (table) { \n";
       _.each(table.attrs, function (attr) {
         schema += "\t\t\ttable." + bookshelfTypeDict[attr.basicType] +  "('" + attr.id.toLowerCase() +
-          "', " + Number(attr.size) + ")";
+          (attr.size ? "', " + Number(attr.size) + ")" : "')");
         if (attr.primary) schema += ".primary()";
         schema += ";\n";
       });
