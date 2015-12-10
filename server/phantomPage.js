@@ -19,10 +19,10 @@ var getElementBounds = function (elementId) {
 var url = 'http://dtbs.herokuapp.com/#/';
 page.open(url, function (status) {
     setTimeout(function () {
-        var clipRect = getElementBounds('code_button');
+        var clipRect = getElementBounds('designer');
         page.clipRect = clipRect;
         page.render('schemas.png');
         phantom.exit();
-    }, 1000);
+    }, 5000);
 });
 
