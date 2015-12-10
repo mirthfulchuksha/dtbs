@@ -187,10 +187,12 @@ var fkLinks = function (graphContainer, data) {
       if (field.origin) {
         // find the index in nodes of the primary key for that table id
         primaryKeys.forEach(function (pk) {
-          if (pk[0] === field.origin) {
-            console.log(pk);
-            source = pk[1];
-            // return;
+          console.log(typeof pk[0], "pk[0]");
+          console.log(typeof field.origin, "field.origin");
+          if (pk[0] === parseInt(field.origin)) {
+            console.log(pk, "matched");
+            source = pk[1] + 1;
+            return;
           }
         });
         // find the index in nodes of the foreign key for that field
@@ -199,7 +201,7 @@ var fkLinks = function (graphContainer, data) {
           if (field.id === fk[0]) {
             console.log(fk);
             target = fk[1];
-            // return;
+            return;
           }
         });
       }
