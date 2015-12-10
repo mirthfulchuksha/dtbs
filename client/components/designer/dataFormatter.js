@@ -1,159 +1,4 @@
-var data = 
-[
-  {
-    "name": "Users",
-    "id": 1,
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    },
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "id": "name",
-        "basicType": "String",
-        "type": "VARCHAR"
-      },
-      {
-        "id": "subject_id",
-        "basicType": "Numeric",
-        "type": "INT",
-        "origin": 2
-      }
-    ]
-  },
-  {
-    "name": "Subjects",
-    "id": 2,
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    },
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "id": "name",
-        "basicType": "String",
-        "type": "VARCHAR"
-      }
-    ]
-  }
-];
-var data2 = [
-  {
-    "name": "Courses",
-    "id": 1,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "TINYINT"
-      },
-      {
-        "id": "name",
-        "basicType": "String",
-        "type": "CHAR"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "TINYINT"
-    }
-  },
-  {
-    "name": "Students",
-    "id": 2,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "id": "name",
-        "basicType": "String",
-        "type": "CHAR"
-      },
-      {
-        "origin": "1",
-        "id": "Courses_id",
-        "type": "TINYINT"
-      }
-    ]
-  }
-];
-var data3 = [
-  {
-    "name": "users",
-    "id": 1,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "id": "name",
-        "basicType": "String",
-        "type": "CHAR"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    }
-  },
-  {
-    "name": "tweets",
-    "id": 2,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "TINYINT"
-      },
-      {
-        "origin": "1",
-        "id": "users_id",
-        "type": "INT"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "TINYINT"
-    }
-  },
-  {
-    "name": "messages",
-    "id": 3,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "TINYINT"
-      },
-      {
-        "origin": "1",
-        "id": "users_id",
-        "type": "INT"
-      }
-    ]
-  }
-];
-var data4 = [
+var beforeBreak = [
   {
     "name": "Users",
     "id": 1,
@@ -162,11 +7,6 @@ var data4 = [
         "id": "id",
         "basicType": "Numeric",
         "type": "INT"
-      },
-      {
-        "id": "name",
-        "basicType": "String",
-        "type": "CHAR"
       }
     ],
     "primaryKey": {
@@ -176,7 +16,7 @@ var data4 = [
     }
   },
   {
-    "name": "Tweets",
+    "name": "Chats",
     "id": 2,
     "attrs": [
       {
@@ -197,29 +37,8 @@ var data4 = [
     }
   },
   {
-    "name": "Boards",
+    "name": "Groups",
     "id": 3,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "origin": "2",
-        "id": "Tweets_id",
-        "type": "INT"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    }
-  },
-  {
-    "name": "Posts",
-    "id": 4,
     "attrs": [
       {
         "id": "id",
@@ -230,30 +49,34 @@ var data4 = [
         "origin": "1",
         "id": "Users_id",
         "type": "INT"
-      },
-      {
-        "origin": "2",
-        "id": "Tweets_id",
-        "type": "INT"
       }
-    ]
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
   }
 ];
-var graph1 = {
+var linksNodesBeforeBreak = {
   "nodes": [
     {
-      "name": "table1",
+      "name": "Users",
       "type": "title",
       "pk": {
         "id": "id",
         "basicType": "Numeric",
-        "type": "TINYINT"
+        "type": "INT"
       },
       "group": 1,
       "size": 32,
       "id": 1,
       "index": 0,
-      "weight": 1
+      "weight": 1,
+      "x": 342.29298494464774,
+      "y": 169.57832002730441,
+      "px": 342.34393620319,
+      "py": 169.57147411311252
     },
     {
       "name": "id",
@@ -262,57 +85,122 @@ var graph1 = {
       "size": 16,
       "id": 1,
       "index": 1,
-      "weight": 2
+      "weight": 3,
+      "x": 388.95627734289207,
+      "y": 158.71080784305445,
+      "px": 388.8411039781085,
+      "py": 158.74638174215625
     },
     {
-      "name": "table2",
+      "name": "Chats",
       "type": "title",
       "pk": {
-        "id": "name",
-        "basicType": "String",
-        "type": "CHAR"
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
       },
       "group": 2,
       "size": 32,
       "id": 2,
       "index": 2,
-      "weight": 2
+      "weight": 2,
+      "x": 337.7066960147619,
+      "y": 70.9093706137136,
+      "px": 337.7185193176976,
+      "py": 71.00491214304799
     },
     {
-      "name": "name",
+      "name": "id",
       "type": "field",
       "group": 2,
       "size": 16,
       "id": 2,
       "index": 3,
-      "weight": 1
+      "weight": 1,
+      "x": 294.6820398138833,
+      "y": 54.46992863292921,
+      "px": 294.79322212832875,
+      "py": 54.54707792681692
     },
     {
-      "name": "table1_id",
+      "name": "Users_id",
       "type": "field",
       "origin": "1",
       "group": 2,
       "size": 16,
       "id": 2,
       "index": 4,
-      "weight": 1
+      "weight": 2,
+      "x": 371.9272776131376,
+      "y": 108.41606900119015,
+      "px": 371.8696230308635,
+      "py": 108.5018548264636
+    },
+    {
+      "name": "Groups",
+      "type": "title",
+      "pk": {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      "group": 3,
+      "size": 32,
+      "id": 3,
+      "index": 5,
+      "weight": 2,
+      "x": 378.7531630759183,
+      "y": 258.8613977759115,
+      "px": 378.7102509409655,
+      "py": 258.78870459677205
+    },
+    {
+      "name": "id",
+      "type": "field",
+      "group": 3,
+      "size": 16,
+      "id": 3,
+      "index": 6,
+      "weight": 1,
+      "x": 346.8484614068855,
+      "y": 292.0442939247825,
+      "px": 346.8959887849546,
+      "py": 291.93855192933796
+    },
+    {
+      "name": "Users_id",
+      "type": "field",
+      "origin": "1",
+      "group": 3,
+      "size": 16,
+      "id": 3,
+      "index": 7,
+      "weight": 2,
+      "x": 395.1961287374394,
+      "y": 211.41040378525327,
+      "px": 395.09999073561244,
+      "py": 211.37377452609783
     }
   ],
   "links": [
     {
       "source": {
-        "name": "table1",
+        "name": "Users",
         "type": "title",
         "pk": {
           "id": "id",
           "basicType": "Numeric",
-          "type": "TINYINT"
+          "type": "INT"
         },
         "group": 1,
         "size": 32,
         "id": 1,
         "index": 0,
-        "weight": 1
+        "weight": 1,
+        "x": 342.29298494464774,
+        "y": 169.57832002730441,
+        "px": 342.34393620319,
+        "py": 169.57147411311252
       },
       "target": {
         "name": "id",
@@ -321,60 +209,149 @@ var graph1 = {
         "size": 16,
         "id": 1,
         "index": 1,
-        "weight": 2
+        "weight": 3,
+        "x": 388.95627734289207,
+        "y": 158.71080784305445,
+        "px": 388.8411039781085,
+        "py": 158.74638174215625
       },
       "value": 40
     },
     {
       "source": {
-        "name": "table2",
+        "name": "Chats",
         "type": "title",
         "pk": {
-          "id": "name",
-          "basicType": "String",
-          "type": "CHAR"
+          "id": "id",
+          "basicType": "Numeric",
+          "type": "INT"
         },
         "group": 2,
         "size": 32,
         "id": 2,
         "index": 2,
-        "weight": 2
+        "weight": 2,
+        "x": 337.7066960147619,
+        "y": 70.9093706137136,
+        "px": 337.7185193176976,
+        "py": 71.00491214304799
       },
       "target": {
-        "name": "name",
+        "name": "id",
         "type": "field",
         "group": 2,
         "size": 16,
         "id": 2,
         "index": 3,
-        "weight": 1
+        "weight": 1,
+        "x": 294.6820398138833,
+        "y": 54.46992863292921,
+        "px": 294.79322212832875,
+        "py": 54.54707792681692
       },
       "value": 40
     },
     {
       "source": {
-        "name": "table2",
+        "name": "Chats",
         "type": "title",
         "pk": {
-          "id": "name",
-          "basicType": "String",
-          "type": "CHAR"
+          "id": "id",
+          "basicType": "Numeric",
+          "type": "INT"
         },
         "group": 2,
         "size": 32,
         "id": 2,
         "index": 2,
-        "weight": 2
+        "weight": 2,
+        "x": 337.7066960147619,
+        "y": 70.9093706137136,
+        "px": 337.7185193176976,
+        "py": 71.00491214304799
       },
       "target": {
-        "name": "table1_id",
+        "name": "Users_id",
         "type": "field",
         "origin": "1",
         "group": 2,
         "size": 16,
         "id": 2,
         "index": 4,
-        "weight": 1
+        "weight": 2,
+        "x": 371.9272776131376,
+        "y": 108.41606900119015,
+        "px": 371.8696230308635,
+        "py": 108.5018548264636
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "Groups",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "basicType": "Numeric",
+          "type": "INT"
+        },
+        "group": 3,
+        "size": 32,
+        "id": 3,
+        "index": 5,
+        "weight": 2,
+        "x": 378.7531630759183,
+        "y": 258.8613977759115,
+        "px": 378.7102509409655,
+        "py": 258.78870459677205
+      },
+      "target": {
+        "name": "id",
+        "type": "field",
+        "group": 3,
+        "size": 16,
+        "id": 3,
+        "index": 6,
+        "weight": 1,
+        "x": 346.8484614068855,
+        "y": 292.0442939247825,
+        "px": 346.8959887849546,
+        "py": 291.93855192933796
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "Groups",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "basicType": "Numeric",
+          "type": "INT"
+        },
+        "group": 3,
+        "size": 32,
+        "id": 3,
+        "index": 5,
+        "weight": 2,
+        "x": 378.7531630759183,
+        "y": 258.8613977759115,
+        "px": 378.7102509409655,
+        "py": 258.78870459677205
+      },
+      "target": {
+        "name": "Users_id",
+        "type": "field",
+        "origin": "1",
+        "group": 3,
+        "size": 16,
+        "id": 3,
+        "index": 7,
+        "weight": 2,
+        "x": 395.1961287374394,
+        "y": 211.41040378525327,
+        "px": 395.09999073561244,
+        "py": 211.37377452609783
       },
       "value": 40
     },
@@ -386,34 +363,61 @@ var graph1 = {
         "size": 16,
         "id": 1,
         "index": 1,
-        "weight": 2
+        "weight": 3,
+        "x": 388.95627734289207,
+        "y": 158.71080784305445,
+        "px": 388.8411039781085,
+        "py": 158.74638174215625
       },
-      "target": "4",
+      "target": {
+        "name": "Users_id",
+        "type": "field",
+        "origin": "1",
+        "group": 2,
+        "size": 16,
+        "id": 2,
+        "index": 4,
+        "weight": 2,
+        "x": 371.9272776131376,
+        "y": 108.41606900119015,
+        "px": 371.8696230308635,
+        "py": 108.5018548264636
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "id",
+        "type": "field",
+        "group": 1,
+        "size": 16,
+        "id": 1,
+        "index": 1,
+        "weight": 3,
+        "x": 388.95627734289207,
+        "y": 158.71080784305445,
+        "px": 388.8411039781085,
+        "py": 158.74638174215625
+      },
+      "target": {
+        "name": "Users_id",
+        "type": "field",
+        "origin": "1",
+        "group": 3,
+        "size": 16,
+        "id": 3,
+        "index": 7,
+        "weight": 2,
+        "x": 395.1961287374394,
+        "y": 211.41040378525327,
+        "px": 395.09999073561244,
+        "py": 211.37377452609783
+      },
       "value": 40
     }
   ]
-}
-var dummyData = {
-          "nodes":[
-            {"name": "Users", "group": 1, "size": 32, "type": "table"},
-            {"name": "id", "group": 1, "size": 16, "type": "field"},
-            {"name": "name", "group": 1, "size": 16, "type": "field"},
-            {"name": "subject_id", "group": 2, "size": 16, "type": "field"},
-            {"name": "Subjects", "group": 2, "size": 32, "type": "table"},
-            {"name": "id", "group": 2, "size": 16, "type": "field"},
-            {"name": "name", "group": 2, "size": 16, "type": "field"}
-            ],
-          "links": [
-          // table links
-            {"source": 0, "target": 1, "value": 40},
-            {"source": 0, "target": 2, "value": 40},
-            {"source": 0, "target": 3, "value": 40},
-            {"source": 4, "target": 5, "value": 40},
-            {"source": 4, "target": 6, "value": 40},
-          // foreign key links
-            {"source": 3, "target": 5, "value": 150}
-            ]
-        };
+};
+
 // function to transform data into dummyData format
 var dataBuilder = function (data) {
   // initialize empty graph

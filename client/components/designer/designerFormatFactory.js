@@ -69,8 +69,6 @@ angular.module('DTBS.main')
   var fkLinks = function (graphContainer, data) {
     var primaryKeys = graphContainer.primaryKeys;
     var foreignKeys = graphContainer.foreignKeys;
-    console.log(primaryKeys, "Primary Keys");
-    console.log(foreignKeys, "Foreign Keys");
     var graph = graphContainer.graph;
     data.forEach(function (table) {
       table.attrs.forEach(function (field) {
@@ -78,23 +76,23 @@ angular.module('DTBS.main')
         // Check for origin - denotes FK relationship ===========
         if (field.origin !== undefined) {
         // Build Link Source ====================================
-          primaryKeys.forEach(function (pk) {
+          for (var m = 0; m < primaryKeys.length; m++) {
+            var pk = primaryKeys[m];
             if (pk[0] === parseInt(field.origin)) {
               source = parseInt(pk[1] + 1);
-              return;
+              break;
             }
-          });
-          var counter = 0;
+          }
           // Build Link Target ===================================
-          foreignKeys.forEach(function (fk) {
+          for (var n = 0; n < foreignKeys.length; n++) {
+            var fk = foreignKeys[n];
             if (field.id.toString()+":"+(fk[1]).toString() === fk[0]) {
               target = parseInt(fk[1]);
               // Mark FK as visited
-              foreignKeys.splice(counter,1);
-              counter++;
-              return;
+              foreignKeys.splice(n,1);
+              break;
             }
-          });
+          }
           var fieldToFKLink = {"source": source, "target": target, "value": 40};
           if (fieldToFKLink.source !== undefined && fieldToFKLink.target !== undefined) {
             graph.links.push(fieldToFKLink);

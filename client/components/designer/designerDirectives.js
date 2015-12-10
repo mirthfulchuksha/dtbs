@@ -33,8 +33,6 @@ angular.module('DTBS.main')
           var graph = d3Format.fkLinks(container, tableData);
           
           var svg = d3.select("svg");
-          console.log(graph, "correct format");
-          // console.log(graph2, "inccorrect format");
           //Creates the graph data structure out of the json data
           force.nodes(graph.nodes)
               .links(graph.links)
