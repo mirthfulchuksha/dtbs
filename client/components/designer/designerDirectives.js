@@ -9,45 +9,109 @@ angular.module('DTBS.main')
         // Constants for the SVG
         var width = 640, height = 350;
 
-        // Function to format incoming data into nodes and links
+        var buildCentralNode = function (table, groupNumber) {
+          var centralNode = {
+            name: table.name,
+            type: "title",
+            pk: table.primaryKey,
+            group: groupNumber,
+            size: 32,
+            id: table.id
+          };
+          return centralNode;
+        };
+        var buildFieldNode = function (table, field, groupNumber) {
+          var fieldNode = {
+            name: field.id,
+            type: "field",
+            origin: field.origin,
+            group: groupNumber,
+            size: 16,
+            id: table.id
+          };
+          return fieldNode;
+        };
+
+        // function to transform data into dummyData format
         var dataBuilder = function (data) {
           // initialize empty graph
           var graph = {nodes: [], links: []};
+          // build up primary key field indices for linking reference
+          var primaryKeys = [];
+          // build up foreign key indexes
+          var foreignKeys = [];
+          // initialize group number
           var groupNumber = 1;
           // loop through tables
           for (var i = 0; i < data.length; i++) {
             var table = data[i];
             // build up the central table node
-            var centralNode = {
-              name: table.name,
-              type: "title",
-              group: groupNumber,
-              size: 32,
-              id: table.id
-            };
+            var centralNode = buildCentralNode(table, groupNumber);
             // push the central node onto the graph
             graph.nodes.push(centralNode);
+              //[tableid: index]
+            primaryKeys.push([table.id, graph.nodes.length-1]);
             var currentLength = graph.nodes.length-1;
             var fieldCounter = i;
             // loop through the current table's fields
             for (var j = 0; j < table.attrs.length; j++) {
               var field = table.attrs[j];
               fieldCounter++;
-              var fieldNode = {
-                name: field.id,
-                type: "field",
-                group: groupNumber,
-                size: 16,
-                id: table.id
-              };
+              var fieldNode = buildFieldNode(table, field, groupNumber);
               // push the field node onto the graph
               graph.nodes.push(fieldNode);
               // push the table/field link onto the graph
               var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
               graph.links.push(fieldToTableLink);
+              // if the field has an origin property, then it must be a FK linked to a PK field
+              if (field.origin) {
+                // we want to store the current index to check after all tables have been parsed
+                // [fieldname: index]
+                foreignKeys.push([field.id.toString()+":"+(graph.nodes.length-1).toString(), (graph.nodes.length-1).toString()]);
+              }
             }
             groupNumber++; 
           }
+          var container = {};
+          container.graph = graph;
+          container.primaryKeys = primaryKeys;
+          container.foreignKeys = foreignKeys;
+          return container;
+        };
+        var fkLinks = function (graphContainer, data) {
+          var primaryKeys = graphContainer.primaryKeys;
+          var foreignKeys = graphContainer.foreignKeys;
+          var graph = graphContainer.graph;
+          data.forEach(function (table) {
+            table.attrs.forEach(function (field) {
+              var source, target;
+              // if it has a defined origin, it is a foreign key to a primary key in another table
+              if (field.origin !== undefined) {
+                // find the index in nodes of the primary key for that table id
+                primaryKeys.forEach(function (pk) {
+                  if (pk[0] === parseInt(field.origin)) {
+                    source = parseInt(pk[1] + 1);
+                    return;
+                  }
+                });
+                // find the index in nodes of the foreign key for that field
+                var counter = 0;
+                foreignKeys.forEach(function (fk) {
+                  // [fieldname: index]
+                  if (field.id.toString()+":"+(fk[1]).toString() === fk[0]) {
+                    target = parseInt(fk[1]);
+                    foreignKeys.splice(counter,1);
+                    counter++;
+                    return;
+                  }
+                });
+                var fieldToFKLink = {"source": source, "target": target, "value": 40};
+                if (fieldToFKLink.source !== undefined && fieldToFKLink.target !== undefined) {
+                  graph.links.push(fieldToFKLink);
+                }
+              }
+            });
+          });
           return graph;
         };
 
@@ -57,7 +121,6 @@ angular.module('DTBS.main')
         .attr('id', '#canvas')
         .style('width', '100%')
         .style('height', height);
-        
        
         scope.render = function (tableData) {
           // Global array to track table classes for deletion
@@ -72,9 +135,12 @@ angular.module('DTBS.main')
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
-          var graph = dataBuilder(tableData);
+          var container = dataBuilder(tableData);
+          var graph = fkLinks(container, tableData);
+          
           var svg = d3.select("svg");
-
+          console.log(graph, "correct format");
+          // console.log(graph2, "inccorrect format");
           //Creates the graph data structure out of the json data
           force.nodes(graph.nodes)
               .links(graph.links)
@@ -128,11 +194,6 @@ angular.module('DTBS.main')
         var click = function (node) {
           // get the class name
           var className = $(node).attr('class');
-          // highlight all nodes of that class
-              d3.select(node).select("circle").transition()
-                  .duration(750)
-                  .attr("r", 16)
-                  .style("fill", "lightsteelblue");
           var classToSend = angular.copy(className);
           d3TableClass.push(classToSend);
         };
@@ -141,7 +202,6 @@ angular.module('DTBS.main')
         };
         scope.$on('d3:new-data', function (e, data) {
           // re do force layout with new data
-          console.log(data);
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);

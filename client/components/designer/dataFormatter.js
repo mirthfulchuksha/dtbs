@@ -239,6 +239,160 @@ var data4 = [
     ]
   }
 ];
+var graph1 = {
+  "nodes": [
+    {
+      "name": "table1",
+      "type": "title",
+      "pk": {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      "group": 1,
+      "size": 32,
+      "id": 1,
+      "index": 0,
+      "weight": 1
+    },
+    {
+      "name": "id",
+      "type": "field",
+      "group": 1,
+      "size": 16,
+      "id": 1,
+      "index": 1,
+      "weight": 2
+    },
+    {
+      "name": "table2",
+      "type": "title",
+      "pk": {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      },
+      "group": 2,
+      "size": 32,
+      "id": 2,
+      "index": 2,
+      "weight": 2
+    },
+    {
+      "name": "name",
+      "type": "field",
+      "group": 2,
+      "size": 16,
+      "id": 2,
+      "index": 3,
+      "weight": 1
+    },
+    {
+      "name": "table1_id",
+      "type": "field",
+      "origin": "1",
+      "group": 2,
+      "size": 16,
+      "id": 2,
+      "index": 4,
+      "weight": 1
+    }
+  ],
+  "links": [
+    {
+      "source": {
+        "name": "table1",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "basicType": "Numeric",
+          "type": "TINYINT"
+        },
+        "group": 1,
+        "size": 32,
+        "id": 1,
+        "index": 0,
+        "weight": 1
+      },
+      "target": {
+        "name": "id",
+        "type": "field",
+        "group": 1,
+        "size": 16,
+        "id": 1,
+        "index": 1,
+        "weight": 2
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "table2",
+        "type": "title",
+        "pk": {
+          "id": "name",
+          "basicType": "String",
+          "type": "CHAR"
+        },
+        "group": 2,
+        "size": 32,
+        "id": 2,
+        "index": 2,
+        "weight": 2
+      },
+      "target": {
+        "name": "name",
+        "type": "field",
+        "group": 2,
+        "size": 16,
+        "id": 2,
+        "index": 3,
+        "weight": 1
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "table2",
+        "type": "title",
+        "pk": {
+          "id": "name",
+          "basicType": "String",
+          "type": "CHAR"
+        },
+        "group": 2,
+        "size": 32,
+        "id": 2,
+        "index": 2,
+        "weight": 2
+      },
+      "target": {
+        "name": "table1_id",
+        "type": "field",
+        "origin": "1",
+        "group": 2,
+        "size": 16,
+        "id": 2,
+        "index": 4,
+        "weight": 1
+      },
+      "value": 40
+    },
+    {
+      "source": {
+        "name": "id",
+        "type": "field",
+        "group": 1,
+        "size": 16,
+        "id": 1,
+        "index": 1,
+        "weight": 2
+      },
+      "target": "4",
+      "value": 40
+    }
+  ]
+}
 var dummyData = {
           "nodes":[
             {"name": "Users", "group": 1, "size": 32, "type": "table"},

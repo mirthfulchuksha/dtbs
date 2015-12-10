@@ -38,14 +38,16 @@ angular.module('DTBS.main')
     $scope.addTableAttr = function (keys, table) {
       keys.forEach(function (key){
        $scope.tableStorage[table.id].attrs.push(key);
-       var updatedData = angular.copy($scope.tableStorage);
-       d3Data.push(updatedData);
+       // var updatedData = angular.copy($scope.tableStorage);
+       // d3Data.push(updatedData);
       });
       $scope.selectedTable = 0;
     };
 
     $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
+      var updatedData = angular.copy($scope.tableStorage);
+      d3Data.push(updatedData);
     };
 
     $scope.changePrimaryKey = function (newPK, table) {
