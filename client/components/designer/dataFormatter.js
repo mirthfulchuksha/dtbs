@@ -23,7 +23,7 @@ var data =
         "id": "subject_id",
         "basicType": "Numeric",
         "type": "INT",
-        "origin": 1
+        "origin": 2
       }
     ]
   },
@@ -76,6 +76,8 @@ var dataBuilder = function (data) {
   var graph = {nodes: [], links: []};
   // build up primary key field indices for linking reference
   var primaryKeys = [];
+  // build up foreign key indexes
+  var foreignKeys = [];
   // initialize group number
   var groupNumber = 1;
   // loop through tables
@@ -93,7 +95,7 @@ var dataBuilder = function (data) {
     // push the central node onto the graph
     graph.nodes.push(centralNode);
       //[tableid: index]
-    primaryKeys.push([table.id, graph.nodes.length-1]);
+    primaryKeys.push([table.id, graph.nodes.length]);
     var currentLength = graph.nodes.length-1;
     var fieldCounter = i;
     // loop through the current table's fields
@@ -115,24 +117,51 @@ var dataBuilder = function (data) {
       graph.links.push(fieldToTableLink);
       // if the field has an origin property, then it must be a FK linked to a PK field
       if (field.origin) {
-        // we want to get the index of where that table's PK is in the nodes array
-        primaryKeys.forEach(function (pk) {
-          console.log(pk);
-          if (pk[0] === field.origin) {
-            console.log("Matched");
-            // index of primary key
-            var source = pk[1];
-            // index of current field
-            var target = graph.nodes.length-1;
-            var fieldToFKLink = {"source": source, "target": target, "value": 40};
-            graph.links.push(fieldToFKLink);
-            return;
-          }
-        });
+        // we want to store the current index to check after all tables have been parsed
+        // [fieldname: index]
+        foreignKeys.push([field.id, graph.nodes.length-1]);
       }
     }
     groupNumber++; 
   }
+  var container = {};
+  container.graph = graph;
+  container.primaryKeys = primaryKeys;
+  container.foreignKeys = foreignKeys;
+  return container;
+};
+var fkLinks = function (graphContainer, data) {
+  var primaryKeys = graphContainer.primaryKeys;
+  var foreignKeys = graphContainer.foreignKeys;
+  var graph = graphContainer.graph;
+  var source, target;
+  data.forEach(function (table) {
+    table.attrs.forEach(function (field) {
+      // if it has a defined origin, it is a foreign key to a primary key in another table
+      if (field.origin) {
+        // find the index in nodes of the primary key for that table id
+        primaryKeys.forEach(function (pk) {
+          if (pk[0] === field.origin) {
+            console.log(pk);
+            source = pk[1];
+            return;
+          }
+        });
+        // find the index in nodes of the foreign key for that field
+        foreignKeys.forEach(function (fk) {
+          // [fieldname: index]
+          if (field.id === fk[0]) {
+            console.log(fk);
+            target = fk[1];
+            return;
+          }
+        });
+      }
+    });
+  });
+  var fieldToFKLink = {"source": source, "target": target, "value": 40};
+  graph.links.push(fieldToFKLink);
+  console.log(fieldToFKLink);
   return graph;
 };
 
