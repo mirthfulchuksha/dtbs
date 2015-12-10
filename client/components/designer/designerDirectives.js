@@ -13,7 +13,7 @@ angular.module('DTBS.main')
         var svg = d3.select(element[0])
         .append("svg")
         .attr('id', '#canvas')
-        .style('width', '100%')
+        .style('width', width)
         .style('height', height);
        
         scope.render = function (tableData) {
@@ -49,6 +49,7 @@ angular.module('DTBS.main')
               .enter().append("g")
               .attr("class", "node")
               .attr("class", function (d) { return d.group; })
+              .style('color', function (d) { return d.origin; })
               .on("click", function () {
                 click(this);
               })
@@ -75,8 +76,11 @@ angular.module('DTBS.main')
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
-            d3.selectAll("circle").attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; });
+            d3.selectAll("circle")
+                // .attr("cx", function (d) { return d.x; })
+                .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
+                // .attr("cy", function (d) { return d.y; });
+                .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
 
             d3.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
