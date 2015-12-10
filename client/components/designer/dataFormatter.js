@@ -93,6 +93,66 @@ var data2 = [
     ]
   }
 ];
+var data3 = [
+  {
+    "name": "users",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "tweets",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      {
+        "origin": "1",
+        "id": "users_id",
+        "type": "INT"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "TINYINT"
+    }
+  },
+  {
+    "name": "messages",
+    "id": 3,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "TINYINT"
+      },
+      {
+        "origin": "1",
+        "id": "users_id",
+        "type": "INT"
+      }
+    ]
+  }
+  ];
 var dummyData = {
           "nodes":[
             {"name": "Users", "group": 1, "size": 32, "type": "table"},
@@ -163,7 +223,7 @@ var dataBuilder = function (data) {
       if (field.origin) {
         // we want to store the current index to check after all tables have been parsed
         // [fieldname: index]
-        foreignKeys.push([field.id, graph.nodes.length-1]);
+        foreignKeys.push([field.id+":"+graph.nodes.length-1, graph.nodes.length-1]);
       }
     }
     groupNumber++; 
@@ -187,10 +247,7 @@ var fkLinks = function (graphContainer, data) {
       if (field.origin) {
         // find the index in nodes of the primary key for that table id
         primaryKeys.forEach(function (pk) {
-          console.log(typeof pk[0], "pk[0]");
-          console.log(typeof field.origin, "field.origin");
           if (pk[0] === parseInt(field.origin)) {
-            console.log(pk, "matched");
             source = pk[1] + 1;
             return;
           }
@@ -198,8 +255,8 @@ var fkLinks = function (graphContainer, data) {
         // find the index in nodes of the foreign key for that field
         foreignKeys.forEach(function (fk) {
           // [fieldname: index]
-          if (field.id === fk[0]) {
-            console.log(fk);
+          if (field.id+":"+fk[1] === fk[0]) {
+            console.log(fk, "FK Match");
             target = fk[1];
             return;
           }
