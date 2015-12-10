@@ -152,7 +152,93 @@ var data3 = [
       }
     ]
   }
-  ];
+];
+var data4 = [
+  {
+    "name": "Users",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "id": "name",
+        "basicType": "String",
+        "type": "CHAR"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "Tweets",
+    "id": 2,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "origin": "1",
+        "id": "Users_id",
+        "type": "INT"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "Boards",
+    "id": 3,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "origin": "2",
+        "id": "Tweets_id",
+        "type": "INT"
+      }
+    ],
+    "primaryKey": {
+      "id": "id",
+      "basicType": "Numeric",
+      "type": "INT"
+    }
+  },
+  {
+    "name": "Posts",
+    "id": 4,
+    "attrs": [
+      {
+        "id": "id",
+        "basicType": "Numeric",
+        "type": "INT"
+      },
+      {
+        "origin": "1",
+        "id": "Users_id",
+        "type": "INT"
+      },
+      {
+        "origin": "2",
+        "id": "Tweets_id",
+        "type": "INT"
+      }
+    ]
+  }
+];
 var dummyData = {
           "nodes":[
             {"name": "Users", "group": 1, "size": 32, "type": "table"},
@@ -223,7 +309,8 @@ var dataBuilder = function (data) {
       if (field.origin) {
         // we want to store the current index to check after all tables have been parsed
         // [fieldname: index]
-        foreignKeys.push([field.id+":"+graph.nodes.length-1, graph.nodes.length-1]);
+        console.log(field.id.toString()+"-"+(graph.nodes.length-1).toString());
+        foreignKeys.push([field.id.toString()+":"+(graph.nodes.length-1).toString(), (graph.nodes.length-1).toString()]);
       }
     }
     groupNumber++; 
@@ -240,11 +327,11 @@ var fkLinks = function (graphContainer, data) {
   console.log(primaryKeys, "PKS");
   console.log(foreignKeys, "FKS")
   var graph = graphContainer.graph;
-  var source, target;
   data.forEach(function (table) {
     table.attrs.forEach(function (field) {
+      var source, target;
       // if it has a defined origin, it is a foreign key to a primary key in another table
-      if (field.origin) {
+      if (field.origin !== undefined) {
         // find the index in nodes of the primary key for that table id
         primaryKeys.forEach(function (pk) {
           if (pk[0] === parseInt(field.origin)) {
@@ -253,20 +340,22 @@ var fkLinks = function (graphContainer, data) {
           }
         });
         // find the index in nodes of the foreign key for that field
+        var counter = 0;
         foreignKeys.forEach(function (fk) {
           // [fieldname: index]
-          if (field.id+":"+fk[1] === fk[0]) {
+          if (field.id.toString()+":"+(fk[1]).toString() === fk[0]) {
             console.log(fk, "FK Match");
             target = fk[1];
+            foreignKeys.splice(counter,1);
+            counter++;
             return;
           }
         });
+      var fieldToFKLink = {"source": source, "target": target, "value": 40};
+      graph.links.push(fieldToFKLink);
       }
     });
   });
-  var fieldToFKLink = {"source": source, "target": target, "value": 40};
-  graph.links.push(fieldToFKLink);
-  console.log(fieldToFKLink);
   return graph;
 };
 
