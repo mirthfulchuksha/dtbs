@@ -12,7 +12,7 @@ angular.module('DTBS.main')
         // Create the SVG
         var svg = d3.select(element[0])
         .append("svg")
-        .attr('id', '#canvas')
+        .attr('id', 'designer')
         .style('width', width)
         .style('height', height);
        
