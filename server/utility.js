@@ -4,8 +4,10 @@ var bodyParser = require('body-parser');
 var _ = require('underscore');
 
 var sequelizeTypeDict = {
-  'Int': 'INTEGER',
-  'Char': 'STRING'
+  'Numeric': 'INTEGER',
+  'String': 'STRING',
+  'DateTime': 'DATE',
+  'Bit': 'INTEGER'
 };
 
 var bookshelfTypeDict = {
@@ -101,7 +103,7 @@ module.exports = {
       var keys = tables[i].attrs;
       for (var key = 0; key < keys.length; key++) {
         scheme += '\
-  ' + keys[key].name + ': Sequelize.' + sequelizeTypeDict[keys[key].type];
+  ' + keys[key].id + ': Sequelize.' + sequelizeTypeDict[keys[key].basicType];
 
         if (key !== keys.length - 1) {
           scheme += ',';
