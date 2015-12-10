@@ -1,7 +1,7 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', function ($scope, CodeParser) {
-  $scope.showModal = true;
+  $scope.showModal = false;
   $scope.toggleModal = function () {
     $scope.showModal = !$scope.showModal;
   };
