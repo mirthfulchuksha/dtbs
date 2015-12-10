@@ -35,10 +35,9 @@ passport.use(new GitHubStrategy({
     // asynchronous verification, for effect...
     process.nextTick(function () {
       console.log(profile);
-      // To keep the example simple, the user's GitHub profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the GitHub account with a user record in your database,
-      // and return that user instead.
+      // we will probably want 
+      // to associate the GitHub account with a user record in our database,
+      // and return that user instead of the git profile itself
       return done(null, profile);
     });
   }
