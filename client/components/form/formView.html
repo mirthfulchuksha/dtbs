@@ -27,14 +27,15 @@
           <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
         </div>
         <form name="tableForm">
-          <button class="btn btn-default" ng-click="addField()"> Add Field </button></br>
-          <button class="btn btn-default" ng-click="addForeignKey()">Add Foreign Key</button>
-          <div ng-repeat="key in keys track by $index" class="border">
-
+          <button class="btn btn-success" ng-click="addField()">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add Field
+          </button>
+          <div ng-repeat="key in keys track by $index" style="height:90px; position:relative">
+            <hr>
             <label>Column ID</label>
-              <input ng-model="keys[$index].id" type="text" placeholder="Column id here..." required/>
+              <input ng-model="keys[$index].id" type="text" placeholder="Column ID..." required/>
 
-            <label>Basic Type</label>
+            <label>  Basic Type</label>
               <select ng-model="keys[$index].basicType" required>
                 <option>Numeric</option>
                 <option>String</option>
@@ -42,41 +43,44 @@
                 <option>Bit</option>
               </select>
 
-            <label ng-if="keys[$index].basicType">Type</label>
+            <label ng-if="keys[$index].basicType">  Type</label>
               <select ng-model="keys[$index].type" ng-if="keys[$index].basicType" required>
                 <option ng-repeat="option in options[keys[$index].basicType]">{{option.name}}</option>
               </select>
+              <br><br>
 
             <label ng-if="keys[$index].basicType">Size</label>
               <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
 
-            <label ng-if="attributes[keys[$index].type]">Attributes</label>
-              <select ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes" multiple>
+            <label ng-if="attributes[keys[$index].type]">  Attributes</label>
+              <select ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes">
                 <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
               </select>
 
-            <label ng-if="keys[$index].type">Default</label>
+            <label ng-if="keys[$index].type">  Default</label>
               <select ng-if="keys[$index].type" ng-model="keys[$index].default">
                 <option>NULL</option>
                 <option>NOT NULL</option>
               </select>
-              <button class="btn btn-default" ng-click="cancelAdd($index)">Delete Field</button>
+              <button style="float:right; position: absolute; top:45px; right:10px" class="minus" ng-click="cancelAdd($index)"><span class="glyphicon glyphicon-minus-sign"></span></button>
           </div>
-
-          <div ng-repeat="fkey in foreignKeys track by $index" class="border">
-            <h4>Select which table to connect:</h4>
-            <select ng-model="foreignKeys[$index].origin">
+          <hr>
+          <div ng-repeat="fkey in foreignKeys track by $index">
+            <label>Select which table to connect:</label>
+            <select ng-model="foreignKeys[$index].origin" style="width:100px">
               <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.id}}</option>
             </select>
           </div>
 
           <div>
-            <h4>Choose the table's primary key</h4>
-            <select ng-model="primaryKey">
+            <label>Choose the table's primary key</label>
+            <select ng-model="primaryKey" style="width:100px" required>
               <option ng-repeat="possibleKey in tableStorage[selectedTable].attrs.concat(keys) track by $index">{{possibleKey.id}}</option>
             </select>
           </div>
+          <br>
 
+          <button class="btn btn-default" ng-click="addForeignKey()">Add Foreign Key</button>
           <button class="btn btn-default" ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
           <button class="btn btn-default" ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
         </form>

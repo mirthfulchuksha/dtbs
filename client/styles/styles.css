@@ -12,11 +12,13 @@ svg {
 }
 
 input {
+  padding-left: 10px;
   border-style: none;
   border-color: #ccc;
   background-color: #eee;
+  border-radius:5px;
   width: 100px;
-  height: 30px;
+  height: 20px;
   overflow: auto;
   outline: none;
   font-size: 10px;
@@ -39,6 +41,23 @@ input {
   display: inline-block;
 }
 
+.modal .modal-body {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.minus {
+  -webkit-appearance: none;
+  outline: none;
+  border: 0;
+  background: transparent;
+  color: #ee5f5b;
+  font-size: 16px;
+}
+
+.minus:hover {
+  color: #bd362f;
+}
 
 /*Editor Styles*/
 .super-wrap {
@@ -72,12 +91,15 @@ input {
   width: 100%;
   height: 100%;
 }
+
 .border {
   border: solid #ccc 1px;
   border-radius: 5px;
-  margin: 5px
+  margin: 5px;
   padding: 5px;
-}.link {
+}
+
+.link {
   stroke: #ccc;
 }
 
@@ -85,6 +107,7 @@ input {
   pointer-events: none;
   font: 10px sans-serif;
 }
+
 #code_button {
   display:block;
   padding-top: 10px;
@@ -96,6 +119,7 @@ input {
   text-align: center;
   z-index: 1;
 }
+
 .close {
   display: none;
 }
