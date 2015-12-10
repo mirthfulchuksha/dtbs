@@ -4,45 +4,45 @@ var data =
     "name": "Users",
     "id": 1,
     "primaryKey": {
-      "id": "user_id",
+      "id": "id",
       "basicType": "Numeric",
       "type": "INT"
     },
     "attrs": [
       {
-        "id": "user_id",
+        "id": "id",
         "basicType": "Numeric",
         "type": "INT"
       },
       {
-        "id": "user_name",
+        "id": "name",
         "basicType": "String",
         "type": "VARCHAR"
       },
       {
         "id": "subject_id",
         "basicType": "Numeric",
-        "type": "INT"
-        "origin": 1,
+        "type": "INT",
+        "origin": 1
       }
     ]
   },
   {
-    "name": "Classes",
+    "name": "Subjects",
     "id": 2,
     "primaryKey": {
-      "id": "class_id",
+      "id": "id",
       "basicType": "Numeric",
       "type": "INT"
     },
     "attrs": [
       {
-        "id": "class_id",
+        "id": "id",
         "basicType": "Numeric",
         "type": "INT"
       },
       {
-        "id": "class_name",
+        "id": "name",
         "basicType": "String",
         "type": "VARCHAR"
       }
@@ -57,8 +57,7 @@ var dummyData = {
             {"name": "subject_id", "group": 2, "size": 16, "type": "field"},
             {"name": "Subjects", "group": 2, "size": 32, "type": "table"},
             {"name": "id", "group": 2, "size": 16, "type": "field"},
-            {"name": "name", "group": 2, "size": 16, "type": "field"},
-            {"name": "teacher", "group": 2, "size": 16, "type": "field"}
+            {"name": "name", "group": 2, "size": 16, "type": "field"}
             ],
           "links": [
           // table links
@@ -67,7 +66,6 @@ var dummyData = {
             {"source": 0, "target": 3, "value": 40},
             {"source": 4, "target": 5, "value": 40},
             {"source": 4, "target": 6, "value": 40},
-            {"source": 4, "target": 7, "value": 40},
           // foreign key links
             {"source": 3, "target": 5, "value": 150}
             ]
@@ -87,12 +85,15 @@ var dataBuilder = function (data) {
     var centralNode = {
       name: table.name,
       type: "title",
+      pk: table.primaryKey,
       group: groupNumber,
       size: 32,
       id: table.id
     };
     // push the central node onto the graph
     graph.nodes.push(centralNode);
+      //[tableid: index]
+    primaryKeys.push([table.id, graph.nodes.length-1]);
     var currentLength = graph.nodes.length-1;
     var fieldCounter = i;
     // loop through the current table's fields
@@ -102,6 +103,7 @@ var dataBuilder = function (data) {
       var fieldNode = {
         name: field.id,
         type: "field",
+        origin: field.origin,
         group: groupNumber,
         size: 16,
         id: table.id
@@ -111,11 +113,26 @@ var dataBuilder = function (data) {
       // push the table/field link onto the graph
       var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
       graph.links.push(fieldToTableLink);
+      // if the field has an origin property, then it must be a FK linked to a PK field
+      if (field.origin) {
+        // we want to get the index of where that table's PK is in the nodes array
+        primaryKeys.forEach(function (pk) {
+          console.log(pk);
+          if (pk[0] === field.origin) {
+            console.log("Matched");
+            // index of primary key
+            var source = pk[1];
+            // index of current field
+            var target = graph.nodes.length-1;
+            var fieldToFKLink = {"source": source, "target": target, "value": 40};
+            graph.links.push(fieldToFKLink);
+            return;
+          }
+        });
+      }
     }
     groupNumber++; 
   }
   return graph;
 };
-// if field has attribute origin, push source: current field index, target: pk of the referenced table
-
 
