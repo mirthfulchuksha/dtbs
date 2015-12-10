@@ -130,8 +130,16 @@ angular.module('DTBS.main')
 
     $scope.addTableAttrChildScope = function (keyArr, foreignKeyArr, table, primaryKey) {
       foreignKeyArr.forEach(function (fkey) {
+        _.each($scope.tableStorage, function (tbl, index) {
+          console.log(tbl.name);
+          if(fkey.origin === tbl.name){
+            console.log("found origin", tbl.name);
+            fkey.origin = tbl.id;
+          }
+        });
         fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey.id;
         fkey.type = $scope.tableStorage[fkey.origin].primaryKey.type;
+        fkey.basicType = $scope.tableStorage[fkey.origin].primaryKey.basicType;
       });
 
       //This loop will find the correct index for the primary key and set it on the parent scope table
