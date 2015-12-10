@@ -70,6 +70,10 @@ angular.module('DTBS.main')
       $scope.seeKeyModal = !$scope.seeKeyModal;
     };
 
+    $scope.modalTitle = function (name) {
+      $("#tableTitle .modal-title").html("Add/Edit Fields for '" + name + "'");
+    };
+
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
@@ -94,8 +98,10 @@ angular.module('DTBS.main')
     $scope.$on('d3:table-class', function (e, data) {
       //regex to extract the table number in case of additional classes
       var parsedNum = data.match(/\d+/)[0];
-      console.log(parsedNum);
       $scope.selectedTable = parsedNum;
+
+      var obj = $scope.tableStorage[$scope.selectedTable];
+      $scope.modalTitle(obj.name);
     });
     //event listener for updating or server side calls on save (NOT WORKING)
     $scope.$watch('tableStorage', debounceUpdate, true);
@@ -113,11 +119,12 @@ angular.module('DTBS.main')
       //close window and open key modal
       $scope.toggleMyModal();
       $scope.toggleKeyModal();
+      $scope.modalTitle(name);
     };
 
     $scope.seeModal = false;
     $scope.toggleMyModal = function () {
-        $scope.seeModal = !$scope.seeModal;
+      $scope.seeModal = !$scope.seeModal;
     };
 
   }])

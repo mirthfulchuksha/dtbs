@@ -20,8 +20,8 @@
       </tablemodal>
     </div>
     <br>
-    <keymodal title="Add/Edit Fields" visible="seeKeyModal">
-      <h1 class="editTableTitle">{{tableStorage[selectedTable].name}}</h1>
+    <keymodal title="" id="tableTitle" visible="seeKeyModal">
+    <!--   <h1 class="editTableTitle">{{tableStorage[selectedTable].name}}</h1> -->
       <div ng-controller="OutputController">
         <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
           <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
