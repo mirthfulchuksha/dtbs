@@ -35,7 +35,7 @@ module.exports = {
           foreignKeys.push(keys[key]);
           console.log("found a fkey", foreignKeys);
         }
-        
+
         schema += "\
     " + keys[key].id + " " + keys[key].type;
 
@@ -62,8 +62,17 @@ module.exports = {
           }
         }
         //add comma if there are more keys
-        if (key !== keys.length -1) {
+        if (key !== keys.length -1 || foreignKeys.length > 0) {
           schema +=",";
+        }
+        schema += "\n";
+      }
+
+      for(var j = 0; j < foreignKeys.length; j++){
+        schema += "\
+    FOREIGN KEY (" + foreignKeys[j].id + ") REFERENCES " + tables[+(foreignKeys[j].origin) - 1].name + "(" + tables[+(foreignKeys[j].origin) - 1].primaryKey.id + ")";
+        if(j !== foreignKeys.length - 1){
+          schema += ",";
         }
         schema += "\n";
       }
