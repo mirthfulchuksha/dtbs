@@ -31,21 +31,31 @@ angular.module('DTBS.main')
 
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
+      $scope.interactd3();
       $scope.toggleKeyModal();
     };
 
     //parent scope function to add keys to tables
-    $scope.addTableAttr = function (keys, table) {
+    $scope.addTableAttr = function (keys, table, pkeyIndex) {
+      console.log(pkeyIndex);
       keys.forEach(function (key){
-       $scope.tableStorage[table.id].attrs.push(key);
+        $scope.tableStorage[table.id].attrs.push(key);
        // var updatedData = angular.copy($scope.tableStorage);
        // d3Data.push(updatedData);
       });
+      var pkey = $scope.tableStorage[table.id].attrs.splice(pkeyIndex, 1);
+      $scope.tableStorage[table.id].attrs.unshift(pkey[0]);
+      console.log($scope.tableStorage);
+      //updated rendering
+      $scope.interactd3();
       $scope.selectedTable = 0;
     };
 
     $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
+    };
+
+    $scope.interactd3 = function () {
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
     };
