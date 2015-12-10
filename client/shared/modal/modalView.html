@@ -8,7 +8,7 @@
       <button ng-click="toggleModal()" class="btn btn-default">Update Settings</button>
     </form>
 
-    <modal title="Page Setup" visible="!showModal" >
+    <modal title="Page Setup" visible="!showModal" data-backdrop="static" keyboard="false">
       <form role="form" ng-submit="updateFactory()">
         <div class="form-group">
           <label for="title">Title</label>
