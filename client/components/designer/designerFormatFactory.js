@@ -8,7 +8,7 @@ angular.module('DTBS.main')
       type: "title",
       pk: table.primaryKey,
       group: groupNumber,
-      size: 32,
+      size: 45,
       id: table.id
     };
     return centralNode;
@@ -19,7 +19,7 @@ angular.module('DTBS.main')
       type: "field",
       origin: field.origin,
       group: groupNumber,
-      size: 16,
+      size: 25,
       id: table.id
     };
     return fieldNode;
@@ -45,7 +45,7 @@ angular.module('DTBS.main')
         var fieldNode = buildFieldNode(table, field, groupNumber);
         graph.nodes.push(fieldNode);
         // Add Field to Central Node Link =======================
-        var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 40};
+        var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 50};
         graph.links.push(fieldToTableLink);
         // Check for origin - denotes FK relationship ===========
         if (field.origin) {
@@ -93,7 +93,7 @@ angular.module('DTBS.main')
               break;
             }
           }
-          var fieldToFKLink = {"source": source, "target": target, "value": 40};
+          var fieldToFKLink = {"source": source, "target": target, "value": 160};
           if (fieldToFKLink.source !== undefined && fieldToFKLink.target !== undefined) {
             graph.links.push(fieldToFKLink);
           }

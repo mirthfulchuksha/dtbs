@@ -21,7 +21,7 @@ angular.module('DTBS.main')
           scope.schemas = [];
 
           // Set up the colour scale
-          var color = d3.scale.category20();
+          var color = d3.scale.category10();
           //Set up the force layout
           var force = d3.layout.force()
             .charge(-500)
@@ -49,7 +49,6 @@ angular.module('DTBS.main')
               .enter().append("g")
               .attr("class", "node")
               .attr("class", function (d) { return d.group; })
-              .style('color', function (d) { return d.origin; })
               .on("click", function () {
                 click(this);
               })
@@ -59,9 +58,21 @@ angular.module('DTBS.main')
           // append the node
           node.append("circle")
               .attr("r", function (d) { return d.size/2; })
+              .attr("stroke", function (d) {
+                // if the node has an origin, it is a foreign key
+                if (d.origin) {
+                  // need to give it a stroke that matches the color of its link
+                  return color(d.origin);
+                }
+              })
+              .attr("stroke-width", function (d) {
+                if (d.origin) {
+                  return 4;
+                }
+              })
               .style("fill", function (d) {
-              return color(d.group);
-          })
+                return color(d.group);
+              })
           // append the field/table name
           node.append("text")
                 .attr("dx", 10)
@@ -77,9 +88,7 @@ angular.module('DTBS.main')
                 .attr("y2", function (d) { return d.target.y; });
 
             d3.selectAll("circle")
-                // .attr("cx", function (d) { return d.x; })
                 .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
-                // .attr("cy", function (d) { return d.y; });
                 .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
 
             d3.selectAll("text").attr("x", function (d) { return d.x; })
