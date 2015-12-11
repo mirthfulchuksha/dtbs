@@ -13,7 +13,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     $scope.showLoginModal = !$scope.showLoginModal;
   };
 
-  $scope.saveSVG = function () {    
+  $scope.saveSVG = function () {
     var svg_xml = document.getElementById('designer');
     var serializer = new XMLSerializer();
     var str = serializer.serializeToString(svg_xml);
@@ -83,7 +83,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
 }]);
 
 mymodal.factory('SaveAndRedirectFactory', ['AccessSchemaService', '$http', function (AccessSchemaService, $http) {
-  
+
   var stashTables = function () {
     var tables = AccessSchemaService.getTempSchema();
     console.log(tables);
