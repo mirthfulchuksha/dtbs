@@ -1,6 +1,7 @@
 var mymodal = angular.module('DTBS.modal', []);
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', function ($scope, CodeParser, d3Save, $http) {
+
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, d3Save, SaveAndRedirectFactory, $http) {
   $scope.showModal = false;
   $scope.showLoginModal = false;
 
@@ -39,9 +40,14 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', func
       data: $scope.user
     }).success(function (data, status, headers, config) {
       console.log("Logged in!")
-      }).error(function (data, status, headers, config) {
-	console.log("Cannot log in")
-      });
+    }).error(function (data, status, headers, config) {
+	   console.log("Cannot log in")
+    });
+  };
+
+  $scope.githubRedirect = function () {
+    console.log("in the redirect");
+    SaveAndRedirectFactory.stashTables();
   };
 
   $scope.db = {};
@@ -61,6 +67,28 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', func
     }
     $scope.toggleModal();
     CodeParser.update($scope.db);
+  };
+}]);
+
+mymodal.factory('SaveAndRedirectFactory', ['AccessSchemaService', '$http', function (AccessSchemaService, $http) {
+  
+  var stashTables = function () {
+    var tables = AccessSchemaService.getTempSchema();
+    console.log(tables);
+    window.localStorage.setItem('tempTable', JSON.stringify(tables));
+
+    // return $http({
+    //     method: 'GET',
+    //     url: '/auth/github'
+    //   }).then(function (res) {
+    //     //???
+    //     console.log("does this get called??!");
+    //     return res.data;
+    //   });
+  };
+
+  return {
+    stashTables: stashTables
   };
 }]);
 

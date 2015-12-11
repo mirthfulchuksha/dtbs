@@ -5,9 +5,10 @@ angular.module('DTBS.main')
   'CodeParser',
   'd3Data',
   'd3TableClass',
-  function ($scope, $timeout, CodeParser, d3Data, d3TableClass) {
+  'AccessSchemaService',
+  function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService) {
     //object for table storage
-    $scope.tableStorage = {};
+    $scope.tableStorage;
     //incrementing id for table creation in child scopes
     $scope.id = 0;
     $scope.db = {};
@@ -24,6 +25,7 @@ angular.module('DTBS.main')
     };
 
     $scope.addTable = function (table) {
+      window.localStorage.removeItem('tempTable');
       $scope.tableStorage[table.id] = table;
       //set selected table to allow for correcting editing window
       $scope.selectedTable = table.id;
@@ -57,7 +59,26 @@ angular.module('DTBS.main')
     $scope.interactd3 = function () {
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
+      console.log(d3Data);
     };
+
+    /*
+      THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
+    */
+    var recoverInfo = function () {
+      var recovered = window.localStorage.getItem('tempTable');
+      if(recovered) {
+        console.log("found! ", recovered);
+        $scope.tableStorage = JSON.parse(recovered);
+        $scope.id = Object.keys($scope.tableStorage).length;
+        console.log($scope.tableStorage);
+        console.log($scope.id);
+        //rebuild visuals
+        $scope.interactd3();
+      } else {
+        $scope.tableStorage = {};
+      }
+    };  
 
     $scope.removeKeyFromTable = function (index, table) {
       $scope.tableStorage[table.id].attrs.splice(index,1);
@@ -78,6 +99,9 @@ angular.module('DTBS.main')
        // console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
        CodeParser.update($scope.db, $scope.tableStorage);
        CodeParser.fetchCode();
+
+       //save table to factory
+       AccessSchemaService.setTempSchema($scope.tableStorage);
      } else {
        console.log("Tried to save updates to item #" + ($scope.tableStorage.length) + " but the form is invalid.");
      }
@@ -104,4 +128,23 @@ angular.module('DTBS.main')
     //event listener for updating or server side calls on save (NOT WORKING)
     $scope.$watch('tableStorage', debounceUpdate, true);
 
-  }]);
+
+    recoverInfo();
+  }])
+  .factory('AccessSchemaService', function () {
+    var tempSchema;
+
+    var setTempSchema = function (schema) {
+      tempSchema = schema;
+      console.log("schema saved in factory");
+    };
+
+    var getTempSchema = function () {
+      return tempSchema;
+    }
+
+    return {
+      setTempSchema: setTempSchema,
+      getTempSchema: getTempSchema
+    };
+  });
