@@ -3,6 +3,9 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
+var phantom = require('node-phantom');
+
+
 var sequelizeTypeDict = {
   'Numeric': 'INTEGER',
   'String': 'STRING',
@@ -150,5 +153,30 @@ module.exports = {
     });
 
     res.send(schema, 200);
+  },
+  saveSVG: function (req, res, next) {
+    var pageUrl = "http://10.6.5.173:3000";
+    phantom.create("--ignore-ssl-errors=yes", "--ssl-protocol=any", function (ph) {//mMAKE SURE WE CAN RENDER https
+      ph.createPage(function (page) {
+        //CREATE PAGE OBJECT
+        page.set('viewportSize', {width:1280,height:900}, function(){
+          page.set('clipRect', {top:0,left:0,width:1280,height:900}, function(){
+            //OPEN PAGE
+            page.open(pageUrl, function(status) {
+              //WAIT 15 SECS FOR WEBPAGE TO BE COMPLETELY LOADED
+              setTimeout(function(){
+                page.render('screenshot.png', function(finished){
+                  console.log('rendering '+pageUrl+' done');
+                  ph.exit();
+                });             
+              }, 5000);
+            });
+            //END OF: OPEN PAGE
+          });
+        });
+        //END OF: CREATE PAGE OBJECT
+      });
+    });
+    res.sendStatus(200);
   }
 };

@@ -4,17 +4,18 @@ page.viewportSize = {
   height: 1200
 };
 
+
 var getElementBounds = function (elementId) {
-    return page.evaluate(function (id) {
-        var clipRect = document.getElementById(id).getBoundingClientRect();
-        return {
-            top: clipRect.top,
-            left: clipRect.left,
-            width: clipRect.width,
-            height: clipRect.height
-        };
-    }, elementId);
-}
+  return page.evaluate(function (id) {
+    var clipRect = document.getElementById(id).getBoundingClientRect();
+    return {
+      top: clipRect.top,
+      left: clipRect.left,
+      width: clipRect.width,
+      height: clipRect.height
+    };
+  }, elementId);
+};
 
 var url = 'http://dtbs.herokuapp.com/#/';
 page.open(url, function (status) {
@@ -23,6 +24,6 @@ page.open(url, function (status) {
         page.clipRect = clipRect;
         page.render('schemas.png');
         phantom.exit();
-    }, 5000);
+    }, 10000);
 });
 

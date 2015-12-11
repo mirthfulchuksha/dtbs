@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', 'd3Save', 'd3Format', function (d3Service, d3TableClass, d3Data, d3Save, d3Format) {
+.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', 'd3Format', function (d3Service, d3TableClass, d3Data, d3Format) {
   return {
     restrict: 'EA',
     scope: {},
@@ -111,9 +111,6 @@ angular.module('DTBS.main')
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
-        });
-        scope.$on('d3:save-table', function (e, data) {
-          console.log("request to save!");
         });
       });
     }};

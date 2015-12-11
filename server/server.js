@@ -90,6 +90,9 @@ app.post('/bookshelf', function (req, res, next) {
 app.post('/sequelize', function (req, res, next){
   util.parseORMSequelize(req, res, next);
 });
+app.post('/saveSVG', function (req, res, next) {
+  util.saveSVG(req, res, next);
+});
 
 app.listen(port);
 

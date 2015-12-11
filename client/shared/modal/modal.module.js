@@ -13,7 +13,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', func
   };
 
   $scope.saveSVG = function () {
-    d3Save.push("save");
+    d3Save.saveSVG();
   };
 
   $scope.user = {};
