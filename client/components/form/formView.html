@@ -30,7 +30,7 @@
           <button class="btn btn-success" ng-click="addField()">
             <span class="glyphicon glyphicon-plus-sign"></span> Add Field
           </button>
-          <div ng-repeat="key in keys track by $index" style="height:90px; position:relative">
+          <div ng-repeat="key in keys track by $index" style="height:110px; position:relative">
             <hr>
             <label>Column ID</label>
               <input ng-model="keys[$index].id" type="text" placeholder="Column ID..." required/>
@@ -52,11 +52,14 @@
             <label ng-if="keys[$index].basicType">Size</label>
               <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
 
-            <label ng-if="attributes[keys[$index].type]">  Attributes</label>
-              <select ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes">
-                <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
-              </select>
-
+              <!-- WHAT THE FUCK WHY DOESNT THIS WORK -->
+            <label class="moreAttributes" ng-if="attributes[keys[$index].type]">  Attributes</label>
+              <div class="moreOptions" ng-repeat="option in attributes[keys[$index].type]" style="height:auto;width:200px;display:inline;">
+              <label>
+                <input type="checkbox" value="{{option}}" ng-checked="selection.indexOf(option) !== -1" ng-click="toggleSelection(option)"> {{option.attr}}
+              </label>
+              </div>
+              <!--  Seriously though   -->
             <label ng-if="keys[$index].type">  Default</label>
               <select ng-if="keys[$index].type" ng-model="keys[$index].default">
                 <option>NULL</option>
@@ -83,6 +86,12 @@
           <button class="btn btn-default" ng-click="addForeignKey()">Add Foreign Key</button>
           <button class="btn btn-default" ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
           <button class="btn btn-default" ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
+          <script>
+            $('.moreAttributes').on('click', function () {
+              console.log("should show stuff");
+              $('.moreOptions').css("display","block");
+            });
+          </script>
         </form>
       </div>
     </keymodal>
