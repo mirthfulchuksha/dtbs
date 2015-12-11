@@ -121,7 +121,7 @@ angular.module('DTBS.main')
       //regex to extract the table number in case of additional classes
       var parsedNum = data.match(/\d+/)[0];
       $scope.selectedTable = parsedNum;
-
+      console.log("selecting ", parsedNum);
       var obj = $scope.tableStorage[$scope.selectedTable];
       $scope.modalTitle(obj.name);
     });

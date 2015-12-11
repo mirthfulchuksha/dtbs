@@ -132,6 +132,7 @@ angular.module('DTBS.main')
       foreignKeyArr.forEach(function (fkey) {
         _.each($scope.tableStorage, function (tbl, index) {
           //iterate through every table to retrieve the id of the foreign keys origin
+          console.log(tbl);
           if(fkey.origin === tbl.name){
             fkey.origin = tbl.id;
           }
