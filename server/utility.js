@@ -3,7 +3,7 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
-var phantom = require('node-phantom');
+var phantom = require('phantom');
 
 
 var sequelizeTypeDict = {
@@ -156,27 +156,44 @@ module.exports = {
   },
   saveSVG: function (req, res, next) {
     var pageUrl = "http://10.6.5.173:3000";
-    phantom.create("--ignore-ssl-errors=yes", "--ssl-protocol=any", function (ph) {//mMAKE SURE WE CAN RENDER https
+    phantom.create(function (ph) {
       ph.createPage(function (page) {
-        //CREATE PAGE OBJECT
-        page.set('viewportSize', {width:1280,height:900}, function(){
-          page.set('clipRect', {top:0,left:0,width:1280,height:900}, function(){
-            //OPEN PAGE
-            page.open(pageUrl, function(status) {
-              //WAIT 15 SECS FOR WEBPAGE TO BE COMPLETELY LOADED
-              setTimeout(function(){
-                page.render('screenshot.png', function(finished){
-                  console.log('rendering '+pageUrl+' done');
-                  ph.exit();
-                });             
-              }, 5000);
-            });
-            //END OF: OPEN PAGE
-          });
+        page.viewportSize = {
+          width: 1600,
+          height: 1200
+        };
+        page.open(pageUrl, function (status) {
+            setTimeout(function () {
+              // var clipRect = module.exports.getElementBounds(page, 'designer');
+              var clipRect;
+              var getElementBounds = function (id) {
+                return page.evaluate(function (id) {
+                  clipRect = document.getElementById('designer').getBoundingClientRect();
+                  return {
+                    top: clipRect.top,
+                    left: clipRect.left,
+                    width: clipRect.width,
+                    height: clipRect.height
+                  };
+                }, id);
+              };
+              // page.clipRect = getElementBounds('designer');
+              page.clipRect = {
+                bottom: 421.81817626953125,
+                height: 350,
+                left: 0,
+                right: 640,
+                top: 71.81817626953125,
+                width: 640
+              };
+              console.log("Capturing designer");
+              page.render('schemas.png');
+              ph.exit();
+            }, 300000);
         });
-        //END OF: CREATE PAGE OBJECT
       });
     });
     res.sendStatus(200);
   }
 };
+

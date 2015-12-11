@@ -72,12 +72,13 @@ angular.module('DTBS.main')
               })
               .style("fill", function (d) {
                 return color(d.group);
-              })
+              });
           // append the field/table name
           node.append("text")
                 .attr("dx", 10)
                 .attr("dy", ".35em")
                 .text(function (d) { return d.name })
+                .attr("text-decoration", function (d) { return d.isPk === true ? "underline" : "none"; })
                 .attr("font-weight", function (d) { return d.type === "title" ? "bold" : "normal"; });
 
           //Give the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
