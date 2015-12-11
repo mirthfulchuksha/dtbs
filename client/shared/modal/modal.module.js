@@ -26,7 +26,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', func
     }).success(function (data, status, headers, config) {
       console.log("Logged in!")
       }).error(function (data, status, headers, config) {
-	console.log("Cannot log in")
+      console.log("Cannot log in")
       });
   };
 
