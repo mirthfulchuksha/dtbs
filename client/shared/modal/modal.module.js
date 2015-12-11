@@ -1,12 +1,33 @@
 var mymodal = angular.module('DTBS.modal', []);
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', function ($scope, CodeParser, d3Save) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', function ($scope, CodeParser, d3Save, $http) {
   $scope.showModal = false;
+  $scope.showLoginModal = false;
+
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
   };
+
+  $scope.toggleLoginModal = function () {
+    $scope.showLoginModal = !$scope.showLoginModal;
+  };
+
   $scope.saveSVG = function () {
     d3Save.push("save");
+  };
+
+  $scope.user = {};
+  $scope.login = function () {
+    $scope.toggleLoginModal();
+    $http({
+      url: '/login',
+      method: 'POST',
+      data: $scope.user
+    }).success(function (data, status, headers, config) {
+      console.log("Logged in!")
+      }).error(function (data, status, headers, config) {
+	console.log("Cannot log in")
+      });
   };
 
   $scope.db = {};

@@ -4,11 +4,18 @@ var bodyParser = require('body-parser');
 var util = require('./utility');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
+var helper = require('./dbHelper');
+var session = require('express-session');
 
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client'));
+app.use(session({
+  secret: 'nyan cat',
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -29,13 +36,14 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/callback"
+    callbackURL: "http://127.0.0.1:3000/auth/callback",
+    passReqToCallback: true
   },
-  function(accessToken, refreshToken, profile, done) {
+  function (req, accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
-      console.log(profile);
-      // we will probably want 
+    // console.log(profile);
+      // we will probably want
       // to associate the GitHub account with a user record in our database,
       // and return that user instead of the git profile itself
       return done(null, profile);
@@ -50,12 +58,22 @@ app.get('/auth/github',
     // function will not be called.
   });
 
-app.get('/auth/callback', 
+app.get('/auth/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   function(req, res) {
-    console.log("finished login");
+    var username = res.req.user.username;
+    helper.createUserDoc(req, res, username);
     res.redirect('/');
   });
+
+app.post('/login', helper.login);
+
+app.get('/logout', function (req, res) {
+  //access token revocation needed for oauth users
+  req.session.destroy(function () {
+    res.redirect('/');
+  });
+});
 
 /*
   Parsing paths
