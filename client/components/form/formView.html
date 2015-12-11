@@ -53,6 +53,11 @@
             <label ng-if="keys[$index].basicType">Size</label>
               <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
 
+            <label ng-if="attributes[keys[$index].type]">Attributes</label>
+              <select class="dropdown" ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes" multiple>
+                <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
+              </select>
+
             <label ng-if="keys[$index].type">  Default</label>
               <select ng-if="keys[$index].type" ng-model="keys[$index].default">
                 <option>NULL</option>
