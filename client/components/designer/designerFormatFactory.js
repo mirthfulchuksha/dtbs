@@ -59,10 +59,7 @@ angular.module('DTBS.main')
           var fieldIdString = field.id.toString()+":";
           var currentNodesIndex = (graph.nodes.length-1).toString();
           fieldIdString += currentNodesIndex;
-          var tuple = [];
-          tuple.push(fieldIdString);
-          tuple.push(currentNodesIndex)
-          foreignKeys.push(tuple);
+          foreignKeys.push([fieldIdString, currentNodesIndex]);
         }
       }
       groupNumber++; 
