@@ -30,15 +30,20 @@
   <div class="super-wrap">
     <div class="editor-wrapper grey" ng-controller="FormController">
       <div class="navbar-header">
-        <a class="navbar-brand editor-head grey" href="#">db code:</a>
+	<a class="navbar-brand editor-head grey" href="#">code:</a>
       </div>
       <form class="navbar-form navbar-left grey dropdown" role="search">
         <a class="btn btn-default" role="button" id="download"
-        target="_self" href="" download="" ng-click="downloadCode()">Download</a>
+	  target="_self" href="" download="" ng-click="downloadCode()">
+	  <span class="glyphicon glyphicon-save"></span>
+	</a>
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           Output
           <span class="caret"></span>
         </button>
+	<a class="btn btn-default" role="button" id="download" href="" ng-click="downloadCode()">
+	  <span class="glyphicon glyphicon-floppy-disk"></span>
+	</a>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
           <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
           <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
