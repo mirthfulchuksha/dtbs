@@ -13,7 +13,8 @@ angular.module('DTBS.main')
     var scriptTag = $document[0].createElement('script');
     scriptTag.type = 'text/javascript'; 
     scriptTag.async = true;
-    scriptTag.src = 'https://d3js.org/d3.v3.min.js';
+    // scriptTag.src = 'https://d3js.org/d3.v3.min.js';
+    scriptTag.src = 'lib/d3/d3.js';
     scriptTag.onreadystatechange = function () {
       if (this.readyState == 'complete') onScriptLoad();
     }
@@ -27,10 +28,13 @@ angular.module('DTBS.main')
     };
 }])
 .factory('d3Save', function ($http) {
-  var saveSVG = function () {
+  var saveSVG = function (form) {
+    console.log(typeof form.data);
     return $http({
       method: 'POST',
-      url: '/saveSVG'
+      url: '/saveSVG',
+      data: form.data,
+      headers: {'Content-Type': 'application/xml'}
     })
     .then(function (resp) {
       console.log("Back from server!")

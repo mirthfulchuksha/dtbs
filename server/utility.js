@@ -159,12 +159,12 @@ module.exports = {
   },
   saveSVG: function (req, res, next) {
     // output format (pdf or png )
-    req.body = '<svg xmlns="http://www.w3.org/2000/svg" id="designer" style="width: 640px; height: 350px;"/>'
+    // req.body = '<svg xmlns="http://www.w3.org/2000/svg" id="designer" style="width: 640px; height: 350px;"/>'
     tmp.file({postfix: '.svg'}, function _tempFileCreated(err, inputFilePath, fd) {
       if (err) {
         res.json(500, err);
       } else {
-        fs.writeFile(inputFilePath, req.body, function(err) {
+        fs.writeFile(inputFilePath, req.body.data, function(err) {
           if (err) {
             res.json(500, err);
           } else {
@@ -173,10 +173,9 @@ module.exports = {
                 res.json(500, err);
               } else {
                 var cmd = "rsvg-convert -z 5 --background-color white -a";
-                cmd += " -f pdf";
+                cmd += " -f "+req.body.output_format;
                 cmd += " -o "+outputFilePath;
                 cmd += " "+inputFilePath;
-                console.log(cmd);
                 exec(cmd, function (error, stdout, stderr) {
                   if (error !== null) {
                     res.json(500, error);

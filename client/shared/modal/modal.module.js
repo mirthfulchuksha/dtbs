@@ -12,8 +12,22 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', '$http', func
     $scope.showLoginModal = !$scope.showLoginModal;
   };
 
-  $scope.saveSVG = function () {
-    d3Save.saveSVG();
+  $scope.saveSVG = function () {    
+    // Get the d3js SVG element
+    // var tmp = document.getElementById("designer");
+    // var svg = tmp.getElementsByTagName("svg")[0];
+    // Extract the data as SVG text string
+    // var svg_xml = (new XMLSerializer).serializeToString(svg);
+    var svg_xml = document.getElementById('designer'); // or whatever you call it
+    var serializer = new XMLSerializer();
+    var str = serializer.serializeToString(svg_xml);
+    // Submit the <FORM> to the server.
+    // The result will be an attachment file to download.
+    var form = {};
+    form['output_format'] = 'pdf';
+    form['data'] = str;
+    console.log(form);
+    d3Save.saveSVG(form);
   };
 
   $scope.user = {};
