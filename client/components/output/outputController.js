@@ -131,18 +131,19 @@ angular.module('DTBS.main')
     $scope.addTableAttrChildScope = function (keyArr, foreignKeyArr, table, primaryKey) {
       foreignKeyArr.forEach(function (fkey) {
         _.each($scope.tableStorage, function (tbl, index) {
-          console.log(tbl.name);
+          //iterate through every table to retrieve the id of the foreign keys origin
           if(fkey.origin === tbl.name){
-            console.log("found origin", tbl.name);
             fkey.origin = tbl.id;
           }
         });
+        //create attributes on the foreign key obj so it can be treated like other keys
         fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey.id;
         fkey.type = $scope.tableStorage[fkey.origin].primaryKey.type;
         fkey.basicType = $scope.tableStorage[fkey.origin].primaryKey.basicType;
       });
 
       //This loop will find the correct index for the primary key and set it on the parent scope table
+      //this is run every time any update is made to the table to make sure relatioships and variable names are consistent
       var pkeyIndex = 0;
       $scope.tableStorage[$scope.selectedTable].attrs.concat(keyArr).forEach( function (newKey, index){
         if(newKey.id === primaryKey){
@@ -150,13 +151,11 @@ angular.module('DTBS.main')
           $scope.addPrimaryKey(newKey, table);  
         }
       });
+      //combine new keys and new foreign keys to be added to parent scope
+      //this has to be run after the above b/c it resets the selected table
       $scope.addTableAttr(keyArr.concat(foreignKeyArr), table, pkeyIndex);
-      // } else if(table.primaryKey.id !== primaryKey) {
-      //   console.log(table.primaryKey.id);
-      //   console.log("new keyyyyyyy!", $scope.primaryKey);
-      //   $scope.changePrimaryKey($scope.primaryKey, table);
-      // }
-      //is this the desired behavior
+
+      //reset fields in the form
       $scope.keys = [];
       $scope.foreignKeys =[];
 
@@ -166,6 +165,7 @@ angular.module('DTBS.main')
     };
 
   }])
+//editing modal window
   .directive('keymodal', function () {
       return {
         template: '<div class="modal fade">' + 
