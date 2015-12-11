@@ -13,10 +13,11 @@ angular.module('DTBS.main')
     };
     return centralNode;
   };
-  var buildFieldNode = function (table, field, groupNumber) {
+  var buildFieldNode = function (table, field, groupNumber, isPrimary) {
     var fieldNode = {
       name: field.id,
       type: "field",
+      isPk: isPrimary,
       origin: field.origin,
       group: groupNumber,
       size: 25,
@@ -42,7 +43,13 @@ angular.module('DTBS.main')
         var field = table.attrs[j];
         fieldCounter++;
         // Build Field Node =====================================
-        var fieldNode = buildFieldNode(table, field, groupNumber);
+        var fieldNode;
+        // Check if it is a primary key - if its the first one after the parent node it is
+        if (fieldCounter === currentLength + 1) {
+          fieldNode = buildFieldNode(table, field, groupNumber, true);
+        } else {
+          fieldNode = buildFieldNode(table, field, groupNumber, false);
+        }
         graph.nodes.push(fieldNode);
         // Add Field to Central Node Link =======================
         var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 50};

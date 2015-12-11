@@ -21,7 +21,7 @@ angular.module('DTBS.main')
           scope.schemas = [];
 
           // Set up the colour scale
-          var color = d3.scale.category10();
+          var color = d3.scale.category20();
           //Set up the force layout
           var force = d3.layout.force()
             .charge(-500)
