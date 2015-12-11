@@ -3,7 +3,10 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
-var phantom = require('phantom');
+var sys = require('sys'),
+    tmp = require('tmp'),
+    fs = require('fs'),
+    exec = require('child_process').exec;
 
 
 var sequelizeTypeDict = {
@@ -155,45 +158,39 @@ module.exports = {
     res.send(schema, 200);
   },
   saveSVG: function (req, res, next) {
-    var pageUrl = "http://10.6.5.173:3000";
-    phantom.create(function (ph) {
-      ph.createPage(function (page) {
-        page.viewportSize = {
-          width: 1600,
-          height: 1200
-        };
-        page.open(pageUrl, function (status) {
-            setTimeout(function () {
-              // var clipRect = module.exports.getElementBounds(page, 'designer');
-              var clipRect;
-              var getElementBounds = function (id) {
-                return page.evaluate(function (id) {
-                  clipRect = document.getElementById('designer').getBoundingClientRect();
-                  return {
-                    top: clipRect.top,
-                    left: clipRect.left,
-                    width: clipRect.width,
-                    height: clipRect.height
-                  };
-                }, id);
-              };
-              // page.clipRect = getElementBounds('designer');
-              page.clipRect = {
-                bottom: 421.81817626953125,
-                height: 350,
-                left: 0,
-                right: 640,
-                top: 71.81817626953125,
-                width: 640
-              };
-              console.log("Capturing designer");
-              page.render('schemas.png');
-              ph.exit();
-            }, 300000);
+    // output format (pdf or png )
+    req.body = '<svg xmlns="http://www.w3.org/2000/svg" id="designer" style="width: 640px; height: 350px;"/>'
+    tmp.file({postfix: '.svg'}, function _tempFileCreated(err, inputFilePath, fd) {
+      if (err) {
+        res.json(500, err);
+      } else {
+        fs.writeFile(inputFilePath, req.body, function(err) {
+          if (err) {
+            res.json(500, err);
+          } else {
+            tmp.file({postfix: '.pdf'}, function _tempFileCreated(err, outputFilePath, fd) {
+              if (err) {
+                res.json(500, err);
+              } else {
+                var cmd = "rsvg-convert -z 5 --background-color white -a";
+                cmd += " -f pdf";
+                cmd += " -o "+outputFilePath;
+                cmd += " "+inputFilePath;
+                console.log(cmd);
+                exec(cmd, function (error, stdout, stderr) {
+                  if (error !== null) {
+                    res.json(500, error);
+                  } else {
+                    res.attachment(outputFilePath);
+                    res.sendfile(outputFilePath);
+                  }
+                });
+              }
+            });
+          }
         });
-      });
+      }
     });
-    res.sendStatus(200);
   }
 };
 
