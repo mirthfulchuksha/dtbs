@@ -31,6 +31,7 @@ angular.module('DTBS.main')
 
           var container = d3Format.dataBuilder(tableData);
           var graph = d3Format.fkLinks(container, tableData);
+          console.log(graph);
           
           var svg = d3.select("svg");
           //Creates the graph data structure out of the json data
@@ -111,6 +112,7 @@ angular.module('DTBS.main')
             dataArr.push(data[key]);
           }
           svg.selectAll("*").remove();
+          console.log(dataArr); 
           scope.render(dataArr);
         });
       });
