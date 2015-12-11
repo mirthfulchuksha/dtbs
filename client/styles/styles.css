@@ -18,7 +18,7 @@ input {
   background-color: #eee;
   border-radius:5px;
   width: 100px;
-  height: 20px;
+  height: 30px;
   overflow: auto;
   outline: none;
   font-size: 10px;
@@ -42,7 +42,7 @@ input {
 }
 
 .modal .modal-body {
-  max-height: 420px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
@@ -123,3 +123,9 @@ input {
 .close {
   display: none;
 }
+
+.dropdown {
+  border-radius: 5px;
+}
+
+
