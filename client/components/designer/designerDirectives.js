@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', 'd3Save', 'd3Format', function (d3Service, d3TableClass, d3Data, d3Save, d3Format) {
+.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', 'd3Format', function (d3Service, d3TableClass, d3Data, d3Format) {
   return {
     restrict: 'EA',
     scope: {},
@@ -21,7 +21,7 @@ angular.module('DTBS.main')
           scope.schemas = [];
 
           // Set up the colour scale
-          var color = d3.scale.category10();
+          var color = d3.scale.category20();
           //Set up the force layout
           var force = d3.layout.force()
             .charge(-500)
@@ -72,12 +72,13 @@ angular.module('DTBS.main')
               })
               .style("fill", function (d) {
                 return color(d.group);
-              })
+              });
           // append the field/table name
           node.append("text")
                 .attr("dx", 10)
                 .attr("dy", ".35em")
                 .text(function (d) { return d.name })
+                .attr("text-decoration", function (d) { return d.isPk === true ? "underline" : "none"; })
                 .attr("font-weight", function (d) { return d.type === "title" ? "bold" : "normal"; });
 
           //Give the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
@@ -111,9 +112,6 @@ angular.module('DTBS.main')
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
-        });
-        scope.$on('d3:save-table', function (e, data) {
-          console.log("request to save!");
         });
       });
     }};

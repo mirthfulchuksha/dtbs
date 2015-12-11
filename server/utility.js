@@ -3,6 +3,12 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 
+var sys = require('sys'),
+    tmp = require('tmp'),
+    fs = require('fs'),
+    exec = require('child_process').exec;
+
+
 var sequelizeTypeDict = {
   'Numeric': 'INTEGER',
   'String': 'STRING',
@@ -150,5 +156,40 @@ module.exports = {
     });
 
     res.send(schema, 200);
+  },
+  saveSVG: function (req, res, next) {
+    // output format (pdf or png )
+    // req.body = '<svg xmlns="http://www.w3.org/2000/svg" id="designer" style="width: 640px; height: 350px;"/>'
+    tmp.file({postfix: '.svg'}, function _tempFileCreated(err, inputFilePath, fd) {
+      if (err) {
+        res.json(500, err);
+      } else {
+        fs.writeFile(inputFilePath, req.body.data, function(err) {
+          if (err) {
+            res.json(500, err);
+          } else {
+            tmp.file({postfix: '.pdf'}, function _tempFileCreated(err, outputFilePath, fd) {
+              if (err) {
+                res.json(500, err);
+              } else {
+                var cmd = "rsvg-convert -z 5 --background-color white -a";
+                cmd += " -f "+req.body.output_format;
+                cmd += " -o "+outputFilePath;
+                cmd += " "+inputFilePath;
+                exec(cmd, function (error, stdout, stderr) {
+                  if (error !== null) {
+                    res.json(500, error);
+                  } else {
+                    res.attachment(outputFilePath);
+                    res.sendfile(outputFilePath);
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
   }
 };
+

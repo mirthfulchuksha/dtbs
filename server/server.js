@@ -4,12 +4,15 @@ var bodyParser = require('body-parser');
 var util = require('./utility');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
+
 var helper = require('./dbHelper');
 var session = require('express-session');
+var xmlparser = require('express-xml-bodyparser');
 
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+
 app.use(express.static(__dirname + '/../client'));
 app.use(session({
   secret: 'nyan cat',
@@ -89,6 +92,9 @@ app.post('/bookshelf', function (req, res, next) {
 
 app.post('/sequelize', function (req, res, next){
   util.parseORMSequelize(req, res, next);
+});
+app.post('/saveSVG', xmlparser({trim: false, explicitArray: false}), function (req, res, next) {
+  util.saveSVG(req, res, next);
 });
 
 app.listen(port);
