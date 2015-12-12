@@ -6,46 +6,46 @@ module.exports = {
 
   createUserDoc: function (req, res, username) {
     User.findOne({userName: username})
-      .exec(function (err, user) {
-	if (user === null) {
-	  var newUser = new User({
-	    userName: username
-	  });
-	  newUser.save(function (err, newUser) {
-	    if (err) {
-	      return console.error('upload failed:', err);
-	    } else {
-	      console.log(newUser, ' Signed in!');
-	      if (req.session) module.exports.login(req, res, newUser);
-	    }
-	  });
-	} else {
-	  console.log(user, ' Signed in!');
-	  if (req.session) module.exports.login(req, res, user);
-	}
-      });
+    .exec(function (err, user) {
+      if (user === null) {
+        var newUser = new User({
+          userName: username
+        });
+        newUser.save(function (err, newUser) {
+          if (err) {
+            return console.error('upload failed:', err);
+          } else {
+            console.log(newUser, ' Signed in!');
+            if (req.session) module.exports.login(req, res, newUser);
+          }
+        });
+      } else {
+        console.log(user, ' Signed in!');
+        if (req.session) module.exports.login(req, res, user);
+      }
+    });
   },
 
   createSchemaDoc: function (req, res) {
     Schema.find({name:req.body.dbName})
-      .exec(function (err, schema) {
-	if (schema === null) {
-	  var newSchema = new Schema({
-	    name: req.body.name,
-	    language: req.body.lang,
-	    data: req.body.tableStorage
-	  });
-	  newSchema.save(function (err, newSchema) {
-	    if (err) {
-	      return console.error('upload failed:', err);
-	    } else {
-	      console.log(newSchema, 'saved!');
-	    }
-	  });
-	} else {
-	  module.exports.updateSchemaDoc(req, res);
-	}
-      });
+    .exec(function (err, schema) {
+      if (schema === null) {
+        var newSchema = new Schema({
+          name: req.body.name,
+          language: req.body.lang,
+          data: req.body.tableStorage
+        });
+        newSchema.save(function (err, newSchema) {
+          if (err) {
+            return console.error('upload failed:', err);
+          } else {
+            console.log(newSchema, 'saved!');
+          }
+        });
+      } else {
+        module.exports.updateSchemaDoc(req, res);
+      }
+    });
   },
 
   updateSchemaDoc: function (req, res) {
@@ -75,8 +75,8 @@ module.exports = {
   login: function (req, res, user) {
     if (!module.exports.checkUser(req, res)) {
       return req.session.regenerate(function () {
-	req.session.user = user;
-	console.log("Session created!");
+        req.session.user = user;
+        console.log("Session created!");
       });
     }
   },
