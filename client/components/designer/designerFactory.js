@@ -25,22 +25,4 @@ angular.module('DTBS.main')
     return {
       d3: function() { return d.promise; }
     };
-}])
-.factory('d3Save', function ($http) {
-  var saveSVG = function (form) {
-    console.log(typeof form.data);
-    return $http({
-      method: 'POST',
-      url: '/saveSVG',
-      data: form.data,
-      headers: {'Content-Type': 'application/xml'}
-    })
-    .then(function (resp) {
-      console.log("Back from server!")
-      return resp;
-    });
-  };
-  return {
-    saveSVG: saveSVG
-  }
-});
+}]);
