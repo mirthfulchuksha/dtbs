@@ -13,8 +13,11 @@ angular.module('DTBS.main')
         var svg = d3.select(element[0])
         .append("svg")
         .attr('id', 'designer')
-        .style('width', width)
-        .style('height', height);
+        .attr('width', width)
+        .attr('height', height)
+        .attr("xmlns", "http://www.w3.org/2000/svg")
+        .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
+
        
         scope.render = function (tableData) {
           // Global array to track table classes for deletion
