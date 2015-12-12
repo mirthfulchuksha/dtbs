@@ -68,6 +68,7 @@
           <hr>
           <div ng-repeat="fkey in foreignKeys track by $index">
             <label>Select which table to connect:</label>
+            <label ng-repeat="table in tableStorage">{{table.id !== selectedTable}}</label>
             <select ng-model="foreignKeys[$index].origin" style="width:100px">
               <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
             </select>
