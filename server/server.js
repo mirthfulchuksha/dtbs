@@ -7,7 +7,6 @@ var GitHubStrategy = require('passport-github').Strategy;
 
 var helper = require('./dbHelper');
 var session = require('express-session');
-var xmlparser = require('express-xml-bodyparser');
 
 var port = process.env.PORT || 3000;
 
@@ -92,9 +91,6 @@ app.post('/bookshelf', function (req, res, next) {
 
 app.post('/sequelize', function (req, res, next){
   util.parseORMSequelize(req, res, next);
-});
-app.post('/saveSVG', xmlparser({trim: false, explicitArray: false}), function (req, res, next) {
-  util.saveSVG(req, res, next);
 });
 
 app.listen(port);

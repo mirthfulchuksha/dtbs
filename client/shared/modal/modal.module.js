@@ -1,7 +1,7 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, d3Save, SaveAndRedirectFactory, $http) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
   $scope.showModal = false;
   $scope.showLoginModal = false;
 
@@ -14,72 +14,33 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', 'SaveAndRedir
   };
 
   $scope.saveSVG = function () {    
-    // Get the d3js SVG element
-    // var tmp = document.getElementById("designer");
-    // var svg = tmp.getElementsByTagName("svg")[0];
-    // Extract the data as SVG text string
-    // var svg_xml = (new XMLSerializer).serializeToString(svg);
-    var svg_xml = document.getElementById('designer'); // or whatever you call it
+    var svg_xml = document.getElementById('designer');
     var serializer = new XMLSerializer();
     var str = serializer.serializeToString(svg_xml);
-    // Submit the <FORM> to the server.
-    // The result will be an attachment file to download.
-    var form = {};
-    form['output_format'] = 'pdf';
-    form['data'] = str;
-    // d3Save.saveSVG(form);
-    var target = $('d3-bars');
-    take(target);
 
-    function take(targetElem) {
-      // First render all SVGs to canvases
-      var elements = targetElem.find('svg').map(function() {
-        var svg = $(this);
-        var canvas = $('<canvas></canvas>');
-        svg.replaceWith(canvas);
+    // Create a canvas
+    var canvas = document.createElement('canvas');
+    canvas.height = 350;
+    canvas.width = 640;
+    canvas.style.background = 'white';
 
-        // Get the raw SVG string and curate it
-        var content = svg.wrap('<p></p>').parent().html();
-        content = content.replace(/xlink:title="hide\/show"/g, "");
-        content = encodeURIComponent(content);
-        svg.unwrap();
+    canvg(canvas, str);
+    context = canvas.getContext("2d");
 
-        // Create an image from the svg
-        var image = new Image();
-        image.src = 'data:image/svg+xml,' + content;
-        image.onload = function() {
-          canvas[0].width = "1400";
-          canvas[0].height = "500";
+    // set to draw behind current content
+    context.globalCompositeOperation = "destination-over";
 
-          // Render the image to the canvas
-          var context = canvas[0].getContext('2d');
-          context.drawImage(image, 0, 0);
-        };
-        return {
-          svg: svg,
-          canvas: canvas
-        };
-      });
-      targetElem.imagesLoaded(function() {
-        // At this point the container has no SVG, it only has HTML and Canvases.
-        html2canvas(targetElem[0], {
-          onrendered: function(canvas) {
-            // Put the SVGs back in place
-            console.log(canvas);
-            elements.each(function() {
-              this.canvas.replaceWith(this.svg);
-            });
-            var a = document.createElement('a');
-              a.href = canvas.toDataURL("schemas/png");
-              a.download = 'schemas.png';
-              a.click();
+    // set background color
+    context.fillStyle = '#fff';
 
-            // Do something with the canvas, for example put it at the bottom
-         // $(canvas).appendTo('body');
-          }
-        });
-      });
-    }
+    // draw background / rect on entire canvas
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    var a = document.createElement('a');
+    a.href = canvas.toDataURL("schemas/png");
+    a.download = 'schemas.png';
+    a.click();
+    a.remove();
+    canvas.remove();
   };
 
   $scope.user = {};

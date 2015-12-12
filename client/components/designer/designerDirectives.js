@@ -34,7 +34,6 @@ angular.module('DTBS.main')
 
           var container = d3Format.dataBuilder(tableData);
           var graph = d3Format.fkLinks(container, tableData);
-          console.log(graph);
           
           var svg = d3.select("svg");
           //Creates the graph data structure out of the json data
@@ -46,6 +45,8 @@ angular.module('DTBS.main')
           var link = svg.selectAll(".link")
               .data(graph.links)
               .enter().append("line")
+              // .attr("stroke-width", "2")
+              .style("stroke", "black")
               .attr("class", "link");
 
           var node = svg.selectAll(".node")
@@ -115,7 +116,6 @@ angular.module('DTBS.main')
             dataArr.push(data[key]);
           }
           svg.selectAll("*").remove();
-          console.log(dataArr); 
           scope.render(dataArr);
         });
       });
