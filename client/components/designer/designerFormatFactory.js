@@ -38,15 +38,14 @@ angular.module('DTBS.main')
       graph.nodes.push(centralNode);
       primaryKeys.push([table.id, graph.nodes.length-1]);
       var currentLength = graph.nodes.length-1;
-      var fieldCounter = i;
+      var isPrimary = true;
       for (var j = 0; j < table.attrs.length; j++) {
         var field = table.attrs[j];
-        fieldCounter++;
         // Build Field Node =====================================
         var fieldNode;
-        // Check if it is a primary key - if its the first one after the parent node it is
-        if (fieldCounter === currentLength + 1) {
+        if (isPrimary) {
           fieldNode = buildFieldNode(table, field, groupNumber, true);
+          isPrimary = false;
         } else {
           fieldNode = buildFieldNode(table, field, groupNumber, false);
         }
