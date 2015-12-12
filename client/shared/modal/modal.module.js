@@ -27,8 +27,59 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', 'SaveAndRedir
     var form = {};
     form['output_format'] = 'pdf';
     form['data'] = str;
-    console.log(form);
-    d3Save.saveSVG(form);
+    // d3Save.saveSVG(form);
+    var target = $('d3-bars');
+    take(target);
+
+    function take(targetElem) {
+      // First render all SVGs to canvases
+      var elements = targetElem.find('svg').map(function() {
+        var svg = $(this);
+        var canvas = $('<canvas></canvas>');
+        svg.replaceWith(canvas);
+
+        // Get the raw SVG string and curate it
+        var content = svg.wrap('<p></p>').parent().html();
+        content = content.replace(/xlink:title="hide\/show"/g, "");
+        content = encodeURIComponent(content);
+        svg.unwrap();
+
+        // Create an image from the svg
+        var image = new Image();
+        image.src = 'data:image/svg+xml,' + content;
+        image.onload = function() {
+          canvas[0].width = "1400";
+          canvas[0].height = "500";
+
+          // Render the image to the canvas
+          var context = canvas[0].getContext('2d');
+          context.drawImage(image, 0, 0);
+        };
+        return {
+          svg: svg,
+          canvas: canvas
+        };
+      });
+      targetElem.imagesLoaded(function() {
+        // At this point the container has no SVG, it only has HTML and Canvases.
+        html2canvas(targetElem[0], {
+          onrendered: function(canvas) {
+            // Put the SVGs back in place
+            console.log(canvas);
+            elements.each(function() {
+              this.canvas.replaceWith(this.svg);
+            });
+            var a = document.createElement('a');
+              a.href = canvas.toDataURL("schemas/png");
+              a.download = 'schemas.png';
+              a.click();
+
+            // Do something with the canvas, for example put it at the bottom
+         // $(canvas).appendTo('body');
+          }
+        });
+      });
+    }
   };
 
   $scope.user = {};
@@ -41,7 +92,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'd3Save', 'SaveAndRedir
     }).success(function (data, status, headers, config) {
       console.log("Logged in!")
     }).error(function (data, status, headers, config) {
-	   console.log("Cannot log in")
+      console.log("Cannot log in")
     });
   };
 
