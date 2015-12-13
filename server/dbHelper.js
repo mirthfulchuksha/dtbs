@@ -9,7 +9,8 @@ module.exports = {
     .exec(function (err, user) {
       if (user === null) {
         var newUser = new User({
-          userName: username
+          userName: username,
+          password: req.body.password
         });
         newUser.save(function (err, newUser) {
           if (err) {
@@ -20,8 +21,9 @@ module.exports = {
           }
         });
       } else {
-        console.log(user, ' Signed in!');
-        if (req.session) module.exports.login(req, res, user);
+        if (req.session && user.comparePasswords(req.body.password)) {
+          module.exports.login(req, res, user);
+        }
       }
     });
   },
@@ -63,17 +65,8 @@ module.exports = {
     return req.session ? !!req.session.user : false;
   },
 
-  checkUser: function (req, res) {
-    if (!module.exports.isLoggedIn(req)) {
-      return false;
-    } else {
-      console.log("User already logged in!");
-      return true;
-    }
-  },
-
   login: function (req, res, user) {
-    if (!module.exports.checkUser(req, res)) {
+    if (!module.exports.isLoggedIn(req, res)) {
       return req.session.regenerate(function () {
         req.session.user = user;
         console.log("Session created!");
