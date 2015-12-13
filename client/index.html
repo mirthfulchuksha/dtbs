@@ -7,7 +7,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular-route/angular-route.min.js"></script>
-  <script type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js"></script> 
+  <script type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js"></script>
   <script type="text/javascript" src="http://gabelerner.github.io/canvg/StackBlur.js"></script>
   <script type="text/javascript" src="http://gabelerner.github.io/canvg/canvg.js"></script>
   <script src="app.module.js"></script>
@@ -30,33 +30,33 @@
     <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div>
     <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
     <div class="standardFont" ng-view></div>
-  <div class="super-wrap">
-    <div class="editor-wrapper grey" ng-controller="FormController">
-      <div class="navbar-header">
-        <a class="navbar-brand editor-head grey" href="#">code:</a>
+      <div class="super-wrap">
+        <div class="editor-wrapper grey" ng-controller="FormController">
+          <div class="navbar-header">
+            <a class="navbar-brand editor-head grey" href="#">code:</a>
+          </div>
+          <form class="navbar-form navbar-left grey dropdown" role="search">
+            <a class="btn btn-default" role="button" id="download"
+              target="_self" href="" download="" ng-click="downloadCode()">
+              <span class="glyphicon glyphicon-save"></span>
+            </a>
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Output
+              <span class="caret"></span>
+            </button>
+            <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+              <span class="glyphicon glyphicon-floppy-disk"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+              <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
+              <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
+              <li><a href="" ng-click="updateFactory('mySQL')">mySQL </a></li>
+            </ul>
+          </form>
+          <div id="editor">/* Your Output will appear here! */</div>
+        </div>
+        <div id="code_button">>></div>
       </div>
-      <form class="navbar-form navbar-left grey dropdown" role="search">
-        <a class="btn btn-default" role="button" id="download"
-          target="_self" href="" download="" ng-click="downloadCode()">
-          <span class="glyphicon glyphicon-save"></span>
-        </a>
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          Output
-          <span class="caret"></span>
-        </button>
-        <a class="btn btn-default" role="button" id="download" href="" ng-click="downloadCode()">
-          <span class="glyphicon glyphicon-floppy-disk"></span>
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-          <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
-          <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
-          <li><a href="" ng-click="updateFactory('mySQL')">mySQL </a></li>
-        </ul>
-      </form>
-      <div id="editor">/* Your Output will appear here! */</div>
-    </div>
-    <div id="code_button">>></div>
-  </div>
   <script>
       var editor = ace.edit("editor");
       editor.setTheme("ace/theme/monokai");

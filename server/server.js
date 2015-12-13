@@ -93,6 +93,12 @@ app.post('/sequelize', function (req, res, next){
   util.parseORMSequelize(req, res, next);
 });
 
+app.post('/saveSVG', xmlparser({trim: false, explicitArray: false}), function (req, res, next) {
+  util.saveSVG(req, res, next);
+});
+
+app.post('/saveSchema', helper.createSchemaDoc);
+
 app.listen(port);
 
 console.log('Server listening on port: ' + port);

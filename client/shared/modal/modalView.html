@@ -8,9 +8,10 @@
       <button id="savepicture" ng-click="saveSVG()" class="btn btn-default">Save Image</button>
       <button ng-click="toggleModal()" class="btn btn-default">Update Settings</button>
       <button ng-click="toggleLoginModal()" class="btn btn-default">Login/Signup</button>
+      <a href="/logout"><span class="btn btn-default">Logout</span></a>
     </form>
 
-    <modal title="Login/Signup" visible="showLoginModal">
+    <modal title="Login/Signup" visible="!showLoginModal">
       <form role="form" ng-submit="login()">
         <div class="form-group">
           <label for="title">Username</label>
@@ -39,10 +40,7 @@
           <div class="dropdown">
             <select ng-model='db.lang' class="form-control" required>
               <option value="mySQL">mySQL</option>
-              <option value="Bookshelf">mySQL - Bookshelf</option>
-              <option value="Sequelize">mySQL - Sequelize</option>
               <option value="Mongo">Mongo</option>
-              <option value="Mongoose">Mongo - Mongoose</option>
             </select>
           </div>
         </div>

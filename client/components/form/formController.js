@@ -6,7 +6,8 @@ angular.module('DTBS.main')
   'd3Data',
   'd3TableClass',
   'AccessSchemaService',
-  function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService) {
+  '$http',
+  function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService, $http) {
     //object for table storage
     $scope.tableStorage;
     //incrementing id for table creation in child scopes
@@ -17,6 +18,10 @@ angular.module('DTBS.main')
 
     $scope.downloadCode = function () {
       CodeParser.saveCode();
+    };
+
+    $scope.saveSchema = function () {
+      CodeParser.saveSchema();
     };
 
     $scope.updateFactory = function (language) {
@@ -78,7 +83,7 @@ angular.module('DTBS.main')
       } else {
         $scope.tableStorage = {};
       }
-    };  
+    };
 
     $scope.removeKeyFromTable = function (index, table) {
       $scope.tableStorage[table.id].attrs.splice(index,1);
@@ -141,7 +146,7 @@ angular.module('DTBS.main')
 
     var getTempSchema = function () {
       return tempSchema;
-    }
+    };
 
     return {
       setTempSchema: setTempSchema,

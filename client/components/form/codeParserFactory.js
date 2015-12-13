@@ -35,7 +35,7 @@ angular.module('DTBS.main')
         var editor = ace.edit("editor");
         //sets the value to the parsed code and places the cursor at the end
         editor.setValue(res.data, 1);
-        return res.data;
+        // return res.data;
       });
     };
 
@@ -51,12 +51,31 @@ angular.module('DTBS.main')
       var formBlob = new Blob([codeBase.code], {type: 'text/plain'});
       document.getElementById("download").href = window.URL.createObjectURL(formBlob);
       document.getElementById("download").download = dbFilename;
+      console.log(dbFilename);
+    };
+
+    var saveSchema = function () {
+      var saveStuff = {
+        dbName: dbName,
+        dbLang: dbLang,
+        tableStorage: dbStorage
+      };
+
+      $http({
+        url: '/saveSchema',
+        method: 'POST',
+        data: saveStuff
+      }).success(function (data, status, headers, config) {
+        console.log("Saved!");
+      }).error(function (data, status, headers, config) {
+        console.log("Cannot save");
+      });
     };
 
     var update = function (db, storage) {
-      dbName = db.name;
-      dbLang = db.lang;
-      dbFilename = db.fileName;
+      dbName = db.name ? db.name : dbName;
+      dbLang = db.lang ? db.lang : dbLang;
+      dbFilename = db. fileName ? db.fileName : dbFilename;
       if (dbStorage) fetchCode();
       else if (storage) dbStorage = storage;
     };
@@ -64,6 +83,7 @@ angular.module('DTBS.main')
     return {
       fetchCode: fetchCode,
       saveCode: saveCode,
+      saveSchema: saveSchema,
       update: update
     };
   });

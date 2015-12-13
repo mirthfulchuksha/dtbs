@@ -3,7 +3,7 @@ var mymodal = angular.module('DTBS.modal', []);
 
 mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
   $scope.showModal = false;
-  $scope.showLoginModal = false;
+  $scope.showLoginModal = true;
 
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
@@ -13,7 +13,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     $scope.showLoginModal = !$scope.showLoginModal;
   };
 
-  $scope.saveSVG = function () {    
+  $scope.saveSVG = function () {
     var svg_xml = document.getElementById('designer');
     var serializer = new XMLSerializer();
     var str = serializer.serializeToString(svg_xml);
@@ -45,16 +45,17 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
 
   $scope.user = {};
   $scope.login = function () {
-    $scope.toggleLoginModal();
     $http({
       url: '/login',
       method: 'POST',
       data: $scope.user
     }).success(function (data, status, headers, config) {
-      console.log("Logged in!")
+      console.log("Logged in!");
+      $scope.toggleLoginModal();
     }).error(function (data, status, headers, config) {
-      console.log("Cannot log in")
+      console.log("Cannot log in");
     });
+    $scope.user = {};
   };
 
   $scope.githubRedirect = function () {
@@ -62,7 +63,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     SaveAndRedirectFactory.stashTables();
   };
 
-  $scope.db = {};
+  $scope.db = {lang: "mySQL"};
   $scope.updateFactory = function () {
     switch ($scope.db.lang) {
       case "mySQL":
@@ -83,7 +84,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
 }]);
 
 mymodal.factory('SaveAndRedirectFactory', ['AccessSchemaService', '$http', function (AccessSchemaService, $http) {
-  
+
   var stashTables = function () {
     var tables = AccessSchemaService.getTempSchema();
     console.log(tables);
