@@ -170,7 +170,6 @@ var inputParser = function (inputTable) {
   if (fks.length > 0) {
     endIndex = inputArr.length-1-fks.length;
   }
-  console.log(fks);
   var title = inputArr[0].split(" ");
   title = title[2];
   table.title = title;
