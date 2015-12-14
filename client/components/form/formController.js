@@ -51,7 +51,7 @@ angular.module('DTBS.main')
       });
       var pkey = $scope.tableStorage[table.id].attrs.splice(pkeyIndex, 1);
       $scope.tableStorage[table.id].attrs.unshift(pkey[0]);
-      console.log($scope.tableStorage);
+
       //updated rendering
       $scope.interactd3();
       $scope.selectedTable = 0;
@@ -62,11 +62,42 @@ angular.module('DTBS.main')
     };
 
     $scope.interactd3 = function () {
+      console.log($scope.tableStorage);
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
-      console.log(d3Data);
     };
 
+
+    $scope.rebuildSchema = function () {
+      console.log("rebuilding");
+      var editor = ace.edit("editor");
+      var newCode = editor.getValue();
+      newCode = newCode.split('\n');
+      console.log(newCode);
+
+      var separatedTables = {};
+      var id = 1;
+      var currentTable = [];
+      for(var i = 0; i < newCode.length; i++) {
+        if(newCode[i].includes('CREATE') && i > 0 || newCode[i].includes('create') && i > 0) {
+          //found keyword for new table, save the current and increment id var
+          separatedTables[id] = currentTable;
+          id++;
+          currentTable = [];
+        }
+        if(newCode[i] !== '') {
+          currentTable = currentTable.concat(newCode[i].trim());
+        }
+      }
+      //one more for the last item in the list
+      separatedTables[id] = currentTable;
+      //call the factory function with newly constructed object
+      AccessSchemaService.schemaBuilder(separatedTables, function (data) {
+        $scope.tableStorage = data.data;
+        $scope.interactd3();
+      });
+      
+    };
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */
@@ -112,6 +143,7 @@ angular.module('DTBS.main')
      }
     };
     var debounceUpdate = function(newVal, oldVal) {
+      console.log("changing");
      if (newVal !== oldVal) {
       //waits for timeout to apply the changes on the server side
        if (timeout) {
@@ -136,7 +168,7 @@ angular.module('DTBS.main')
 
     recoverInfo();
   }])
-  .factory('AccessSchemaService', function () {
+  .factory('AccessSchemaService', function ($http) {
     var tempSchema;
 
     var setTempSchema = function (schema) {
@@ -148,8 +180,21 @@ angular.module('DTBS.main')
       return tempSchema;
     };
 
+    var schemaBuilder = function (structObject, callback) {
+      var dataObj = {data: structObject};
+      return $http({
+        method: 'POST',
+        url: '/build',
+        data : dataObj
+      }).then(function (res) {
+        console.log("got response from /build");
+        callback(res.data);
+      });
+    };
+
     return {
       setTempSchema: setTempSchema,
-      getTempSchema: getTempSchema
+      getTempSchema: getTempSchema,
+      schemaBuilder: schemaBuilder
     };
   });

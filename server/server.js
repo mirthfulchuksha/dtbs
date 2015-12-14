@@ -85,6 +85,10 @@ app.post('/update', function (req, res, next) {
   util.parseTable(req, res, next);
 });
 
+app.post('/build', function (req, res, next) {
+  util.buildTables(req, res, next);
+});
+
 app.post('/bookshelf', function (req, res, next) {
   util.parseORMBookshelf(req, res, next);
 });
