@@ -1,423 +1,3 @@
-var beforeBreak = [
-  {
-    "name": "Users",
-    "id": 1,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    }
-  },
-  {
-    "name": "Chats",
-    "id": 2,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "origin": "1",
-        "id": "Users_id",
-        "type": "INT"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    }
-  },
-  {
-    "name": "Groups",
-    "id": 3,
-    "attrs": [
-      {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      {
-        "origin": "1",
-        "id": "Users_id",
-        "type": "INT"
-      }
-    ],
-    "primaryKey": {
-      "id": "id",
-      "basicType": "Numeric",
-      "type": "INT"
-    }
-  }
-];
-var linksNodesBeforeBreak = {
-  "nodes": [
-    {
-      "name": "Users",
-      "type": "title",
-      "pk": {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      "group": 1,
-      "size": 32,
-      "id": 1,
-      "index": 0,
-      "weight": 1,
-      "x": 342.29298494464774,
-      "y": 169.57832002730441,
-      "px": 342.34393620319,
-      "py": 169.57147411311252
-    },
-    {
-      "name": "id",
-      "type": "field",
-      "group": 1,
-      "size": 16,
-      "id": 1,
-      "index": 1,
-      "weight": 3,
-      "x": 388.95627734289207,
-      "y": 158.71080784305445,
-      "px": 388.8411039781085,
-      "py": 158.74638174215625
-    },
-    {
-      "name": "Chats",
-      "type": "title",
-      "pk": {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      "group": 2,
-      "size": 32,
-      "id": 2,
-      "index": 2,
-      "weight": 2,
-      "x": 337.7066960147619,
-      "y": 70.9093706137136,
-      "px": 337.7185193176976,
-      "py": 71.00491214304799
-    },
-    {
-      "name": "id",
-      "type": "field",
-      "group": 2,
-      "size": 16,
-      "id": 2,
-      "index": 3,
-      "weight": 1,
-      "x": 294.6820398138833,
-      "y": 54.46992863292921,
-      "px": 294.79322212832875,
-      "py": 54.54707792681692
-    },
-    {
-      "name": "Users_id",
-      "type": "field",
-      "origin": "1",
-      "group": 2,
-      "size": 16,
-      "id": 2,
-      "index": 4,
-      "weight": 2,
-      "x": 371.9272776131376,
-      "y": 108.41606900119015,
-      "px": 371.8696230308635,
-      "py": 108.5018548264636
-    },
-    {
-      "name": "Groups",
-      "type": "title",
-      "pk": {
-        "id": "id",
-        "basicType": "Numeric",
-        "type": "INT"
-      },
-      "group": 3,
-      "size": 32,
-      "id": 3,
-      "index": 5,
-      "weight": 2,
-      "x": 378.7531630759183,
-      "y": 258.8613977759115,
-      "px": 378.7102509409655,
-      "py": 258.78870459677205
-    },
-    {
-      "name": "id",
-      "type": "field",
-      "group": 3,
-      "size": 16,
-      "id": 3,
-      "index": 6,
-      "weight": 1,
-      "x": 346.8484614068855,
-      "y": 292.0442939247825,
-      "px": 346.8959887849546,
-      "py": 291.93855192933796
-    },
-    {
-      "name": "Users_id",
-      "type": "field",
-      "origin": "1",
-      "group": 3,
-      "size": 16,
-      "id": 3,
-      "index": 7,
-      "weight": 2,
-      "x": 395.1961287374394,
-      "y": 211.41040378525327,
-      "px": 395.09999073561244,
-      "py": 211.37377452609783
-    }
-  ],
-  "links": [
-    {
-      "source": {
-        "name": "Users",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "basicType": "Numeric",
-          "type": "INT"
-        },
-        "group": 1,
-        "size": 32,
-        "id": 1,
-        "index": 0,
-        "weight": 1,
-        "x": 342.29298494464774,
-        "y": 169.57832002730441,
-        "px": 342.34393620319,
-        "py": 169.57147411311252
-      },
-      "target": {
-        "name": "id",
-        "type": "field",
-        "group": 1,
-        "size": 16,
-        "id": 1,
-        "index": 1,
-        "weight": 3,
-        "x": 388.95627734289207,
-        "y": 158.71080784305445,
-        "px": 388.8411039781085,
-        "py": 158.74638174215625
-      },
-      "value": 40
-    },
-    {
-      "source": {
-        "name": "Chats",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "basicType": "Numeric",
-          "type": "INT"
-        },
-        "group": 2,
-        "size": 32,
-        "id": 2,
-        "index": 2,
-        "weight": 2,
-        "x": 337.7066960147619,
-        "y": 70.9093706137136,
-        "px": 337.7185193176976,
-        "py": 71.00491214304799
-      },
-      "target": {
-        "name": "id",
-        "type": "field",
-        "group": 2,
-        "size": 16,
-        "id": 2,
-        "index": 3,
-        "weight": 1,
-        "x": 294.6820398138833,
-        "y": 54.46992863292921,
-        "px": 294.79322212832875,
-        "py": 54.54707792681692
-      },
-      "value": 40
-    },
-    {
-      "source": {
-        "name": "Chats",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "basicType": "Numeric",
-          "type": "INT"
-        },
-        "group": 2,
-        "size": 32,
-        "id": 2,
-        "index": 2,
-        "weight": 2,
-        "x": 337.7066960147619,
-        "y": 70.9093706137136,
-        "px": 337.7185193176976,
-        "py": 71.00491214304799
-      },
-      "target": {
-        "name": "Users_id",
-        "type": "field",
-        "origin": "1",
-        "group": 2,
-        "size": 16,
-        "id": 2,
-        "index": 4,
-        "weight": 2,
-        "x": 371.9272776131376,
-        "y": 108.41606900119015,
-        "px": 371.8696230308635,
-        "py": 108.5018548264636
-      },
-      "value": 40
-    },
-    {
-      "source": {
-        "name": "Groups",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "basicType": "Numeric",
-          "type": "INT"
-        },
-        "group": 3,
-        "size": 32,
-        "id": 3,
-        "index": 5,
-        "weight": 2,
-        "x": 378.7531630759183,
-        "y": 258.8613977759115,
-        "px": 378.7102509409655,
-        "py": 258.78870459677205
-      },
-      "target": {
-        "name": "id",
-        "type": "field",
-        "group": 3,
-        "size": 16,
-        "id": 3,
-        "index": 6,
-        "weight": 1,
-        "x": 346.8484614068855,
-        "y": 292.0442939247825,
-        "px": 346.8959887849546,
-        "py": 291.93855192933796
-      },
-      "value": 40
-    },
-    {
-      "source": {
-        "name": "Groups",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "basicType": "Numeric",
-          "type": "INT"
-        },
-        "group": 3,
-        "size": 32,
-        "id": 3,
-        "index": 5,
-        "weight": 2,
-        "x": 378.7531630759183,
-        "y": 258.8613977759115,
-        "px": 378.7102509409655,
-        "py": 258.78870459677205
-      },
-      "target": {
-        "name": "Users_id",
-        "type": "field",
-        "origin": "1",
-        "group": 3,
-        "size": 16,
-        "id": 3,
-        "index": 7,
-        "weight": 2,
-        "x": 395.1961287374394,
-        "y": 211.41040378525327,
-        "px": 395.09999073561244,
-        "py": 211.37377452609783
-      },
-      "value": 40
-    },
-    {
-      "source": {
-        "name": "id",
-        "type": "field",
-        "group": 1,
-        "size": 16,
-        "id": 1,
-        "index": 1,
-        "weight": 3,
-        "x": 388.95627734289207,
-        "y": 158.71080784305445,
-        "px": 388.8411039781085,
-        "py": 158.74638174215625
-      },
-      "target": {
-        "name": "Users_id",
-        "type": "field",
-        "origin": "1",
-        "group": 2,
-        "size": 16,
-        "id": 2,
-        "index": 4,
-        "weight": 2,
-        "x": 371.9272776131376,
-        "y": 108.41606900119015,
-        "px": 371.8696230308635,
-        "py": 108.5018548264636
-      },
-      "value": 40
-    },
-    {
-      "source": {
-        "name": "id",
-        "type": "field",
-        "group": 1,
-        "size": 16,
-        "id": 1,
-        "index": 1,
-        "weight": 3,
-        "x": 388.95627734289207,
-        "y": 158.71080784305445,
-        "px": 388.8411039781085,
-        "py": 158.74638174215625
-      },
-      "target": {
-        "name": "Users_id",
-        "type": "field",
-        "origin": "1",
-        "group": 3,
-        "size": 16,
-        "id": 3,
-        "index": 7,
-        "weight": 2,
-        "x": 395.1961287374394,
-        "y": 211.41040378525327,
-        "px": 395.09999073561244,
-        "py": 211.37377452609783
-      },
-      "value": 40
-    }
-  ]
-};
-
 // function to transform data into dummyData format
 var dataBuilder = function (data) {
   // initialize empty graph
@@ -516,4 +96,209 @@ var fkLinks = function (graphContainer, data) {
   });
   return graph;
 };
+
+// var testString =   "CREATE TABLE shop (,
+//     article INT(4) PRIMARY KEY NOT NULL UNSIGNED ZEROFILL,
+//     dealer CHAR(20) NOT NULL,
+//     price DOUBLE(16,2) NOT NULL
+//   );";
+// func to read sql - call on each table
+/*{
+  "1": {
+    "name": "shop",
+    "id": 1,
+    "attrs": [
+      {
+        "id": "article",
+        "basicType": "Numeric",
+        "type": "INT",
+        "size": "4",
+        "default": "NOT NULL",
+        "attributes": [
+          "UNSIGNED",
+          "ZEROFILL"
+        ]
+      },
+      {
+        "id": "dealer",
+        "basicType": "String",
+        "type": "CHAR",
+        "size": "20",
+        "default": "NOT NULL"
+      },
+      {
+        "id": "price",
+        "basicType": "Numeric",
+        "type": "DECIMAL",
+        "size": "16,2",
+        "default": "NOT NULL"
+      }
+    ],
+    "primaryKey": {
+      "id": "article",
+      "basicType": "Numeric",
+      "type": "INT",
+      "size": "4",
+      "default": "NOT NULL",
+      "attributes": [
+        "UNSIGNED",
+        "ZEROFILL"
+      ]
+    }
+  }
+}*/
+
+// var table1 = "CREATE TABLE shop (
+//     item_name CHAR(45) PRIMARY KEY NOT NULL CHARACTER SET,
+//     price INT(5) NOT NULL ZEROFILL
+//   );"
+
+// var table2 = "CREATE TABLE seller (
+//     seller_id INT(45) PRIMARY KEY NOT NULL,
+//     shop_item_name CHAR,
+//     FOREIGN KEY (shop_item_name) REFERENCES shop(item_name)
+//   );";
+
+// Takes in one table and formats it to go into table storage
+var inputParser = function (inputTable) {
+  var inputArr = inputTable; // placeholder
+  // var inputArr = inputTable.split("\n");
+  var table = {};
+  table.attrs = [];
+  var fks = buildFks(inputArr);
+  var endIndex = inputArr.length-1;
+  if (fks.length > 0) {
+    endIndex = inputArr.length-1-fks.length;
+  }
+  console.log(fks);
+  var title = inputArr[0].split(" ");
+  title = title[2];
+  table.title = title;
+  table.id = 1;
+  table.primaryKey = {};
+  for (var i = 1; i <= endIndex-1; i++) {
+    var line = inputArr[i];
+    var attr = {};
+    var isPrimary = isPrimaryKey(line);
+    var zeroFill = hasZeroFill(line);
+    var unsigned = isUnsigned(line);
+    var notNull = isNotNull(line);
+    var autoinc = autoIncrement(line);
+    var explicitNull = !notNull && isNull(line);
+    var hasOrigin = isForeignKey(line);
+    line = line.split(" ");
+    attr.id = line[0];
+    attr.basicType = typeFormatter(line[1]);
+    attr.type = line[1];
+    attr.size = sizeFormatter(line[1]);
+    // attr.default = ; we aren't supporting defaults currently?
+    attr.attributes = [];
+    if (zeroFill) {
+      attr.attributes.push("ZEROFILL");
+    }
+    if (unsigned) {
+      attr.attributes.push("UNSIGNED");
+    }
+    if (notNull) {
+      attr.attributes.push("NOT NULL");
+    }
+    if (explicitNull) {
+      attr.attributes.push("NULL");
+    }
+    if (autoinc) {
+      attr.attributes.push("AUTO_INCREMENT");
+    }
+    if (isPrimary) {
+      table.primaryKey = attr;
+    }
+    if (hasOrigin) {
+      for (var i = 0; i < fks.length; i++) {
+        // check if in foreign keys array, if yes, assign origin
+        if (fks[i][0] === attr.id) {
+          attr.origin = fks[i][1];
+        }
+      }
+    }
+    table.attrs.push(attr);
+  }
+  return table;
+};
+
+// Helper functions
+var buildFks = function (inputArr) {
+  var fks = [];
+  for (var i = 1; i < inputArr.length-1; i++) {
+    var line = inputArr[i];
+    var lineCopy = line.slice();
+    // Build up all fks for table
+    if (isForeignKey(line)) {
+      var field = sizeFormatter(lineCopy);
+      var i = lineCopy.indexOf(")");
+      var origin = sizeFormatter(lineCopy.slice(i));
+      fks.push([field, origin]);
+    }
+  }
+  return fks;
+};
+var sizeFormatter = function (basicType) {
+  var insideParens = /\(([^)]+)\)/;
+  var size = insideParens.exec(basicType)[1];
+  return size;
+};
+var typeFormatter = function (basicType) {
+  var i = basicType.indexOf("(");
+  return i > 0 ? basicType.slice(0, i) : "";                          
+};
+
+var isPrimaryKey = function (string) {
+  return string.indexOf("PRIMARY KEY") !== -1;
+};
+var isNull = function (string) {
+  return string.indexOf("NULL") !== -1;
+};
+var isNotNull = function (string) {
+  return string.indexOf("NOT NULL") !== -1;
+};
+var isUnsigned = function (string) {
+  return string.indexOf("UNSIGNED") !== -1;
+};
+var hasZeroFill = function (string) {
+  return string.indexOf("ZEROFILL") !== -1;
+};
+var autoIncrement = function (string) {
+  return string.indexOf("AUTO_INCREMENT") !== -1;
+};
+var isForeignKey = function (string) {
+  return string.indexOf("FOREIGN KEY") !== -1;
+};
+var inputArr1 = ["CREATE TABLE shop (,","article INT(4) PRIMARY KEY NOT NULL UNSIGNED ZEROFILL,","dealer CHAR(20) NOT NULL,","price DOUBLE(16,2) NULL","FOREIGN KEY (shop_item_name) REFERENCES shop(item_name)", ");"];
+var inputArr2 = ["CREATE TABLE shop (,","article INT(4) PRIMARY KEY NOT NULL UNSIGNED ZEROFILL,","dealer CHAR(20) NOT NULL,","price DOUBLE(16,2) NULL", ");"];
+var inputArr3 = ["CREATE TABLE seller (", "seller_id INT(45) PRIMARY KEY NOT NULL,", "shop_item_name CHAR(30),", "FOREIGN KEY (shop_item_name) REFERENCES shop(item_name)", ");"];
+
+console.log(inputParser(inputArr2));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
