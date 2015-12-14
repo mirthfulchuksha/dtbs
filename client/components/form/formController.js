@@ -9,7 +9,7 @@ angular.module('DTBS.main')
   '$http',
   function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService, $http) {
     //object for table storage
-    $scope.tableStorage;
+    $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
     $scope.id = 0;
     $scope.db = {};
@@ -30,7 +30,7 @@ angular.module('DTBS.main')
     };
 
     $scope.addTable = function (table) {
-      window.localStorage.removeItem('tempTable');
+      //window.localStorage.removeItem('tempTable');
       $scope.tableStorage[table.id] = table;
       //set selected table to allow for correcting editing window
       $scope.selectedTable = table.id;
@@ -62,7 +62,11 @@ angular.module('DTBS.main')
     };
 
     $scope.interactd3 = function () {
+      //TEMPORARY PLACEMENT
       console.log($scope.tableStorage);
+      CodeParser.update($scope.db, $scope.tableStorage);
+      CodeParser.fetchCode();
+
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
     };
@@ -93,7 +97,11 @@ angular.module('DTBS.main')
       separatedTables[id] = currentTable;
       //call the factory function with newly constructed object
       AccessSchemaService.schemaBuilder(separatedTables, function (data) {
+        console.log(data.data);
         $scope.tableStorage = data.data;
+
+        CodeParser.update($scope.db, $scope.tableStorage);
+        CodeParser.fetchCode();
         $scope.interactd3();
       });
       
@@ -163,10 +171,10 @@ angular.module('DTBS.main')
       $scope.modalTitle(obj.name);
     });
     //event listener for updating or server side calls on save (NOT WORKING)
-    $scope.$watch('tableStorage', debounceUpdate, true);
+    //$scope.$watch('tableStorage', debounceUpdate, true);
 
 
-    recoverInfo();
+    //recoverInfo();
   }])
   .factory('AccessSchemaService', function ($http) {
     var tempSchema;

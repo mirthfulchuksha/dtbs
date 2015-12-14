@@ -151,13 +151,29 @@ module.exports = {
   },
 
   buildTables: function (req, res, next) {
-    console.log("in /build", req.body.data);
     var rawTableData = req.body.data;
     var finishedTableStorage = {};
 
     //loop through raw data and process it via inputParser()
     for(var tableId in rawTableData) {
       finishedTableStorage[tableId] = inputParser(rawTableData[tableId], tableId);
+    }
+
+    //fix for foreign keys pointing to the wrong table
+    for(var tableId in finishedTableStorage) {
+      var keys = finishedTableStorage[tableId].attrs;
+      for(var key = 0; key < keys.length; key++) {
+        //only execute this mess if the key is a foreign key
+        if(keys[key].origin) {
+          var originTableName = keys[key].origin;
+          for(var foreignKeyTable in finishedTableStorage) {
+            if(finishedTableStorage[foreignKeyTable].name === originTableName) {
+              //change origin to be a table id number instead of a name
+              keys[key].origin = parseInt(foreignKeyTable);
+            }
+          }
+        }
+      }
     }
 
     res.send({data: finishedTableStorage}, 200);
@@ -178,7 +194,7 @@ var inputParser = function (inputTable, tableId) {
   title = title[2];
   table.name = title;
   //this will be passed in from raw data object
-  table.id = tableId;
+  table.id = parseInt(tableId);
 
   table.primaryKey = {};
   for (var i = 1; i <= endIndex-1; i++) {
@@ -236,9 +252,9 @@ var buildFks = function (inputArr) {
     // Build up all fks for table
     if (isForeignKey(line)) {
       var field = sizeFormatter(lineCopy);
-      var i = lineCopy.indexOf(")");
-      var origin = sizeFormatter(lineCopy.slice(i));
-      console.log('originBuild', origin);
+      var isolateTableName = lineCopy.split(' ')[4];
+      var i = isolateTableName.indexOf("(");
+      var origin = isolateTableName.slice(0, i);
       fks.push([field, origin]);
     }
   }
