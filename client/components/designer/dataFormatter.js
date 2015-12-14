@@ -170,7 +170,6 @@ var inputParser = function (inputTable) {
   if (fks.length > 0) {
     endIndex = inputArr.length-1-fks.length;
   }
-  console.log(fks);
   var title = inputArr[0].split(" ");
   title = title[2];
   table.title = title;
@@ -185,7 +184,6 @@ var inputParser = function (inputTable) {
     var notNull = isNotNull(line);
     var autoinc = autoIncrement(line);
     var explicitNull = !notNull && isNull(line);
-    var hasOrigin = isForeignKey(line);
     line = line.split(" ");
     attr.id = line[0];
     attr.basicType = typeFormatter(line[1]);
@@ -211,12 +209,10 @@ var inputParser = function (inputTable) {
     if (isPrimary) {
       table.primaryKey = attr;
     }
-    if (hasOrigin) {
-      for (var i = 0; i < fks.length; i++) {
-        // check if in foreign keys array, if yes, assign origin
-        if (fks[i][0] === attr.id) {
-          attr.origin = fks[i][1];
-        }
+    for (var j = 0; j < fks.length; j++) {
+      // check if in foreign keys array, if yes, assign origin
+      if (fks[j][0] === attr.id) {
+        attr.origin = fks[j][1];
       }
     }
     table.attrs.push(attr);
@@ -271,7 +267,7 @@ var autoIncrement = function (string) {
 var isForeignKey = function (string) {
   return string.indexOf("FOREIGN KEY") !== -1;
 };
-var inputArr1 = ["CREATE TABLE shop (,","article INT(4) PRIMARY KEY NOT NULL UNSIGNED ZEROFILL,","dealer CHAR(20) NOT NULL,","price DOUBLE(16,2) NULL","FOREIGN KEY (shop_item_name) REFERENCES shop(item_name)", ");"];
+var inputArr1 = ["CREATE TABLE shop (","article INT(4) PRIMARY KEY NOT NULL UNSIGNED ZEROFILL,","dealer CHAR(20) NOT NULL,","price DOUBLE(16,2) NULL","FOREIGN KEY (shop_item_name) REFERENCES shop(item_name)", ");"];
 var inputArr2 = ["CREATE TABLE shop (,","article INT(4) PRIMARY KEY NOT NULL UNSIGNED ZEROFILL,","dealer CHAR(20) NOT NULL,","price DOUBLE(16,2) NULL", ");"];
 var inputArr3 = ["CREATE TABLE seller (", "seller_id INT(45) PRIMARY KEY NOT NULL,", "shop_item_name CHAR(30),", "FOREIGN KEY (shop_item_name) REFERENCES shop(item_name)", ");"];
 
