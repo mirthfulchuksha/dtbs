@@ -3,9 +3,9 @@
   <div ng-controller="TableController" class="container">
     <hr>
     <div class="editButtonContainer">
-      <h3>Table Editor</h3>
-      <button ng-click="toggleMyModal()" class="btn btn-default">Create</button>
-      <button ng-click="toggleKeyModal()" class="btn btn-default">Edit Selected</button>
+      <button ng-click="toggleMyModal()" class="btn btn-default">Create Table</button>
+      <!-- <button ng-click="toggleKeyModal()" class="btn btn-default">Edit Selected</button> -->
+      <button ng-click="toggleKeyModal()" class="btn btn-default">Edit Table</button>
     </div>
 
     <tablemodal title="Table Create Form" visible="seeModal">
@@ -23,15 +23,15 @@
   <keymodal title="" id="tableTitle" visible="seeKeyModal">
 
     <div ng-controller="OutputController">
-      <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
+      <!-- <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
         <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
-      </div>
+      </div> -->
       <form name="tableForm">
+      <!--
         <button class="btn btn-success" ng-click="addField()">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Field
-        </button>
-        <div ng-repeat="key in keys track by $index" style="height:150px; position:relative">
-          <hr>
+        </button> -->
+        <div ng-repeat="key in keys track by $index" style="height:130px;">
           <label>Column ID</label>
             <input ng-model="keys[$index].id" type="text" placeholder="Column ID..." required/>
 
@@ -64,36 +64,53 @@
               <option>NULL</option>
               <option>NOT NULL</option>
             </select> -->
-            <button style="float:right; position: absolute; top:45px; right:10px" class="minus" ng-click="cancelAdd($index)"><span class="glyphicon glyphicon-minus-sign"></span></button>
+            <button style="float:right; position: absolute; top:45px; right:10px" class="minus" ng-click="cancelAdd($index)"><span class="glyphicon glyphicon-minus-sign"></span></button> 
+
         </div>
-        <hr>
-        <div ng-repeat="fkey in foreignKeys track by $index">
-          <label>Select which table to connect:</label>
-          <label ng-repeat="table in tableStorage">{{table.id !== selectedTable}}</label>
-          <select ng-model="foreignKeys[$index].origin" style="width:100px">
-            <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
-          </select>
+          
+        <div class="addField">
+          <hr>
+          <button class="btn btn-success" ng-click="addField()">
+            <span class="glyphicon glyphicon-plus-sign"></span> Add Field
+          </button>
+        </div>
+      
+          
+        <div class="addForeign" ng-if="primaryKeyPresent !== undefined">
+          <hr>
+          <button class="btn btn-success" ng-click="addForeignKey()">
+              <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key
+          </button>
+          <div ng-repeat="fkey in foreignKeys track by $index">
+            <label>Select which table to connect:</label>
+            <!-- <label ng-repeat="table in tableStorage">{{table.id !== selectedTable}}</label> -->
+            <select ng-model="foreignKeys[$index].origin" style="width:100px">
+              <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
+            </select>
+          </div>         
         </div>
 
         <div>
+          <hr>
           <label>Choose the table's primary key</label>
           <select ng-model="primaryKey" style="width:100px" required>
             <option ng-repeat="possibleKey in tableStorage[selectedTable].attrs.concat(keys) track by $index">{{possibleKey.id}}</option>
           </select>
         </div>
         <br>
-
-        <button class="btn btn-default" ng-click="addForeignKey()">Add Foreign Key</button>
+        <!-- <div ng-if="foreignKeyPresent"> -->
+        <!-- <button class="btn btn-default" ng-click="addForeignKey()">Add Foreign Key</button> -->
         <button class="btn btn-default" ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
         <button class="btn btn-default" ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
-        <script>
+        <!-- <script>
           $('.moreAttributes').on('click', function () {
             console.log("should show stuff");
             $('.moreOptions').css("display","block");
           });
 
-        </script>
+        </script> -->
       </form>
     </div>
   </keymodal>
+
 </div>

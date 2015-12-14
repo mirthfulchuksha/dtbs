@@ -15,6 +15,7 @@ angular.module('DTBS.main')
     $scope.db = {};
     $scope.selectedTable = 0;
     var secondsToWaitBeforeSave = 0;
+    $scope.primaryKeyPresent;
 
     $scope.downloadCode = function () {
       CodeParser.saveCode();
@@ -59,6 +60,7 @@ angular.module('DTBS.main')
 
     $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
+      $scope.primaryKeyPresent = true;
     };
 
     $scope.interactd3 = function () {
