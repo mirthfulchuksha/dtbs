@@ -77,7 +77,6 @@ angular.module('DTBS.main')
       var editor = ace.edit("editor");
       var newCode = editor.getValue();
       newCode = newCode.split('\n');
-      console.log(newCode);
 
       var separatedTables = {};
       var id = 1;
