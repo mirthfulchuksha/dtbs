@@ -1,8 +1,10 @@
 angular.module('DTBS.main')
 .controller('EditController', ['$scope', function ($scope) {
   $scope.edits = {};
-  $scope.currentTable;
-  $scope.currentAttrs;
+
+  $scope.whatTable = function(table){
+    console.log(table);
+  };
 
   // $scope.table = {};
   // //Table save function that clears form and pushes up to the parent
