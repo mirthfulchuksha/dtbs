@@ -2,10 +2,6 @@ angular.module('DTBS.main')
 .controller('EditController', ['$scope', function ($scope) {
   $scope.edited = [];
 
-  // $scope.edit = function(table){
-  //   $scope.editTable(table);
-  // };
-
   $scope.editTable = function(table){
     console.log($scope.tableStorage);
     for (var key in $scope.tableStorage){
