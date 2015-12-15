@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" type="text/css" href="styles/css/materialize.min.css">
   <link href="styles/styles.css" rel="stylesheet" type="text/css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="styles/js/materialize.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular-route/angular-route.min.js"></script>
   <script type="text/javascript" src="http://gabelerner.github.io/canvg/rgbcolor.js"></script>
@@ -28,61 +30,10 @@
   <script src="components/form/editKeysModalDirective.js"></script>
   <script src="components/output/outputController.js"></script>
   <script src="styles/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
   <title>DTBS</title>
   </head>
   <body ng-app="DTBS">
-    <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div>
-    <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
     <div class="standardFont" ng-view></div>
-      <div class="super-wrap">
-        <div class="editor-wrapper grey" ng-controller="EditorController">
-          <div class="navbar-header">
-            <a class="navbar-brand editor-head grey" href="#">code:</a>
-          </div>
-          <form class="navbar-form navbar-left grey dropdown" role="search">
-            <a class="btn btn-default" role="button" id="download"
-              target="_self" href="" download="" ng-click="downloadCode()">
-              <span class="glyphicon glyphicon-save"></span>
-            </a>
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Output
-              <span class="caret"></span>
-            </button>
-            <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
-              <span class="glyphicon glyphicon-floppy-disk"></span>
-            </a>
-            <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-              <span class="glyphicon glyphicon-wrench"></span>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-              <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
-              <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
-              <li><a href="" ng-click="updateFactory('mySQL')">mySQL </a></li>
-            </ul>
-          </form>
-          <div id="editor"><textarea ng-model="editorText">/* Your Output will appear here! */</textarea></div>
-        </div>
-        <div id="code_button">>></div>
-      </div>
-  <script>
-      var editor = ace.edit("editor");
-      editor.setTheme("ace/theme/monokai");
-      editor.getSession().setMode("ace/mode/sql");
-      editor.session.setOptions({
-        tabSize: 2,
-        useSoftTabs: true
-      });
-
-      $('#code_button').on('click', function () {
-        var state = parseInt($('.super-wrap').css('right'), 10) > -1;
-        $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
-        $('#code_button').text((state ? '<<': '>>'));
-      });
-      $(".dropdown-menu li a").click(function () {
-        $(".dropdown-toggle").text($(this).text());
-        $(".dropdown-toggle").append('<span class="caret"></span>');
-      });
-  </script>
   </body>
 </html>
