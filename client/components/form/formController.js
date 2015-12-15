@@ -14,7 +14,6 @@ angular.module('DTBS.main')
     $scope.id = 0;
     $scope.db = {};
     $scope.selectedTable = 0;
-    $scope.unSavedChanges = false;
     var secondsToWaitBeforeSave = 0;
     $scope.primaryKeyPresent;
 
@@ -177,13 +176,6 @@ angular.module('DTBS.main')
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
-    $scope.$watch('editorText', function (newVal, oldVal){
-      if(newVal !== "/* Your Output will appear here! */") {
-        //$scope.unSavedChanges = true;  
-        console.log("actually changed");
-      }
-      console.log("hellooooo editor");
-    });
 
 
     recoverInfo();
