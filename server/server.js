@@ -64,17 +64,24 @@ app.get('/auth/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   function(req, res) {
     var username = res.req.user.username;
-    helper.createUserDoc(req, res, username);
+    var id = res.req.user.id;
+    helper.createUserDoc(req, res, null, username, id);
     res.redirect('/');
   });
 
-app.post('/login', helper.login);
+app.post('/login', function (req, res) {
+  helper.createUserDoc(req, res, null, null);
+});
 
 app.get('/logout', function (req, res) {
   //access token revocation needed for oauth users
   req.session.destroy(function () {
     res.redirect('/');
   });
+});
+
+app.post('/signup', function (req, res) {
+  helper.createUserDoc(req, res, null, null);
 });
 
 /*
