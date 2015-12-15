@@ -2,6 +2,8 @@ angular.module('DTBS.main')
 .controller('EditController', ['$scope', function ($scope) {
   $scope.edits = {};
 
+  
+
   $scope.whatTable = function(table){
     console.log(table);
   };

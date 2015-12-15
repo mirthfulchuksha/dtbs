@@ -25,17 +25,17 @@
         <div class="form-group">
           <label>Choose Table to Edit:</label>
             <select ng-model="currentTable">
-              <option ng-repeat="table in tableStorage">{{table}}</option>
+              <option ng-repeat="currentTable in tableStorage">{{currentTable.name}}</option>
             </select>
-          <div ng-if="currentTable">
-            <label>Choose Field to Edit: </label>
-              <select ng-model="currentField">
-                 <option ng-repeat="attr in currentTable.attrs track by $index">{{attr.id}}</option> <!-- not showing up -->
-              </select>
-          </div>
-        </div>
+            <br> <!--
+            <label ng-if="currentTable">Choose Field to Edit: </label>
+            <select ng-model="currentField" ng-if="currentTable">
+               <option ng-repeat="attr in currentTable.attrs">{{currentTable.attrs}}</option> 
+            </select> 
+            <br> -->
         <button type="submit" class="btn btn-default">Edit</button>   
         <button ng-click="whatTable(currentTable)">Info</button>   
+        </div>
       </form>
     </editmodal>
   </div>
