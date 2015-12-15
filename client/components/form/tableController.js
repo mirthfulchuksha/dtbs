@@ -14,6 +14,7 @@ angular.module('DTBS.main')
     $scope.modalTitle(name);
   };
 
+
   $scope.seeModal = false;
   $scope.toggleMyModal = function () {
     $scope.seeModal = !$scope.seeModal;
