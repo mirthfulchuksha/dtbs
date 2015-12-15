@@ -175,6 +175,7 @@ module.exports = {
         }
       }
     }
+    console.log(finishedTableStorage[1].attrs);
 
     res.send({data: finishedTableStorage}, 200);
   }
@@ -274,7 +275,11 @@ var sizeFormatter = function (basicType) {
 };
 var typeFormatter = function (basicType) {
   var i = basicType.indexOf("(");
-  return i > 0 ? basicType.slice(0, i) : "";                          
+  if(i > 0) {
+    return basicType.slice(0, i);
+  } else {
+    return basicType;
+  }                       
 };
 
 var isPrimaryKey = function (string) {

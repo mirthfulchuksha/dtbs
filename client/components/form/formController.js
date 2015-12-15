@@ -14,21 +14,8 @@ angular.module('DTBS.main')
     $scope.id = 0;
     $scope.db = {};
     $scope.selectedTable = 0;
-    $scope.unSavedChanges = false;
+    $scope.primaryKeyPresent;
     var secondsToWaitBeforeSave = 0;
-
-    $scope.downloadCode = function () {
-      CodeParser.saveCode();
-    };
-
-    $scope.saveSchema = function () {
-      CodeParser.saveSchema();
-    };
-
-    $scope.updateFactory = function (language) {
-      $scope.db.lang = language;
-      CodeParser.update($scope.db);
-    };
 
     $scope.addTable = function (table) {
       //window.localStorage.removeItem('tempTable');
@@ -60,6 +47,7 @@ angular.module('DTBS.main')
 
     $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
+      $scope.primaryKeyPresent = true;
     };
 
     $scope.interactd3 = function () {
@@ -70,42 +58,6 @@ angular.module('DTBS.main')
       d3Data.push(updatedData);
     };
 
-
-    $scope.rebuildSchema = function () {
-      console.log("rebuilding");
-      var editor = ace.edit("editor");
-      var newCode = editor.getValue();
-      newCode = newCode.split('\n');
-
-      var separatedTables = {};
-      var id = 1;
-      var currentTable = [];
-      for(var i = 0; i < newCode.length; i++) {
-        if(newCode[i].includes('CREATE') && i > 0 || newCode[i].includes('create') && i > 0) {
-          //found keyword for new table, save the current and increment id var
-          separatedTables[id] = currentTable;
-          id++;
-          currentTable = [];
-        }
-        if(newCode[i] !== '') {
-          currentTable = currentTable.concat(newCode[i].trim());
-        }
-      }
-      //one more for the last item in the list
-      separatedTables[id] = currentTable;
-      //call the factory function with newly constructed object
-      AccessSchemaService.schemaBuilder(separatedTables, function (data) {
-        console.log(data.data);
-        $scope.tableStorage = data.data;
-
-        // CodeParser.update($scope.db, $scope.tableStorage);
-        // CodeParser.fetchCode();
-        $scope.interactd3();
-      });
-      
-
-      $scope.unSavedChanges = false;
-    };
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */
@@ -139,6 +91,7 @@ angular.module('DTBS.main')
 
     var timeout = null;
     var saveUpdates = function() {
+      console.log("saving updates", $scope.tableStorage);
      if ($scope.tableStorage) {
        // console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
        CodeParser.update($scope.db, $scope.tableStorage);
