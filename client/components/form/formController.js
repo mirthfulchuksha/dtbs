@@ -14,7 +14,7 @@ angular.module('DTBS.main')
     $scope.db = {};
     $scope.selectedTable = 0;
     $scope.primaryKeyPresent;
-    var secondsToWaitBeforeSave = 0.1;
+    var secondsToWaitBeforeSave = 0;
 
     $scope.addTable = function (table) {
       //window.localStorage.removeItem('tempTable');
@@ -93,7 +93,6 @@ angular.module('DTBS.main')
 
     var timeout = null;
     var saveUpdates = function() {
-      console.log("saving updates", $scope.tableStorage);
      if ($scope.tableStorage) {
        // console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
        CodeParser.update($scope.db, $scope.tableStorage);
@@ -106,7 +105,6 @@ angular.module('DTBS.main')
      }
     };
     var debounceUpdate = function(newVal, oldVal) {
-      console.log("changing");
      if (newVal !== oldVal) {
       //waits for timeout to apply the changes on the server side
        if (timeout) {
@@ -127,7 +125,6 @@ angular.module('DTBS.main')
     });
 
     $scope.$on('schemaService:new-data', function (e, data) {
-      console.log("passed thru successfully", data);
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;
       $scope.interactd3();

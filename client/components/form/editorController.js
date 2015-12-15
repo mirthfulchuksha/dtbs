@@ -36,15 +36,9 @@ angular.module('DTBS.main')
       //one more for the last item in the list
       separatedTables[id] = currentTable;
 
-      console.log(separatedTables);
       //call the factory function with newly constructed object
       AccessSchemaService.schemaBuilder(separatedTables, function (data) {
-        console.log(data.data);
-        //$scope.tableStorage = data.data;
-
-        // CodeParser.update($scope.db, $scope.tableStorage);
-        // CodeParser.fetchCode();
-        //$scope.interactd3();
+        console.log("tables built");
       });
     };
   }]);
