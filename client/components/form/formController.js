@@ -84,7 +84,7 @@ angular.module('DTBS.main')
 
     $scope.seeEditModal = false;
     $scope.toggleEditModal = function () {
-      $scope.seeEditModel = !$scope.seeEditModel;
+      $scope.seeEditModal = !$scope.seeEditModl;
     };
 
     $scope.modalTitle = function (name) {
