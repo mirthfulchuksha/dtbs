@@ -14,6 +14,7 @@ angular.module('DTBS.main')
     $scope.id = 0;
     $scope.db = {};
     $scope.selectedTable = 0;
+    $scope.unSavedChanges = true;
     var secondsToWaitBeforeSave = 0;
     $scope.primaryKeyPresent;
 
