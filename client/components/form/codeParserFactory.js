@@ -76,8 +76,10 @@ angular.module('DTBS.main')
       dbName = db.name ? db.name : dbName;
       dbLang = db.lang ? db.lang : dbLang;
       dbFilename = db. fileName ? db.fileName : dbFilename;
-      if (dbStorage) fetchCode();
-      else if (storage) dbStorage = storage;
+      if (storage) {
+        console.log("replacing dbstorage");
+        dbStorage = storage;
+      }
     };
 
     return {

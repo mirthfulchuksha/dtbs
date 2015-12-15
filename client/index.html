@@ -22,6 +22,7 @@
   <script src="components/form/tableModalDirective.js"></script>
   <script src="components/form/codeParserFactory.js"></script>
   <script src="components/form/editController.js"></script>
+  <script src="components/form/editorController.js"></script>
   <script src="components/form/editModalDirective.js"></script>
   <script src="components/output/outputController.js"></script>
   <script src="styles/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -33,7 +34,7 @@
     <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
     <div class="standardFont" ng-view></div>
       <div class="super-wrap">
-        <div class="editor-wrapper grey" ng-controller="FormController">
+        <div class="editor-wrapper grey" ng-controller="EditorController">
           <div class="navbar-header">
             <a class="navbar-brand editor-head grey" href="#">code:</a>
           </div>
@@ -58,7 +59,7 @@
               <li><a href="" ng-click="updateFactory('mySQL')">mySQL </a></li>
             </ul>
           </form>
-          <div id="editor">/* Your Output will appear here! */</div>
+          <div id="editor"><textarea ng-model="editorText">/* Your Output will appear here! */</textarea></div>
         </div>
         <div id="code_button">>></div>
       </div>
