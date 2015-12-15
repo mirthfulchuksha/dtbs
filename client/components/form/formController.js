@@ -9,13 +9,13 @@ angular.module('DTBS.main')
   '$http',
   function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService, $http) {
     //object for table storage
-    $scope.tableStorage;
+    $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
     $scope.id = 0;
     $scope.db = {};
     $scope.selectedTable = 0;
+    $scope.unSavedChanges = false;
     var secondsToWaitBeforeSave = 0;
-    $scope.primaryKeyPresent;
 
     $scope.downloadCode = function () {
       CodeParser.saveCode();
@@ -31,7 +31,7 @@ angular.module('DTBS.main')
     };
 
     $scope.addTable = function (table) {
-      window.localStorage.removeItem('tempTable');
+      //window.localStorage.removeItem('tempTable');
       $scope.tableStorage[table.id] = table;
       //set selected table to allow for correcting editing window
       $scope.selectedTable = table.id;
@@ -41,7 +41,6 @@ angular.module('DTBS.main')
       delete $scope.tableStorage[table.id];
       $scope.interactd3();
       $scope.toggleKeyModal();
-      console.log('keymodal should be gone');
     };
 
     //parent scope function to add keys to tables
@@ -53,7 +52,7 @@ angular.module('DTBS.main')
       });
       var pkey = $scope.tableStorage[table.id].attrs.splice(pkeyIndex, 1);
       $scope.tableStorage[table.id].attrs.unshift(pkey[0]);
-      console.log($scope.tableStorage);
+
       //updated rendering
       $scope.interactd3();
       $scope.selectedTable = 0;
@@ -61,14 +60,16 @@ angular.module('DTBS.main')
 
     $scope.addPrimaryKey = function (newPK, table){
       $scope.tableStorage[table.id].primaryKey = newPK;
-      $scope.primaryKeyPresent = true;
     };
 
     $scope.interactd3 = function () {
+      //info to send to d3, all manipulation needs to be finished before calling this.
+      console.log($scope.tableStorage);
+
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
-      console.log(d3Data);
     };
+
 
     $scope.rebuildSchema = function () {
       console.log("rebuilding");
@@ -132,12 +133,6 @@ angular.module('DTBS.main')
       $scope.seeKeyModal = !$scope.seeKeyModal;
     };
 
-    $scope.seeEditModal = false;
-    $scope.toggleEditModal = function () {
-      $scope.seeEditModal = !$scope.seeEditModal;
-      console.log('edit modal clicked');
-    };
-
     $scope.modalTitle = function (name) {
       $("#tableTitle .modal-title").html("Add/Edit Fields for '" + name + "'");
     };
@@ -156,6 +151,7 @@ angular.module('DTBS.main')
      }
     };
     var debounceUpdate = function(newVal, oldVal) {
+      console.log("changing");
      if (newVal !== oldVal) {
       //waits for timeout to apply the changes on the server side
        if (timeout) {
@@ -177,10 +173,9 @@ angular.module('DTBS.main')
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
 
-
-    recoverInfo();
+    //recoverInfo();
   }])
-  .factory('AccessSchemaService', function () {
+  .factory('AccessSchemaService', function ($http) {
     var tempSchema;
 
     var setTempSchema = function (schema) {
@@ -192,8 +187,21 @@ angular.module('DTBS.main')
       return tempSchema;
     };
 
+    var schemaBuilder = function (structObject, callback) {
+      var dataObj = {data: structObject};
+      return $http({
+        method: 'POST',
+        url: '/build',
+        data : dataObj
+      }).then(function (res) {
+        console.log("got response from /build");
+        callback(res.data);
+      });
+    };
+
     return {
       setTempSchema: setTempSchema,
-      getTempSchema: getTempSchema
+      getTempSchema: getTempSchema,
+      schemaBuilder: schemaBuilder
     };
   });
