@@ -23,9 +23,9 @@
   <keymodal title="" id="tableTitle" visible="seeKeyModal">
 
     <div ng-controller="OutputController">
-      <!-- <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
+      <div ng-repeat="existingKey in tableStorage[selectedTable].attrs">
         <input ng-model="existingKey.id" ng-class="{primaryKey: existingKey.id === tableStorage[selectedTable].primaryKey}">
-      </div> -->
+      </div> 
       <form name="tableForm">
 
         <div ng-repeat="key in keys track by $index" style="height:130px;">
@@ -90,7 +90,7 @@
 
         <button class="btn btn-default" ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
         <button class="btn btn-default" ng-click="deleteTable(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
-        
+
       </form>
     </div>
   </keymodal>
