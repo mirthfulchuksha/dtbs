@@ -122,6 +122,7 @@ angular.module('DTBS.main')
 
   $scope.deleteKeys = function (table) {
     $scope.keys = [];
+    $scope.foreignKeys = [];
     $scope.deleteTable(table);
   };
 

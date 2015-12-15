@@ -40,8 +40,8 @@ angular.module('DTBS.main')
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
       $scope.interactd3();
-      $scope.keys = [];
       $scope.toggleKeyModal();
+      console.log('keymodal should be gone');
     };
 
     //parent scope function to add keys to tables
@@ -100,6 +100,7 @@ angular.module('DTBS.main')
     $scope.seeEditModal = false;
     $scope.toggleEditModal = function () {
       $scope.seeEditModal = !$scope.seeEditModal;
+      console.log('edit modal clicked');
     };
 
     $scope.modalTitle = function (name) {
