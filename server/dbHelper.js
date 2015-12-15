@@ -1,29 +1,30 @@
 var User = require('./db/models/user');
 var Schema = require('./db/models/schema');
 var db = require('./db/database');
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports = {
 
-  createUserDoc: function (req, res, username) {
+  createUserDoc: function (req, res, next, username, id) {
+    username = req.body.userName || (username + '_gh');
+    password = req.body.password || id;
     User.findOne({userName: username})
     .exec(function (err, user) {
       if (user === null) {
         var newUser = new User({
           userName: username,
-          password: req.body.password
+          password: password
         });
         newUser.save(function (err, newUser) {
-          if (err) {
-            return console.error('upload failed:', err);
-          } else {
-            console.log(newUser, ' Signed in!');
-            if (req.session) module.exports.login(req, res, newUser);
-          }
+          if (err) return console.error(err);
+          console.log("saved!");
+          module.exports.login(req, res, newUser);
         });
       } else {
-        if (req.session && user.comparePasswords(req.body.password)) {
-          module.exports.login(req, res, user);
-        }
+        bcrypt.compare(password, user.password, function (err, isMatch) {
+          if (err) return console.error(err);
+          else if (isMatch) module.exports.login(req, res, user);
+        });
       }
     });
   },
@@ -39,7 +40,7 @@ module.exports = {
         });
         newSchema.save(function (err, newSchema) {
           if (err) {
-            return console.error('upload failed:', err);
+            return console.error(err);
           } else {
             console.log(newSchema, 'saved!');
           }
@@ -61,23 +62,14 @@ module.exports = {
     });
   },
 
-  isLoggedIn: function (req, res) {
-    return req.session ? !!req.session.user : false;
-  },
-
   login: function (req, res, user) {
-    if (!module.exports.isLoggedIn(req, res)) {
-      return req.session.regenerate(function () {
+    if (req.session) {
+      req.session.regenerate(function () {
         req.session.user = user;
-        console.log("Session created!");
+        console.log("Session created! ", req.session.user, "WOO");
+        if (req.body.userName) res.send(200);
       });
     }
-  },
-
-  logOut: function (req, res) {
-    req.session.destroy(function () {
-      console.log("Session detroyed!");
-    });
   }
 
 };

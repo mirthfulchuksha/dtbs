@@ -11,12 +11,14 @@
     "postinstall": "bower install"
   },
   "dependencies": {
+    "bcrypt": "^0.8.5",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
     "bower": "1.6.5",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
-    "mongoose-auto-increment": "^5.0.1",
     "fs": "0.0.2",
+    "mongoose-auto-increment": "^5.0.1",
     "passport": "^0.3.2",
     "passport-github": "^1.0.0",
     "underscore": "^1.8.3"
