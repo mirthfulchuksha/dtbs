@@ -15,13 +15,12 @@ var bookshelfTypeDict = {
   'String': 'string',
   'DateTime': 'integer',
   'Bit': 'integer'
-}
+};
 
 module.exports = {
 
   parseTable: function (req, res, next) {
     var tables = req.body.data;
-    console.log("req", req.body.data);
 
     var schema = "";
     for(var i = 0; i < tables.length; i++){
@@ -35,7 +34,6 @@ module.exports = {
         //Build structured string of SQL table's keys
         if(keys[key].origin){
           foreignKeys.push(keys[key]);
-          console.log("found a fkey", foreignKeys);
         }
 
         schema += "\
@@ -150,6 +148,154 @@ module.exports = {
     });
 
     res.send(schema, 200);
+  },
+
+  buildTables: function (req, res, next) {
+    var rawTableData = req.body.data;
+    var finishedTableStorage = {};
+
+    //loop through raw data and process it via inputParser()
+    for(var tableId in rawTableData) {
+      finishedTableStorage[tableId] = inputParser(rawTableData[tableId], tableId);
+    }
+
+    //fix for foreign keys pointing to the wrong table
+    for(var tableId in finishedTableStorage) {
+      var keys = finishedTableStorage[tableId].attrs;
+      for(var key = 0; key < keys.length; key++) {
+        //only execute this mess if the key is a foreign key
+        if(keys[key].origin) {
+          var originTableName = keys[key].origin;
+          for(var foreignKeyTable in finishedTableStorage) {
+            if(finishedTableStorage[foreignKeyTable].name === originTableName) {
+              //change origin to be a table id number instead of a name
+              keys[key].origin = parseInt(foreignKeyTable);
+            }
+          }
+        }
+      }
+    }
+
+    res.send({data: finishedTableStorage}, 200);
   }
+};
+
+var inputParser = function (inputTable, tableId) {
+  var inputArr = inputTable; // placeholder
+  // splitting and trimming is already done on the client side
+  var table = {};
+  table.attrs = [];
+  var fks = buildFks(inputArr);
+  var endIndex = inputArr.length-1;
+  if (fks.length > 0) {
+    endIndex = inputArr.length-1-fks.length;
+  }
+  var title = inputArr[0].split(" ");
+  title = title[2];
+  table.name = title;
+  //this will be passed in from raw data object
+  table.id = parseInt(tableId);
+
+  table.primaryKey = {};
+  for (var i = 1; i <= endIndex-1; i++) {
+    var line = inputArr[i];
+    var attr = {};
+    var isPrimary = isPrimaryKey(line);
+    var zeroFill = hasZeroFill(line);
+    var unsigned = isUnsigned(line);
+    var notNull = isNotNull(line);
+    var autoinc = autoIncrement(line);
+    var explicitNull = !notNull && isNull(line);
+    line = line.split(" ");
+    attr.id = line[0];
+    //This is actually not correct, it is too specific for basic type
+    attr.basicType = typeFormatter(line[1]);
+    attr.type = typeFormatter(line[1]);
+    
+    attr.size = sizeFormatter(line[1]);
+    // attr.default = ; we aren't supporting defaults currently?
+    attr.attributes = [];
+    if (zeroFill) {
+      attr.attributes.push("ZEROFILL");
+    }
+    if (unsigned) {
+      attr.attributes.push("UNSIGNED");
+    }
+    if (notNull) {
+      attr.attributes.push("NOT NULL");
+    }
+    if (explicitNull) {
+      attr.attributes.push("NULL");
+    }
+    if (autoinc) {
+      attr.attributes.push("AUTO_INCREMENT");
+    }
+    if (isPrimary) {
+      table.primaryKey = attr;
+    }
+    for (var j = 0; j < fks.length; j++) {
+      // check if in foreign keys array, if yes, assign origin
+      if (fks[j][0] === attr.id) {
+        attr.origin = fks[j][1];
+      }
+    }
+    table.attrs.push(attr);
+  }
+  return table;
+};
+
+// Helper functions
+var buildFks = function (inputArr) {
+  var fks = [];
+  for (var i = 1; i < inputArr.length-1; i++) {
+    var line = inputArr[i];
+    var lineCopy = line.slice();
+    // Build up all fks for table
+    if (isForeignKey(line)) {
+      var field = sizeFormatter(lineCopy);
+      var isolateTableName = lineCopy.split(' ')[4];
+      var i = isolateTableName.indexOf("(");
+      var origin = isolateTableName.slice(0, i);
+      fks.push([field, origin]);
+    }
+  }
+  return fks;
+};
+var sizeFormatter = function (basicType) {
+  var insideParens = /\(([^)]+)\)/;
+  var executedParse = insideParens.exec(basicType);
+  var finalSize;
+  if(executedParse) {
+    finalSize = executedParse[1];
+  } else {
+    finalSize = '';
+  }
+  return finalSize;
+};
+var typeFormatter = function (basicType) {
+  var i = basicType.indexOf("(");
+  return i > 0 ? basicType.slice(0, i) : "";                          
+};
+
+var isPrimaryKey = function (string) {
+  return string.indexOf("PRIMARY KEY") !== -1;
+};
+var isNull = function (string) {
+  return string.indexOf("NULL") !== -1;
+};
+var isNotNull = function (string) {
+  return string.indexOf("NOT NULL") !== -1;
+};
+var isUnsigned = function (string) {
+  return string.indexOf("UNSIGNED") !== -1;
+};
+var hasZeroFill = function (string) {
+  return string.indexOf("ZEROFILL") !== -1;
+};
+var autoIncrement = function (string) {
+  return string.indexOf("AUTO_INCREMENT") !== -1;
+};
+var isForeignKey = function (string) {
+  return string.indexOf("FOREIGN KEY") !== -1;
 };
 
