@@ -182,7 +182,7 @@ module.exports = {
 
 var inputParser = function (inputTable, tableId) {
   var inputArr = inputTable; // placeholder
-  // var inputArr = inputTable.split("\n");
+  // splitting and trimming is already done on the client side
   var table = {};
   table.attrs = [];
   var fks = buildFks(inputArr);
@@ -208,8 +208,9 @@ var inputParser = function (inputTable, tableId) {
     var explicitNull = !notNull && isNull(line);
     line = line.split(" ");
     attr.id = line[0];
+    //This is actually not correct, it is too specific for basic type
     attr.basicType = typeFormatter(line[1]);
-    attr.type = line[1];
+    attr.type = typeFormatter(line[1]);
     
     attr.size = sizeFormatter(line[1]);
     // attr.default = ; we aren't supporting defaults currently?

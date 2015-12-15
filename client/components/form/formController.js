@@ -62,10 +62,8 @@ angular.module('DTBS.main')
     };
 
     $scope.interactd3 = function () {
-      //TEMPORARY PLACEMENT
+      //info to send to d3, all manipulation needs to be finished before calling this.
       console.log($scope.tableStorage);
-      CodeParser.update($scope.db, $scope.tableStorage);
-      CodeParser.fetchCode();
 
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
@@ -99,8 +97,8 @@ angular.module('DTBS.main')
         console.log(data.data);
         $scope.tableStorage = data.data;
 
-        CodeParser.update($scope.db, $scope.tableStorage);
-        CodeParser.fetchCode();
+        // CodeParser.update($scope.db, $scope.tableStorage);
+        // CodeParser.fetchCode();
         $scope.interactd3();
       });
       
@@ -170,7 +168,7 @@ angular.module('DTBS.main')
       $scope.modalTitle(obj.name);
     });
     //event listener for updating or server side calls on save (NOT WORKING)
-    //$scope.$watch('tableStorage', debounceUpdate, true);
+    $scope.$watch('tableStorage', debounceUpdate, true);
 
 
     //recoverInfo();
