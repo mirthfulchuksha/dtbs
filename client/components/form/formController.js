@@ -6,8 +6,7 @@ angular.module('DTBS.main')
   'd3Data',
   'd3TableClass',
   'AccessSchemaService',
-  '$http',
-  function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService, $http) {
+  function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService) {
     //object for table storage
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
@@ -15,7 +14,7 @@ angular.module('DTBS.main')
     $scope.db = {};
     $scope.selectedTable = 0;
     $scope.primaryKeyPresent;
-    var secondsToWaitBeforeSave = 0;
+    var secondsToWaitBeforeSave = 0.1;
 
     $scope.addTable = function (table) {
       //window.localStorage.removeItem('tempTable');
@@ -52,8 +51,6 @@ angular.module('DTBS.main')
 
     $scope.interactd3 = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
-      console.log($scope.tableStorage);
-
       var updatedData = angular.copy($scope.tableStorage);
       d3Data.push(updatedData);
     };
@@ -83,6 +80,11 @@ angular.module('DTBS.main')
     $scope.seeKeyModal = false;
     $scope.toggleKeyModal = function () {
       $scope.seeKeyModal = !$scope.seeKeyModal;
+    };
+
+    $scope.seeEditModal = false;
+    $scope.toggleEditModal = function () {
+      $scope.seeEditModel = !$scope.seeEditModel;
     };
 
     $scope.modalTitle = function (name) {
@@ -123,13 +125,25 @@ angular.module('DTBS.main')
       var obj = $scope.tableStorage[$scope.selectedTable];
       $scope.modalTitle(obj.name);
     });
+
+    $scope.$on('schemaService:new-data', function (e, data) {
+      console.log("passed thru successfully", data);
+      //for some reason the data is buried two levels deep in the response, no big deal
+      $scope.tableStorage = data.data;
+      $scope.interactd3();
+    });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
 
     //recoverInfo();
   }])
-  .factory('AccessSchemaService', function ($http) {
+  .factory('AccessSchemaService', ['$rootScope', '$http', function ($rootScope, $http) {
     var tempSchema;
+
+    //function to broadcast new parsed table from the server
+    var emit = function(data) { 
+      $rootScope.$broadcast('schemaService:new-data', data); 
+    }
 
     var setTempSchema = function (schema) {
       tempSchema = schema;
@@ -148,6 +162,7 @@ angular.module('DTBS.main')
         data : dataObj
       }).then(function (res) {
         console.log("got response from /build");
+        emit(res.data);
         callback(res.data);
       });
     };
@@ -157,4 +172,4 @@ angular.module('DTBS.main')
       getTempSchema: getTempSchema,
       schemaBuilder: schemaBuilder
     };
-  });
+  }]);

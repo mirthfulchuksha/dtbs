@@ -14,7 +14,6 @@ angular.module('DTBS.main')
     };
 
     $scope.rebuildSchema = function () {
-      console.log("rebuilding");
       var editor = ace.edit("editor");
       var newCode = editor.getValue();
       newCode = newCode.split('\n');
@@ -29,12 +28,15 @@ angular.module('DTBS.main')
           id++;
           currentTable = [];
         }
-        if(newCode[i] !== '') {
-          currentTable = currentTable.concat(newCode[i].trim());
+        var trimmedInput = newCode[i].trim();
+        if(trimmedInput !== '') {
+          currentTable = currentTable.concat(trimmedInput);
         }
       }
       //one more for the last item in the list
       separatedTables[id] = currentTable;
+
+      console.log(separatedTables);
       //call the factory function with newly constructed object
       AccessSchemaService.schemaBuilder(separatedTables, function (data) {
         console.log(data.data);

@@ -154,6 +154,7 @@ module.exports = {
     var rawTableData = req.body.data;
     var finishedTableStorage = {};
 
+    console.log("serverside", rawTableData);
     //loop through raw data and process it via inputParser()
     for(var tableId in rawTableData) {
       finishedTableStorage[tableId] = inputParser(rawTableData[tableId], tableId);
@@ -201,6 +202,9 @@ var inputParser = function (inputTable, tableId) {
   for (var i = 1; i <= endIndex-1; i++) {
     var line = inputArr[i];
     var attr = {};
+
+    console.log(line);
+
     var isPrimary = isPrimaryKey(line);
     var zeroFill = hasZeroFill(line);
     var unsigned = isUnsigned(line);
