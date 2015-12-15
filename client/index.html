@@ -49,7 +49,7 @@
             <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
               <span class="glyphicon glyphicon-floppy-disk"></span>
             </a>
-            <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
+            <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()" disabled="{{unsavedChanges}}">
               <span class="glyphicon glyphicon-wrench"></span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -58,7 +58,7 @@
               <li><a href="" ng-click="updateFactory('mySQL')">mySQL </a></li>
             </ul>
           </form>
-          <div id="editor">/* Your Output will appear here! */</div>
+          <div id="editor"><textarea ng-model="editorText">/* Your Output will appear here! */</textarea></div>
         </div>
         <div id="code_button">>></div>
       </div>
