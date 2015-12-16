@@ -134,5 +134,5 @@ angular.module('DTBS.main')
     $scope.$watch('tableStorage', debounceUpdate, true);
     
     //??????
-    //recoverInfo();
+    $timeout($scope.recoverInfo());
   }]);
