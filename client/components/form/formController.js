@@ -56,20 +56,27 @@ angular.module('DTBS.main')
       d3Data.push(updatedData);
     };
 
+    var changeTableID = function (num) {
+      $scope.id = num;
+    };
+
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */
     $scope.recoverInfo = function () {
       var recovered = window.localStorage.getItem('tempTable');
       if(recovered) {
-        $scope.tableStorage = JSON.parse(recovered);
+        var parsedRecovered = JSON.parse(recovered);
+        $scope.tableStorage = parsedRecovered;
         $scope.id = Object.keys($scope.tableStorage).length;
 
         window.localStorage.removeItem('tempTable');  
 
+        var amount = Object.keys(parsedRecovered).length;
         //rebuild visuals        
         $timeout($scope.interactd3, secondsToWaitBeforeRender * 1000);
         $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
+        $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 1000);
       } else {
         $scope.tableStorage = {};
       }
@@ -130,6 +137,7 @@ angular.module('DTBS.main')
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;
+      $scope.id = Object.keys($scope.tableStorage).length;
       $scope.interactd3();
     });
     //event listener for updating or server side calls on save
