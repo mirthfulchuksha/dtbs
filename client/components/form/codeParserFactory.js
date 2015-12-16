@@ -3,10 +3,11 @@ angular.module('DTBS.main')
     var dbName = "",
         dbLang = "",
         dbFilename = "",
-        dbStorage;
+        dbStorage,
+        dbUser;
 
-    var emit = function(data) { 
-      $rootScope.$broadcast('codeParser:new-db-data', data); 
+    var emit = function(data) {
+      $rootScope.$broadcast('codeParser:new-db-data', data);
     }
 
     var fetchCode = function () {
@@ -17,7 +18,7 @@ angular.module('DTBS.main')
 
       var url;
       switch (dbLang) {
-        case "mySQL":
+        case "SQL":
           url = '/update';
           break;
         case "Bookshelf":
@@ -60,6 +61,7 @@ angular.module('DTBS.main')
 
     var saveSchema = function () {
       var saveStuff = {
+        dbUser: dbUser,
         dbName: dbName,
         dbLang: dbLang,
         tableStorage: dbStorage
@@ -76,10 +78,24 @@ angular.module('DTBS.main')
       });
     };
 
-    var update = function (db, storage) {
-      dbName = db.name ? db.name : dbName;
-      dbLang = db.lang ? db.lang : dbLang;
-      dbFilename = db.fileName ? db.fileName : dbFilename;
+    var fetchSchemas = function () {
+      $http({
+        url: '/setup?username=' + dbUser,
+        method: 'GET',
+      }).success(function (res) {
+        console.log("RESPPP", res);
+      }).error(function (res) {
+        console.log("Cannot fetch schemas");
+      });
+    };
+
+    var update = function (db, storage, user) {
+      dbUser = user ? user.userName : dbUser;
+      if (db) {
+        dbName = db.name ? db.name : dbName;
+        dbLang = db.lang ? db.lang : dbLang;
+        dbFilename = db.fileName ? db.fileName : dbFilename;
+      }
       if (storage) {
         //if storage is provided, it has been updated and needs to be reflected here for fetching
         dbStorage = storage;
@@ -91,6 +107,7 @@ angular.module('DTBS.main')
       fetchCode: fetchCode,
       saveCode: saveCode,
       saveSchema: saveSchema,
+      fetchSchemas: fetchSchemas,
       update: update
     };
   }]);

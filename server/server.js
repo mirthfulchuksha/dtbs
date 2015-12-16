@@ -10,6 +10,7 @@ var session = require('express-session');
 
 var port = process.env.PORT || 3000;
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client'));
@@ -66,12 +67,11 @@ app.get('/auth/callback',
     var username = res.req.user.username;
     var id = res.req.user.id;
     helper.findUser(req, res, username, id);
-    res.redirect('/');
+    res.redirect('/setup');
   });
 
 app.post('/login', function (req, res) {
-  console.log(req.body)
-  helper.findUser(req, res, null, null, null);
+  helper.findUser(req, res);
 });
 
 app.get('/logout', function (req, res) {
@@ -82,7 +82,12 @@ app.get('/logout', function (req, res) {
 });
 
 app.post('/signup', function (req, res) {
-  helper.findUser(req, res, null, null);
+  helper.findUser(req, res);
+});
+
+app.get('/setup', function(req, res) {
+  console.log("HERE")
+  helper.fetchSchemas(req, res);
 });
 
 /*

@@ -1,9 +1,22 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', '$location', function ($scope, CodeParser, SaveAndRedirectFactory, $http, $location) {
   $scope.showLoginModal = true;
   $scope.loggingIn = true;
+  $scope.db = {lang: "SQL"};
+
+  $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
+    switch (newValue) {
+      case '/login':
+        $('#loginModal').openModal();
+        break;
+      case '/setup':
+        $('#setupModal').openModal();
+        break;
+      default:
+    }
+  });
 
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
@@ -50,6 +63,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   $scope.user = {};
   $scope.login = function () {
       $scope.user.login = true;
+      CodeParser.update(null, null, $scope.user);
       $scope.sendUserData({
         url: '/login',
         method: 'POST',
@@ -57,6 +71,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
       }, function (res) {
         $('#loginModal').closeModal();
         $scope.notValid = false;
+        $location.path('/setup');
       }, function (res) {
         if (res === 'noUser') {
           $scope.noUser = true;
@@ -69,6 +84,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.signup = function () {
+    CodeParser.update(null, null, $scope.user);
     if ($scope.isMatch()) {
       $scope.sendUserData({
         url: '/signup',
@@ -78,11 +94,16 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
         $('#loginModal').closeModal();
         $scope.notValid = false;
         $scope.userExist = false;
+        $location.path('/setup');
       }, function () {
         $scope.userExist = true;
       });
       $scope.user = {};
     }
+  };
+
+  $scope.fetchDBs = function () {
+    CodeParser.fetchSchemas();
   };
 
   $scope.isMatch = function () {
@@ -102,10 +123,9 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     SaveAndRedirectFactory.stashTables();
   };
 
-  $scope.db = {lang: "mySQL"};
   $scope.updateFactory = function () {
     switch ($scope.db.lang) {
-      case "mySQL":
+      case "SQL":
         $scope.db.fileName = $scope.db.lang + '_Schema.sql';
         break;
       case "Bookshelf":

@@ -48,8 +48,9 @@ module.exports = {
     .exec(function (err, schema) {
       if (schema === null) {
         var newSchema = new Schema({
-          name: req.body.name,
-          language: req.body.lang,
+          user: req.body.dbUser,
+          name: req.body.dbName,
+          language: req.body.dbLang,
           data: req.body.tableStorage
         });
         newSchema.save(function (err, newSchema) {
@@ -73,6 +74,14 @@ module.exports = {
     }, function (err, schema) {
       if (err) return res.send(500, err);
       console.log("Updated Schema!");
+    });
+  },
+
+  fetchSchemas: function (req, res) {
+    console.log(req.query.username);
+    Schema.find({user: req.query.username}, function (err, schemas) {
+      if (err) return console.error(err);
+      res.send(schemas);
     });
   },
 

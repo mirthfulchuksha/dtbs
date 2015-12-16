@@ -667,7 +667,8 @@ else {
     _generateID = function() {
       _lastID++;
       return 'materialize-lean-overlay-' + _lastID;
-    };
+    },
+    _stackModals = [];
 
   $.fn.extend({
     openModal: function(options) {
@@ -688,25 +689,37 @@ else {
       $overlay = $('<div class="lean-overlay"></div>'),
       lStack = (++_stack);
 
-      // Store a reference of the overlay
-      $overlay.attr('id', overlayID).css('z-index', 1000 + lStack * 2);
-      $modal.data('overlay-id', overlayID).css('z-index', 1000 + lStack * 2 + 1);
+      //check if modal has been opened
+      //if the modal is not opened then add a new overlay
+      if( _stackModals.indexOf($modal.selector) === -1 ) {
+          // Store a reference of the modal
+          _stackModals.push($modal.selector);
 
-      $("body").append($overlay);
+        // Store a reference of the overlay
+        $overlay.attr('id', overlayID).css('z-index', 1000 + lStack * 2);
+
+        $("body").append($overlay);
+      } else {
+          //if the modal has been opened already
+          //retrieve overlayID
+          overlayID = $modal.data('overlay-id');
+      }
+
+      $modal.data('overlay-id', overlayID).css('z-index', 1000 + lStack * 2 + 1);
 
       // Override defaults
       options = $.extend(defaults, options);
 
       if (options.dismissible) {
-      //   $overlay.click(function() {
-      //     $modal.closeModal(options);
-      //   });
+        $overlay.click(function() {
+          $modal.closeModal(options);
+        });
         // Return on ESC
-        // $(document).on('keyup.leanModal' + overlayID, function(e) {
-        //   if (e.keyCode === 27) {   // ESC key
-        //     $modal.closeModal(options);
-        //   }
-        // });
+        $(document).on('keyup.leanModal' + overlayID, function(e) {
+          if (e.keyCode === 27) {   // ESC key
+            $modal.closeModal(options);
+          }
+        });
       }
 
       $modal.find(".modal-close").on('click.close', function(e) {
@@ -777,6 +790,10 @@ else {
 
       $overlay.velocity( { opacity: 0}, {duration: options.out_duration, queue: false, ease: "easeOutQuart"});
 
+      //remove modal from stack
+      if( _stackModals.indexOf($modal.selector) !== -1 ) {
+        _stackModals.splice(_stackModals.indexOf($modal.selector), 1);
+      }
 
       // Define Bottom Sheet animation
       if ($modal.hasClass('bottom-sheet')) {
