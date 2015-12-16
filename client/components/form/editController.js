@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     for (var key in $scope.tableStorage){
       for (var stuff in $scope.tableStorage[key]){
         for (var actuals in $scope.tableStorage[key][stuff]){
-          console.log($scope.tableStorage[key][stuff][actuals]);
+          console.log($scope.tableStorage[key][stuff]);
         }
       }       
     }
