@@ -16,6 +16,15 @@ angular.module('DTBS.main')
     $scope.primaryKeyPresent;
     var secondsToWaitBeforeSave = 0;
 
+    // $scope.editTable = function(table){
+    //   console.log($scope.tableStorage);
+    //   for (var key in $scope.tableStorage){
+    //     for (var stuff in $scope.tableStorage[key]){
+    //       console.log(stuff);
+    //     }       
+    //   }
+    // };
+
     $scope.addTable = function (table) {
       //window.localStorage.removeItem('tempTable');
       $scope.tableStorage[table.id] = table;

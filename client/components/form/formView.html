@@ -21,20 +21,15 @@
  
   <div ng-controller="EditController">
     <editmodal title="Edit Table" visible="seeEditModal">
-      <form role="form" ng-submit="editTable()" name="tableEdit">
+      <form role="form" name="tableEdit">
         <div class="form-group">
           <label>Choose Table to Edit:</label>
             <select ng-model="currentTable">
               <option ng-repeat="currentTable in tableStorage">{{currentTable.name}}</option>
             </select>
-            <br> <!--
-            <label ng-if="currentTable">Choose Field to Edit: </label>
-            <select ng-model="currentField" ng-if="currentTable">
-               <option ng-repeat="attr in currentTable.attrs">{{currentTable.attrs}}</option> 
-            </select> 
-            <br> -->
+            <br>
         <button type="submit" class="btn btn-default">Edit</button>   
-        <button ng-click="whatTable(currentTable)">Info</button>   
+        <button ng-click="editTable(currentTable)">Info</button>   
         </div>
       </form>
     </editmodal>
