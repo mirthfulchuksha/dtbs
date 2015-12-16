@@ -16,7 +16,6 @@ angular.module('DTBS.main')
         }
       }  
     }
-
     $scope.toggleEditModal();
     $scope.toggleEditKeysModal();
   };
@@ -26,4 +25,9 @@ angular.module('DTBS.main')
     $scope.toggleEditKeysModal();
   };
 
-}]);
+}])
+
+// .controller('EditKeysController', ['$scope', function ($scope) {
+
+  
+// }])
