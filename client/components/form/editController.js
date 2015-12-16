@@ -1,30 +1,29 @@
 angular.module('DTBS.main')
 .controller('EditController', ['$scope', function ($scope) {
-  $scope.edited = [];
+
+  $scope.keyEdit = [];
+
+  $scope.editKeysModal = false;
+  $scope.toggleEditKeysModal = function () {
+    $scope.editKeysModal = !$scope.editKeysModal;
+  };
 
   $scope.editTable = function(table){
-    console.log($scope.tableStorage);
     for (var key in $scope.tableStorage){
-      for (var stuff in $scope.tableStorage[key]){
-        for (var actuals in $scope.tableStorage[key][stuff]){
-          console.log($scope.tableStorage[key][stuff]);
+      if ($scope.tableStorage[key]["name"] === table) {
+        for (var key2 in $scope.tableStorage[key]["attrs"]){
+          $scope.keyEdit.push($scope.tableStorage[key]["attrs"][key2]);
         }
-      }       
+      }  
     }
-  };
-  // $scope.table = {};
-  // //Table save function that clears form and pushes up to the parent
-  // $scope.save = function (name) {
-  //   $scope.id++;
-  //   $scope.table.id = $scope.id;
-  //   $scope.table.attrs = [];
-  //   $scope.addTable($scope.table);
-  //   $scope.table = {};
-  //   //close window and open key modal
-  //   $scope.toggleMyModal();
-  //   $scope.toggleKeyModal();
-  //   $scope.modalTitle(name);
-  // };
 
+    $scope.toggleEditModal();
+    $scope.toggleEditKeysModal();
+  };
+
+  $scope.editDone = function () {
+    $scope.keyEdit = [];
+    $scope.toggleEditKeysModal();
+  };
 
 }]);
