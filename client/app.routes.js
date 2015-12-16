@@ -15,9 +15,6 @@ angular.module('DTBS', [
       templateUrl: './components/getStarted/login/login.html',
       controller: 'ModalCtrl'
     })
-    .when('/signup', {
-      templateUrl: './components/getStarted/signup/signup.html'
-    })
     .when('/try', {
       templateUrl: './components/getStarted/setup/setup.html'
     })

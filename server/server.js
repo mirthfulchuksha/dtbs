@@ -65,12 +65,13 @@ app.get('/auth/callback',
   function(req, res) {
     var username = res.req.user.username;
     var id = res.req.user.id;
-    helper.createUserDoc(req, res, null, username, id);
+    helper.findUser(req, res, username, id);
     res.redirect('/');
   });
 
 app.post('/login', function (req, res) {
-  helper.createUserDoc(req, res, null, null);
+  console.log(req.body)
+  helper.findUser(req, res, null, null, null);
 });
 
 app.get('/logout', function (req, res) {
@@ -81,7 +82,7 @@ app.get('/logout', function (req, res) {
 });
 
 app.post('/signup', function (req, res) {
-  helper.createUserDoc(req, res, null, null);
+  helper.findUser(req, res, null, null);
 });
 
 /*
