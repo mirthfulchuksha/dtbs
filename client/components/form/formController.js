@@ -15,6 +15,7 @@ angular.module('DTBS.main')
     $scope.selectedTable = 0;
     $scope.primaryKeyPresent;
     var secondsToWaitBeforeSave = 0;
+    var secondsToWaitBeforeRender = 1;
 
     $scope.addTable = function (table) {
       //window.localStorage.removeItem('tempTable');
@@ -61,14 +62,14 @@ angular.module('DTBS.main')
     $scope.recoverInfo = function () {
       var recovered = window.localStorage.getItem('tempTable');
       if(recovered) {
-        console.log("found! ", recovered);
         $scope.tableStorage = JSON.parse(recovered);
         $scope.id = Object.keys($scope.tableStorage).length;
-        console.log($scope.tableStorage);
-        console.log($scope.id);
-        //window.localStorage.removeItem('tempTable');
-        //rebuild visuals
-        $scope.interactd3();
+
+        window.localStorage.removeItem('tempTable');  
+
+        //rebuild visuals        
+        $timeout($scope.interactd3, secondsToWaitBeforeRender * 1000);
+        $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
       } else {
         $scope.tableStorage = {};
       }
@@ -133,7 +134,8 @@ angular.module('DTBS.main')
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
-
+    
+    //on set up to check local storage
     $timeout($scope.recoverInfo());
 
   }]);

@@ -89,15 +89,6 @@ mymodal.factory('SaveAndRedirectFactory', ['AccessSchemaService', '$http', funct
     var tables = AccessSchemaService.getTempSchema();
     console.log(tables);
     window.localStorage.setItem('tempTable', JSON.stringify(tables));
-
-    // return $http({
-    //     method: 'GET',
-    //     url: '/auth/github'
-    //   }).then(function (res) {
-    //     //???
-    //     console.log("does this get called??!");
-    //     return res.data;
-    //   });
   };
 
   return {
