@@ -31,13 +31,14 @@ module.exports = {
       var keys = tables[i].attrs;
       var foreignKeys = [];
       for (var key = 0; key < keys.length; key++) {
+        console.log(keys[key]);
         //Build structured string of SQL table's keys
         if(keys[key].origin){
           foreignKeys.push(keys[key]);
         }
 
         schema += "\
-    " + keys[key].id + " " + keys[key].type;
+    " + keys[key].id + " " + keys[key].type.replace(/,/g, '');
 
         //NOTE: the order of these checks is important
         //size of key's value
@@ -154,7 +155,6 @@ module.exports = {
     var rawTableData = req.body.data;
     var finishedTableStorage = {};
 
-    console.log("serverside", rawTableData);
     //loop through raw data and process it via inputParser()
     for(var tableId in rawTableData) {
       finishedTableStorage[tableId] = inputParser(rawTableData[tableId], tableId);
@@ -176,7 +176,6 @@ module.exports = {
         }
       }
     }
-    console.log(finishedTableStorage[1].attrs);
 
     res.send({data: finishedTableStorage}, 200);
   }
@@ -203,8 +202,6 @@ var inputParser = function (inputTable, tableId) {
     var line = inputArr[i];
     var attr = {};
 
-    console.log(line);
-
     var isPrimary = isPrimaryKey(line);
     var zeroFill = hasZeroFill(line);
     var unsigned = isUnsigned(line);
@@ -215,7 +212,7 @@ var inputParser = function (inputTable, tableId) {
     attr.id = line[0];
     //This is actually not correct, it is too specific for basic type
     attr.basicType = typeFormatter(line[1]);
-    attr.type = typeFormatter(line[1]);
+    attr.type = typeFormatter(line[1]).replace(/,/g, '');
     
     attr.size = sizeFormatter(line[1]);
     // attr.default = ; we aren't supporting defaults currently?
@@ -252,15 +249,15 @@ var inputParser = function (inputTable, tableId) {
 // Helper functions
 var buildFks = function (inputArr) {
   var fks = [];
-  for (var i = 1; i < inputArr.length-1; i++) {
+  for (var i = 1; i < inputArr.length; i++) {
     var line = inputArr[i];
     var lineCopy = line.slice();
     // Build up all fks for table
     if (isForeignKey(line)) {
       var field = sizeFormatter(lineCopy);
       var isolateTableName = lineCopy.split(' ')[4];
-      var i = isolateTableName.indexOf("(");
-      var origin = isolateTableName.slice(0, i);
+      var spot = isolateTableName.indexOf("(");
+      var origin = isolateTableName.slice(0, spot);
       fks.push([field, origin]);
     }
   }
