@@ -58,7 +58,7 @@ angular.module('DTBS.main')
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */
-    var recoverInfo = function () {
+    $scope.recoverInfo = function () {
       var recovered = window.localStorage.getItem('tempTable');
       if(recovered) {
         console.log("found! ", recovered);
@@ -66,6 +66,7 @@ angular.module('DTBS.main')
         $scope.id = Object.keys($scope.tableStorage).length;
         console.log($scope.tableStorage);
         console.log($scope.id);
+        //window.localStorage.removeItem('tempTable');
         //rebuild visuals
         $scope.interactd3();
       } else {
@@ -94,7 +95,7 @@ angular.module('DTBS.main')
     var timeout = null;
     var saveUpdates = function() {
      if ($scope.tableStorage) {
-       // console.log("Saving updates to item #" + Object.keys($scope.tableStorage).length + "...");
+       //update the factory's representation of table storage and fetch code of the current structure
        CodeParser.update($scope.db, $scope.tableStorage);
        CodeParser.fetchCode();
 
@@ -131,43 +132,7 @@ angular.module('DTBS.main')
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
-
-    //recoverInfo();
-  }])
-  .factory('AccessSchemaService', ['$rootScope', '$http', function ($rootScope, $http) {
-    var tempSchema;
-
-    //function to broadcast new parsed table from the server
-    var emit = function(data) { 
-      $rootScope.$broadcast('schemaService:new-data', data); 
-    }
-
-    var setTempSchema = function (schema) {
-      tempSchema = schema;
-      console.log("schema saved in factory");
-    };
-
-    var getTempSchema = function () {
-      return tempSchema;
-    };
-
-    var schemaBuilder = function (structObject, callback) {
-      var dataObj = {data: structObject};
-      return $http({
-        method: 'POST',
-        url: '/build',
-        data : dataObj
-      }).then(function (res) {
-        //response containing structure from editor code
-        //data is emitted to be grabbed by the form controller
-        emit(res.data);
-        callback(res.data);
-      });
-    };
-
-    return {
-      setTempSchema: setTempSchema,
-      getTempSchema: getTempSchema,
-      schemaBuilder: schemaBuilder
-    };
+    
+    //??????
+    $timeout($scope.recoverInfo());
   }]);

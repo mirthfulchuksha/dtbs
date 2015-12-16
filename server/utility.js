@@ -17,6 +17,48 @@ var bookshelfTypeDict = {
   'Bit': 'integer'
 };
 
+var basicTypes = { 
+    Numeric: [
+      "TINYINT", 
+      "SMALLINT", 
+      "MEDIUMINT",
+      "INT",
+      "INTEGER",
+      "BIGINT",
+      "FLOATp",
+      "FLOATMD",
+      "DOUBLE",
+      "DECIMAL"     
+    ], 
+    String: [
+      "CHAR",
+      "VARCHAR",
+      "TINYTEXT2",
+      "TEXT",
+      "TEXT2",
+      "MEDIUMTEXT2",
+      "LONGTEXT2",
+      "BINARY",
+      "VARBINARY",
+      "TINYBLOB",
+      "BLOB",
+      "MEDIUMBLOB",
+      "LONGBLOB",
+      "ENUM2",
+      "SET2"
+    ],
+    Bit: [
+      "BIT"
+    ],
+    DateTime: [
+      "DATE",
+      "DATETIME",
+      "TIME",
+      "TIMESTAMP",
+      "YEAR"
+    ]
+  }
+
 module.exports = {
 
   parseTable: function (req, res, next) {
@@ -31,7 +73,6 @@ module.exports = {
       var keys = tables[i].attrs;
       var foreignKeys = [];
       for (var key = 0; key < keys.length; key++) {
-        console.log(keys[key]);
         //Build structured string of SQL table's keys
         if(keys[key].origin){
           foreignKeys.push(keys[key]);
@@ -211,8 +252,15 @@ var inputParser = function (inputTable, tableId) {
     line = line.split(" ");
     attr.id = line[0];
     //This is actually not correct, it is too specific for basic type
-    attr.basicType = typeFormatter(line[1]);
     attr.type = typeFormatter(line[1]).replace(/,/g, '');
+    
+    //use type to create basic type attr
+    for(var type in basicTypes) {
+      if(basicTypes[type].indexOf(attr.type.toUpperCase()) > -1) {
+        attr.basicType = type;
+      }
+    }
+    //attr.basicType = typeFormatter(line[1]);
     
     attr.size = sizeFormatter(line[1]);
     // attr.default = ; we aren't supporting defaults currently?

@@ -1,5 +1,6 @@
 angular.module('DTBS.main')
   .controller('EditorController', [ '$scope', 'CodeParser', 'AccessSchemaService', function ($scope, CodeParser, AccessSchemaService) {
+    $scope.db = {};
     $scope.downloadCode = function () {
       CodeParser.saveCode();
     };
@@ -11,6 +12,7 @@ angular.module('DTBS.main')
     $scope.updateFactory = function (language) {
       $scope.db.lang = language;
       CodeParser.update($scope.db);
+      CodeParser.fetchCode();
     };
 
     $scope.rebuildSchema = function () {
@@ -41,4 +43,8 @@ angular.module('DTBS.main')
         console.log("tables built");
       });
     };
+
+    $scope.$on('codeParser:new-db-data', function (e, data) {
+      //this is never called
+    });
   }]);
