@@ -45,8 +45,6 @@ angular.module('DTBS.main')
     };
 
     $scope.$on('codeParser:new-db-data', function (e, data) {
-      //for some reason the data is buried two levels deep in the response, no big deal
-      console.log(data);
-      //$scope.db = data.data;
+      //this is never called
     });
   }]);
