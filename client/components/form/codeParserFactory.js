@@ -1,9 +1,13 @@
 angular.module('DTBS.main')
-  .factory('CodeParser', function ($http) {
+  .factory('CodeParser', [ '$http', '$rootScope', function ($http, $rootScope) {
     var dbName = "",
         dbLang = "",
         dbFilename = "",
         dbStorage;
+
+    var emit = function(data) { 
+      $rootScope.$broadcast('codeParser:new-db-data', data); 
+    }
 
     var fetchCode = function () {
       var dataObj = {data: []};
@@ -75,10 +79,11 @@ angular.module('DTBS.main')
     var update = function (db, storage) {
       dbName = db.name ? db.name : dbName;
       dbLang = db.lang ? db.lang : dbLang;
-      dbFilename = db. fileName ? db.fileName : dbFilename;
+      dbFilename = db.fileName ? db.fileName : dbFilename;
       if (storage) {
         //if storage is provided, it has been updated and needs to be reflected here for fetching
         dbStorage = storage;
+        emit(db);
       }
     };
 
@@ -88,4 +93,4 @@ angular.module('DTBS.main')
       saveSchema: saveSchema,
       update: update
     };
-  });
+  }]);
