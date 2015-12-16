@@ -77,7 +77,7 @@ angular.module('DTBS.main')
       dbLang = db.lang ? db.lang : dbLang;
       dbFilename = db. fileName ? db.fileName : dbFilename;
       if (storage) {
-        console.log("replacing dbstorage");
+        //if storage is provided, it has been updated and needs to be reflected here for fetching
         dbStorage = storage;
       }
     };

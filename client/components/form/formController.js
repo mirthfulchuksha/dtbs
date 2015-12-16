@@ -158,7 +158,8 @@ angular.module('DTBS.main')
         url: '/build',
         data : dataObj
       }).then(function (res) {
-        console.log("got response from /build");
+        //response containing structure from editor code
+        //data is emitted to be grabbed by the form controller
         emit(res.data);
         callback(res.data);
       });
