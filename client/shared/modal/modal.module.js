@@ -1,7 +1,9 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', '$location', function ($scope, CodeParser, SaveAndRedirectFactory, $http, $location) {
+
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', 'd3Data', function ($scope, CodeParser, SaveAndRedirectFactory, $http, d3Data) {
+  $scope.showModal = false;
   $scope.showLoginModal = true;
   $scope.loggingIn = true;
   $scope.db = {lang: "SQL"};
@@ -18,12 +20,22 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     }
   });
 
+  $scope.coolView = true;
+
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
   };
 
   $scope.toggleLoginModal = function () {
     $scope.showLoginModal = !$scope.showLoginModal;
+  };
+
+  $scope.d3View = function () {
+    $scope.coolView = true;
+  };
+
+  $scope.stodgyView = function () {
+    $scope.coolView = false;
   };
 
   $scope.saveSVG = function () {

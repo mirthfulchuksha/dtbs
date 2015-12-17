@@ -96,28 +96,27 @@ var snapFormatter = function (table) {
   });
   return snapTable;
 };
-console.log(snapFormatter(mocked[0]));
-  CREATE TABLE Users (
-    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name CHAR(45) NOT NULL,
-    email CHAR(45)
+
+
+  CREATE TABLE users (
+    id INT PRIMARY KEY NOT NULL,
+    name VARCHAR(45),
+    email VARCHAR(45)
   );
 
-  // CREATE TABLE Recipes (
-  //   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  //   ingredients VARCHAR(100) NOT NULL AUTO_INCREMENT,
-  //   Users_id INT,
-  //   FOREIGN KEY (Users_id) REFERENCES Users(id)
-  // );
+  CREATE TABLE chats (
+    id INT PRIMARY KEY NOT NULL,
+    users_id INT,
+    FOREIGN KEY (users_id) REFERENCES users(id)
+  );
 
-  // CREATE TABLE Restaurants (
-  //   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  //   name VARCHAR(100) NOT NULL AUTO_INCREMENT,
-  //   Users_id INT,
-  //   FOREIGN KEY (Users_id) REFERENCES Users(id)
-  // );  
-
-
+  CREATE TABLE test (
+    id INT PRIMARY KEY NOT NULL,
+    field1 VARCHAR,
+    field2 CHAR(45),
+    chats_id INT,
+    FOREIGN KEY (chats_id) REFERENCES chats(id)
+  );
 
 
 

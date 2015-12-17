@@ -5,14 +5,6 @@ angular.module('DTBS.main')
 
   var emit = function(data) { $rootScope.$broadcast('d3:table-class', data); }
   var api = {
-    get: function() {
-      return data;
-    },
-    set: function(data) {
-      data = data;
-      emit(data);
-      return data;
-    },
     push: function(datum) {
       data = datum;
       emit(data);
@@ -26,14 +18,6 @@ angular.module('DTBS.main')
 
   var emit = function(data) { $rootScope.$broadcast('d3:new-data', data); }
   var api = {
-    get: function() {
-      return data;
-    },
-    set: function(data) {
-      data = data;
-      emit(data);
-      return data;
-    },
     push: function(datum) {
       data = datum;
       emit(data);
@@ -41,25 +25,17 @@ angular.module('DTBS.main')
     }
   }
   return api;
-}]);
-// .service('snapData', ['$rootScope', function($rootScope) {
-//   var data;
+}])
+.service('snapData', ['$rootScope', function($rootScope) {
+  var data;
 
-//   var emit = function(data) { $rootScope.$broadcast('snap:new-data', data); }
-//   var api = {
-//     get: function() {
-//       return data;
-//     },
-//     set: function(data) {
-//       data = data;
-//       emit(data);
-//       return data;
-//     },
-//     push: function(datum) {
-//       data = datum;
-//       emit(data);
-//       //return data;
-//     }
-//   }
-//   return api;
-// }])
+  var emit = function(data) { $rootScope.$broadcast('snap:new-data', data); }
+  var api = {
+    push: function(datum) {
+      data = datum;
+      emit(data);
+      return data;
+    }
+  }
+  return api;
+}])

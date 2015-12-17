@@ -98,20 +98,14 @@ angular.module('DTBS.main')
         for (var i = 0, ii = shapes.length; i < ii; i++) {
           color = "grey";
           tempS = shapes[i].attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move"});
-          tempT = texts[i].attr({fill: color, stroke: "none", "font-size": 15, cursor: "move"});
+          tempT = texts[i].attr({fill: color, stroke: "none", "font-size": 12, cursor: "move"});
         }
-        // have to pass in what is connected to what 
-        // var fkConnections = [[fromShape, toShape], [fromShape, toShape]]
-        // connections.push(s.connection.apply(s, fkConnection))
         fkConnections.forEach(function (fkConnection) {
           connections.push(s.connection.apply(s, fkConnection));
         });
-        // connections.push(s.connection(shapes[1], shapes[4]));
-        // connections.push(s.connection(shapes[1], shapes[6]));
           
         dragGroups.forEach(function (dragGroup) {
           var group = s.group.apply(s, dragGroup);
-        // apply drag to that group
           group.drag(move, dragger, up);
         });
       };
@@ -121,15 +115,12 @@ angular.module('DTBS.main')
         for (var key in data) {
           dataArr.push(data[key]);
         }
-
-
         var shapes = [], texts = [];
         var s = Snap("#svgout");
         
         var randomIntFromInterval = function (min,max) {
           return Math.floor(Math.random()*(max-min+1)+min);
         };
-        // array of all the groups shapes/texts in individual arrays
         var dragGroups = [];
         for (var i = 0; i < dataArr.length; i++) {
           var dragGroup = [];
@@ -138,7 +129,7 @@ angular.module('DTBS.main')
           var startY = randomIntFromInterval(40, 300);
 
           var startYText = startY+15, startXText = startX+20;
-          var tableShape = s.rect(startX, startY, 80, 20);
+          var tableShape = s.rect(startX, startY, 120, 20);
           var tableText = s.text(startXText, startYText, table.name);
           shapes.push(tableShape);
           texts.push(tableText);
@@ -146,19 +137,18 @@ angular.module('DTBS.main')
           table.attrs.forEach(function (field) {
             startY += 20;
             startYText += 20;
-            var fieldShape = s.rect(startX, startY, 80, 20);
-            var fieldText = s.text(startXText, startYText, field.id);
+            var fieldShape = s.rect(startX, startY, 120, 20);
+            var fieldText = s.text(startXText, startYText, field.id+"("+field.type+")");
             shapes.push(fieldShape);
             texts.push(fieldText);
             dragGroup.push(fieldShape, fieldText);
           });
           dragGroups.push(dragGroup);
         }
-        // BUILD UP FOREIGN KEY LINKS TO PASS INTO FUNCTION ABOVE
-        var container = d3Format.dataBuilder(dataArr);
+        
+        var container = d3Format.dataBuilder(dataArr, false);
         var graph = d3Format.fkLinks(container, dataArr);
-        console.log(graph);
-        // var fkConnections = [[fromShape, toShape], [fromShape, toShape]]
+        
         var fkConnections = [];
         graph.links.forEach(function (link) {
           var fkConnection = [shapes[link.source], shapes[link.target]];

@@ -10,11 +10,15 @@ angular.module('DTBS.main')
         var width = 640, height = 350;
 
         // Create the SVG
-        var svg = d3.select(element[0])
-        .append("svg")
-        .attr('id', 'designer')
-        .attr('width', width)
-        .attr('height', height)
+        // var svg = d3.select(element[0])
+        // .append("svg")
+        // .attr('id', 'designer')
+        // .attr('width', width)
+        // .attr('height', height)
+        // .attr("xmlns", "http://www.w3.org/2000/svg")
+        // .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
+
+        var svg = d3.selectAll("#designer")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
@@ -32,10 +36,10 @@ angular.module('DTBS.main')
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
-          var container = d3Format.dataBuilder(tableData);
+          var container = d3Format.dataBuilder(tableData, true);
           var graph = d3Format.fkLinks(container, tableData);
           
-          var svg = d3.select("svg");
+          var svg = d3.select("#designer");
           //Creates the graph data structure out of the json data
           force.nodes(graph.nodes)
               .links(graph.links)
