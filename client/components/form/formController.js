@@ -58,8 +58,18 @@ angular.module('DTBS.main')
       d3Data.push(updatedData);
     };
 
+
     var changeTableID = function (num) {
       $scope.id = num;
+    }
+    
+    $("#mytoggler").click(function() {
+      $('#designCanvas').find('svg').toggle();
+    });
+
+    $scope.interactSnap = function () {
+      var newSnapData = angular.copy($scope.tableStorage);
+      snapData.push(newSnapData);
     };
 
     /*

@@ -10,15 +10,7 @@
       <button ng-click="toggleLoginModal()" class="btn btn-default">Login/Signup</button>
       <a href="/logout"><span class="btn btn-default">Logout</span></a>
     </form>
-    <ul class="nav navbar-nav">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">View Type <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a ng-click="d3View()">d3 View</a></li>
-          <li><a ng-click="stodgyView()">I hate nice things</a></li>
-        </ul>
-      </li>
-    </ul>
+    
     <modal title="Login/Signup" visible="!showLoginModal">
       <form role="form" ng-submit="login()">
         <div class="form-group">
@@ -57,5 +49,3 @@
     </modal>
   </div>
 </nav>
-<div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
-<div ng-include="'/components/designer/snapView.html'"></div>

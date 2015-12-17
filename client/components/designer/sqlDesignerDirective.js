@@ -97,11 +97,11 @@ angular.module('DTBS.main')
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
-            d3.selectAll("circle")
+            svg.selectAll("circle")
                 .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
                 .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
 
-            d3.selectAll("text").attr("x", function (d) { return d.x; })
+            svg.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
           });
         };
@@ -112,7 +112,7 @@ angular.module('DTBS.main')
           d3TableClass.push(classToSend);
         };
         var dblclick = function (d) {
-          d3.select(this).classed("fixed", d.fixed = !d.fixed);
+          svg.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('d3:new-data', function (e, data) {
           var dataArr = [];
