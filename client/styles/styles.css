@@ -132,3 +132,14 @@ input {
   height: 50px;
 }
 
+.pass2, #valSignup {
+  display: none;
+}
+
+.select-dropdown {
+  width:20px;
+}
+
+.caret {
+  font-size: 10px;
+}

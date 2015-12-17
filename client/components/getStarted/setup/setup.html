@@ -1,0 +1,71 @@
+<div id="setupModal" class="modal" >
+  <div class="modal-content">
+    <div class="col s12" ng-if="loggedIn">
+      <ul class="tabs" style="background-color:transparent; height:10px">
+        <li id="login" class="tab col s6"><a href="">New</a></li>
+        <li id="signup" class="tab col s6"><a href="" ng-click="fetchDBs()">Saved</a></li>
+      </ul>
+    </div>
+    <br>
+  </div>
+  <div class="row">
+    <br>
+    <form class="col s12 loginForm" ng-submit="updateFactory() && setup()">
+      <div class="col s6">
+        <div class="input-field col s12">
+          <input id="dbName" type="text" ng-model="db.name" class="validate">
+          <label for="dbName">Database Name</label>
+        </div>
+      </div>
+      <div class="col s12" style="text-align:center">
+        <a class='dropdown-button btn' style="width:400px" href='' data-activates='dropdown1'>Your Databases <span>&#x25BE;</span></a>
+        <ul id='dropdown1' class='dropdown-content'>
+          <li ng-repeat="schema in schemaList" style="width:220px" ng-model="db.name" value="{{schema.name}}"><a href="">{{schema.name}} </a></li>
+        </ul>
+      </div>
+      <br>
+      <div class="col s6" style="text-align:center">
+        <a class='dropdown-button btn' style="width:220px" href='' data-activates='dropdown1'>Database Type <span>&#x25BE;</span></a>
+        <ul id='dropdown1' class='dropdown-content'>
+          <li style="width:220px" ng-model='db.lang' value="SQL"><a href="">SQL </a></li>
+          <li style="width:220px" ng-model='db.lang' value="Mongo"><a href="">Mongo </a></li>
+        </ul>
+      </div>
+    </form>
+  </div>
+  <br><br><br>
+  <div class="modal-footer">
+    <span ng-show="userExist">You already have a database with this name!</span>
+    <button id="create" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat">Create</button>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.modal-trigger').leanModal();
+    $('#new').on('click', function () {
+      $('#dbName').show();
+      $('#dbList').hide();
+      $('#create').text('Create');
+    });
+    $('#saved').on('click', function () {
+      $('#dbName').hide();
+      $('#dbList').show();
+      $('#create').text('Load');
+    });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: true, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+      }
+    );
+    $(".dropdown-content li a").click(function () {
+      $(".dropdown-button").text($(this).text());
+      $(".dropdown-button").append('<span>&#x25BE;</span>');
+    });
+  });
+</script>

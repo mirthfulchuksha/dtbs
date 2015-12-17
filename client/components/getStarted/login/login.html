@@ -1,0 +1,61 @@
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+      <div class="col s12">
+        <ul class="tabs" style="background-color:transparent; height:10px">
+          <li id="login" class="tab col s6"><a href="">Login</a></li>
+          <li id="signup" class="tab col s6"><a href="">Signup</a></li>
+        </ul>
+      </div>
+      <br>
+    </div>
+    <div class="row">
+      <form class="col s12 loginForm">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="username" type="text" ng-model="user.userName" required>
+            <label for="username">Username</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="password" type="password" ng-model="user.password">
+            <label for="password">Password</label>
+          </div>
+        </div>
+        <div class="row pass2">
+          <div class="input-field col s12">
+            <input id="password2" type="password" ng-model="pass2">
+            <label for="password2">Verify Password</label>
+          </div>
+        </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+    <span ng-show="userExist">User already exists!</span>
+    <span ng-show="noUser">Not a valid username!</span>
+    <span ng-show="notValid">Incorrect password!</span>
+    <span ng-show="notMatch">Passwords do not match!</span>
+    <button id="valLogin" ng-click="login()" class="waves-effect waves-green btn-flat">Login</button>
+    <button id="valSignup" ng-click="signup()" class="waves-effect waves-green btn-flat">Signup</button>
+    <a href="/auth/github" target="_blank" class="modal-action modal-close waves-effect waves-green btn-flat">Login/Signup with Github</a>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.modal-trigger').leanModal({
+      dismissible: true,
+      complete: function () {$('.lean-overlay').remove();}
+      });
+    $('#signup').on('click', function () {
+      $('.pass2').show();
+      $('#valSignup').show();
+      $('#valLogin').hide();
+    });
+    $('#login').on('click', function () {
+      $('.pass2').hide();
+      $('#valLogin').show();
+       $('#valSignup').hide();
+    });
+  });
+</script>
