@@ -59,7 +59,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.githubRedirect = function () {
-    console.log("in the redirect");
     SaveAndRedirectFactory.stashTables();
   };
 
@@ -87,7 +86,6 @@ mymodal.factory('SaveAndRedirectFactory', ['AccessSchemaService', '$http', funct
 
   var stashTables = function () {
     var tables = AccessSchemaService.getTempSchema();
-    console.log(tables);
     window.localStorage.setItem('tempTable', JSON.stringify(tables));
   };
 
