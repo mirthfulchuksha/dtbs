@@ -21,7 +21,7 @@
  
   <div ng-controller="EditController">
 
-    <editmodal title="Edit Table" visible="seeEditModal">
+    <editmodal title="Edit Table" visible="editModal">
       <form role="form" ng-submit="editTable(currentTable)" name="tableEdit">
         <div class="form-group">
           <label>Choose Table to Edit:</label>
@@ -59,6 +59,7 @@
     </div>
       <button class="btn btn-default" ng-click="editDone()">Done</button>
     </editkeysmodal>
+
 
   </div>
 

@@ -11,6 +11,7 @@ angular.module('DTBS.main')
   };
 
   $scope.editTable = function(table){
+    console.log($scope.tableStorage);
     $scope.tablename = table;
     for (var key in $scope.tableStorage){
       if ($scope.tableStorage[key]["name"] === table) {
@@ -19,7 +20,9 @@ angular.module('DTBS.main')
         }
       }  
     }
-    $scope.toggleEditModal();
+
+    $scope.editModal = false;
+
     $scope.toggleEditKeysModal();
   };
 
@@ -49,7 +52,8 @@ angular.module('DTBS.main')
         $scope.keyEdit.splice(i, 1);
       }
     }
-
+    
+    //update d3 with edits
     $scope.interactd3();
 
   };
