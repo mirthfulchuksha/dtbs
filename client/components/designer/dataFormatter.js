@@ -97,11 +97,11 @@ var snapFormatter = function (table) {
   return snapTable;
 };
 console.log(snapFormatter(mocked[0]));
-  // CREATE TABLE Users (
-  //   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  //   name CHAR(45) NOT NULL,
-  //   email CHAR(45)
-  // );
+  CREATE TABLE Users (
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name CHAR(45) NOT NULL,
+    email CHAR(45)
+  );
 
   // CREATE TABLE Recipes (
   //   id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

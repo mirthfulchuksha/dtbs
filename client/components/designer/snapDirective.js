@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.directive('snapSql', ['d3Data', function (d3Data) {
+.directive('snapSql', ['d3Data', 'd3Format', function (d3Data, d3Format) {
   return {
     restrict: 'EA',
     scope: {},
@@ -76,7 +76,7 @@ angular.module('DTBS.main')
         }
       });
 
-      scope.render = function (s, shapes, texts, dragGroups) {
+      scope.render = function (s, shapes, texts, dragGroups, fkConnections) {
         var color, i, ii, tempS, tempT;
         var dragger = function () {
           this.data('origTransform', this.transform().local )
@@ -96,18 +96,24 @@ angular.module('DTBS.main')
 
         var connections = [];
         for (var i = 0, ii = shapes.length; i < ii; i++) {
-            color = "grey";
-            tempS = shapes[i].attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move"});
-            tempT = texts[i].attr({fill: color, stroke: "none", "font-size": 15, cursor: "move"});
-          }
-          // connections.push(s.connection(shapes[1], shapes[5]));
-          // connections.push(s.connection(shapes[1], shapes[8]));
+          color = "grey";
+          tempS = shapes[i].attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move"});
+          tempT = texts[i].attr({fill: color, stroke: "none", "font-size": 15, cursor: "move"});
+        }
+        // have to pass in what is connected to what 
+        // var fkConnections = [[fromShape, toShape], [fromShape, toShape]]
+        // connections.push(s.connection.apply(s, fkConnection))
+        fkConnections.forEach(function (fkConnection) {
+          connections.push(s.connection.apply(s, fkConnection));
+        });
+        // connections.push(s.connection(shapes[1], shapes[4]));
+        // connections.push(s.connection(shapes[1], shapes[6]));
           
-          dragGroups.forEach(function (dragGroup) {
-            var group = s.group.apply(s, dragGroup);
-          // apply drag to that group
-            group.drag(move, dragger, up);
-          });
+        dragGroups.forEach(function (dragGroup) {
+          var group = s.group.apply(s, dragGroup);
+        // apply drag to that group
+          group.drag(move, dragger, up);
+        });
       };
       scope.$on('d3:new-data', function (e, data) {
         $("#svgout").empty();
@@ -115,6 +121,7 @@ angular.module('DTBS.main')
         for (var key in data) {
           dataArr.push(data[key]);
         }
+
 
         var shapes = [], texts = [];
         var s = Snap("#svgout");
@@ -147,8 +154,17 @@ angular.module('DTBS.main')
           });
           dragGroups.push(dragGroup);
         }
-
-        scope.render(s, shapes, texts, dragGroups);
+        // BUILD UP FOREIGN KEY LINKS TO PASS INTO FUNCTION ABOVE
+        var container = d3Format.dataBuilder(dataArr);
+        var graph = d3Format.fkLinks(container, dataArr);
+        console.log(graph);
+        // var fkConnections = [[fromShape, toShape], [fromShape, toShape]]
+        var fkConnections = [];
+        graph.links.forEach(function (link) {
+          var fkConnection = [shapes[link.source], shapes[link.target]];
+          fkConnections.push(fkConnection);
+        });
+        scope.render(s, shapes, texts, dragGroups, fkConnections);
       });
     }
   };

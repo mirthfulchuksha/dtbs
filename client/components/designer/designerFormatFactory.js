@@ -52,7 +52,7 @@ angular.module('DTBS.main')
         graph.nodes.push(fieldNode);
         // Add Field to Central Node Link =======================
         var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 50};
-        graph.links.push(fieldToTableLink);
+        // graph.links.push(fieldToTableLink); // >> UNCOMMENT FOR D3 STUFF
         // Check for origin - denotes FK relationship ===========
         if (field.origin) {
           var fieldIdString = field.id.toString()+":";
