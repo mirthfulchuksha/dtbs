@@ -27,6 +27,7 @@ angular.module('DTBS.main')
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
       $scope.interactd3();
+      // $scope.interactSnap();
       $scope.toggleKeyModal();
     };
 
@@ -42,6 +43,7 @@ angular.module('DTBS.main')
 
       //updated rendering
       $scope.interactd3();
+      // $scope.interactSnap();
       $scope.selectedTable = 0;
     };
 
@@ -139,6 +141,7 @@ angular.module('DTBS.main')
       $scope.tableStorage = data.data;
       $scope.id = Object.keys($scope.tableStorage).length;
       $scope.interactd3();
+      // $scope.interactSnap();
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);

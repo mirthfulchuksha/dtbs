@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.directive('snapSql', function () {
+.directive('snapSql', ['d3Data', function (d3Data) {
   return {
     restrict: 'EA',
     scope: {},
@@ -11,20 +11,18 @@ angular.module('DTBS.main')
           var t = this.node.getTransformToElement( this.paper.node );
           var m = Snap.matrix( t );
           var obj = { x: m.x( bb.x, bb.y ), y: m.y( bb.x, bb.y ), x2: m.x( bb.x2, bb.y2 ), y2: m.y( bb.x2, bb.y2 ),
-                   cx: m.x( bb.cx, bb.cy ), cy: m.y( bb.cy, bb.cy ) }
-          obj['width'] =  obj.x2 - obj.x
-          obj['height'] = obj.y2 - obj.y
+                      cx: m.x( bb.cx, bb.cy ), cy: m.y( bb.cy, bb.cy ) }
+          obj['width'] =  obj.x2 - obj.x;
+          obj['height'] = obj.y2 - obj.y;
           return obj;
         };
 
-      Paper.prototype.connection = function (obj1, obj2, line, bg) {
-        console.log( 'obj1', obj1 )
+        Paper.prototype.connection = function (obj1, obj2, line, bg) {
           if (obj1.line && obj1.from && obj1.to) {
             line = obj1;
             obj1 = line.from;
             obj2 = line.to;
           }
-        console.log( 'tbb', obj1.getTransformedBB() )    
           var bb1 = obj1.getTransformedBB(),
               bb2 = obj2.getTransformedBB(),
               p = [{x: bb1.x + bb1.width / 2, y: bb1.y - 1},
@@ -52,9 +50,9 @@ angular.module('DTBS.main')
             res = d[Math.min.apply(Math, dis)];
           }
           var x1 = p[res[0]].x,
-            y1 = p[res[0]].y,
-            x4 = p[res[1]].x,
-            y4 = p[res[1]].y;
+              y1 = p[res[0]].y,
+              x4 = p[res[1]].x,
+              y4 = p[res[1]].y;
           dx = Math.max(Math.abs(x1 - x4) / 2, 10);
           dy = Math.max(Math.abs(y1 - y4) / 2, 10);
           var x2 = [x1, x1, x1 - dx, x1 + dx][res[0]].toFixed(3),
@@ -78,65 +76,82 @@ angular.module('DTBS.main')
         }
       });
 
-      var el;
-      (function () {
-          var color, i, ii, tempS, tempT;
-          var dragger = function () {
-            this.data('origTransform', this.transform().local )
-            this.animate({"fill-opacity": .5}, 500);
-          },
-              move = function (dx, dy) {
-                this.attr({ transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]})
-                for (var i = connections.length; i--;) {
-                  s.connection(connections[i]);
-                }
-              },
-              up = function () {
-                this.animate({"fill-opacity": 0}, 500);
-                // Fade paired element on mouse up
-                this.animate({"fill-opacity": 1}, 500);
-              },
-              s = Snap("#svgout"),
-              connections = [],
-              shapes = [  // Users
-                s.rect(250, 80, 80, 20),
-                s.rect(250, 100, 80, 20),
-                s.rect(250, 120, 80, 20),
-                // Groups
-                s.rect(380, 80, 80, 20),
-                s.rect(380, 100, 80, 20),
-                s.rect(380, 120, 80, 20),
-                // Chats
-                s.rect(380, 80, 80, 20),
-                s.rect(380, 100, 80, 20),
-                s.rect(380, 120, 80, 20)
-              ],
-              texts = [   
-                s.text(290, 90, "Users"), //0
-                s.text(290, 110, "id"), //1
-                s.text(290, 130, "name"), //2
-                s.text(420, 90, "Groups"), //3
-                s.text(420, 110, "id"), //4
-                s.text(420, 130, "owner"), //5
-                s.text(420, 90, "Chats"), //6
-                s.text(420, 110, "id"), //7
-                s.text(420, 130, "owner") //8
-              ];
-          for (var i = 0, ii = shapes.length; i < ii; i++) {
+      scope.render = function (s, shapes, texts, dragGroups) {
+        var color, i, ii, tempS, tempT;
+        var dragger = function () {
+          this.data('origTransform', this.transform().local )
+          this.animate({"fill-opacity": .5}, 500);
+        };
+        var move = function (dx, dy) {
+          this.attr({ transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]});
+          for (var i = connections.length; i--;) {
+            s.connection(connections[i]);
+          }
+        };
+        var up = function () {
+          this.animate({"fill-opacity": 0}, 500);
+          // Fade paired element on mouse up
+          this.animate({"fill-opacity": 1}, 500);
+        };
+
+        var connections = [];
+        for (var i = 0, ii = shapes.length; i < ii; i++) {
             color = "grey";
             tempS = shapes[i].attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move"});
             tempT = texts[i].attr({fill: color, stroke: "none", "font-size": 15, cursor: "move"});
           }
-          connections.push(s.connection(shapes[1], shapes[5]));
-          connections.push(s.connection(shapes[1], shapes[8]));
-          var group1 = s.g(shapes[0], shapes[1], shapes[2], texts[0], texts[1], texts[2]);
-          var group2 = s.g(shapes[3], shapes[4], shapes[5], texts[3], texts[4], texts[5]);
-          var group3 = s.g(shapes[6], shapes[7], shapes[8], texts[6], texts[7], texts[8]);
-          group1.drag(move, dragger, up);
-          group2.drag(move, dragger, up);
-          group3.drag(move, dragger, up);
-      })();
-    }};
-});
+          // connections.push(s.connection(shapes[1], shapes[5]));
+          // connections.push(s.connection(shapes[1], shapes[8]));
+          
+          dragGroups.forEach(function (dragGroup) {
+            var group = s.group.apply(s, dragGroup);
+          // apply drag to that group
+            group.drag(move, dragger, up);
+          });
+      };
+      scope.$on('d3:new-data', function (e, data) {
+        $("#svgout").empty();
+        var dataArr = [];
+        for (var key in data) {
+          dataArr.push(data[key]);
+        }
+
+        var shapes = [], texts = [];
+        var s = Snap("#svgout");
+        
+        var randomIntFromInterval = function (min,max) {
+          return Math.floor(Math.random()*(max-min+1)+min);
+        };
+        // array of all the groups shapes/texts in individual arrays
+        var dragGroups = [];
+        for (var i = 0; i < dataArr.length; i++) {
+          var dragGroup = [];
+          var table = dataArr[i];
+          var startX = randomIntFromInterval(40, 600);
+          var startY = randomIntFromInterval(40, 300);
+
+          var startYText = startY+15, startXText = startX+20;
+          var tableShape = s.rect(startX, startY, 80, 20);
+          var tableText = s.text(startXText, startYText, table.name);
+          shapes.push(tableShape);
+          texts.push(tableText);
+          dragGroup.push(tableShape, tableText);
+          table.attrs.forEach(function (field) {
+            startY += 20;
+            startYText += 20;
+            var fieldShape = s.rect(startX, startY, 80, 20);
+            var fieldText = s.text(startXText, startYText, field.id);
+            shapes.push(fieldShape);
+            texts.push(fieldText);
+            dragGroup.push(fieldShape, fieldText);
+          });
+          dragGroups.push(dragGroup);
+        }
+
+        scope.render(s, shapes, texts, dragGroups);
+      });
+    }
+  };
+}]);
 
 
