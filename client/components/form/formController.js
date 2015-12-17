@@ -83,9 +83,9 @@ angular.module('DTBS.main')
       $scope.seeKeyModal = !$scope.seeKeyModal;
     };
 
-    $scope.seeEditModal = false;
+    $scope.editModal = false;
     $scope.toggleEditModal = function () {
-      $scope.seeEditModal = !$scope.seeEditModl;
+      $scope.editModal = !$scope.editModal;
     };
 
     $scope.modalTitle = function (name) {
@@ -133,6 +133,6 @@ angular.module('DTBS.main')
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
     
-    //??????
     $timeout($scope.recoverInfo());
+
   }]);
