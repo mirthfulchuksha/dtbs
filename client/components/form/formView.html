@@ -25,32 +25,38 @@
       <form role="form" ng-submit="editTable(currentTable)" name="tableEdit">
         <div class="form-group">
           <label>Choose Table to Edit:</label>
-            <select ng-model="currentTable">
+            <select ng-model="currentTable" required>
               <option ng-repeat="currentTable in tableStorage">{{currentTable.name}}</option>
             </select>
             <br>
-        <button type="submit" class="btn btn-default">Edit</button>   
+        <button type="submit" class="btn btn-default">Edit</button> 
+
         <!-- <button ng-click="editTable(currentTable)">Info</button>  --> 
         </div>
       </form>
+      <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteTable(currentTable)">Delete Table</button>  
     </editmodal>
 
     <editkeysmodal title="Edit Fields" visible="editKeysModal">
       <div ng-repeat="savedKey in keyEdit">
-        <label>Column ID</label>
+        <label>Column ID: {{savedKey.id}}</label>
+        <button "btn btn-default" ng-click="deleteField(savedKey.id, currentTable)" class="pull-right">Delete Field</button>
+        <hr>
+        <!--
           <input ng-model="savedKey.id"/>
         <label>Type</label>
           <select ng-model="savedKey.type">
             <option ng-repeat="option in options[savedKey.basicType]">{{option.name}}</option>
           </select>
        <!--   <input ng-model="savedKey.type"/> -->
-        <label>Size</label>
+        <!--<label>Size</label>
           <input ng-model="savedKey.size"/>
         <label>Attributes</label>
           <input ng-model="savedKey.attributes">
         <label>Null?</label>
           <input ng-model="savedKey.default">
-      </div>
+      </div>-->
+    </div>
       <button class="btn btn-default" ng-click="editDone()">Done</button>
     </editkeysmodal>
 
