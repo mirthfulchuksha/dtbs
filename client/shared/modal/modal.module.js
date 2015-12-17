@@ -21,6 +21,11 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   });
 
   $scope.coolView = true;
+  // when page loads, only the d3 view loads
+  // coolview is set to true
+  // when the view toggles
+    // the d3 svg is removed
+    // the snap svg is added
 
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
