@@ -119,7 +119,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.githubRedirect = function () {
-    console.log("in the redirect");
     SaveAndRedirectFactory.stashTables();
   };
 

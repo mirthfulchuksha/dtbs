@@ -60,6 +60,7 @@ angular.module('DTBS.main')
     };
 
     var saveSchema = function () {
+      //console.log('sending scheme to server');
       var saveStuff = {
         dbUser: dbUser,
         dbName: dbName,
