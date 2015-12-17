@@ -11,7 +11,6 @@ angular.module('DTBS.main')
   };
 
   $scope.editTable = function(table){
-    console.log($scope.tableStorage);
     $scope.tablename = table;
     for (var key in $scope.tableStorage){
       if ($scope.tableStorage[key]["name"] === table) {
@@ -55,6 +54,19 @@ angular.module('DTBS.main')
     
     //update d3 with edits
     $scope.interactd3();
+
+  };
+
+  $scope.editDeleteTable = function (tableName) {
+    for (var key in $scope.tableStorage){
+      if ($scope.tableStorage[key].name === tableName){
+        console.log($scope.tableStorage[key]);
+        delete $scope.tableStorage[key];
+      }
+    }
+    $scope.interactd3();
+    console.log($scope.tableStorage);
+    //delete $scope.tableStorage[table.id];
 
   };
 
