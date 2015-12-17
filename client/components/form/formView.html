@@ -18,7 +18,7 @@
     </tablemodal>
   </div>
   <br>
- 
+
   <div ng-controller="EditController">
 
     <editmodal title="Edit Table" visible="editModal">
@@ -29,12 +29,12 @@
               <option ng-repeat="currentTable in tableStorage">{{currentTable.name}}</option>
             </select>
             <br>
-        <button type="submit" class="btn btn-default">Edit</button> 
+        <button type="submit" class="btn btn-default">Edit</button>
 
-        <!-- <button ng-click="editTable(currentTable)">Info</button>  --> 
+        <!-- <button ng-click="editTable(currentTable)">Info</button>  -->
         </div>
       </form>
-      <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteTable(currentTable)">Delete Table</button>  
+      <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteTable(currentTable)">Delete Table</button>
     </editmodal>
 
     <editkeysmodal title="Edit Fields" visible="editKeysModal">
@@ -96,18 +96,18 @@
 
           <label ng-if="keys[$index].type"> Not Null?</label>
             <input type="checkbox" ng-if="keys[$index].type" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="keys[$index].default"/>
-            <button style="float:right; position: absolute; top:45px; right:10px" class="minus" ng-click="cancelAdd($index)"><span class="glyphicon glyphicon-minus-sign"></span></button> 
+            <button style="float:right; position: absolute; top:45px; right:10px" class="minus" ng-click="cancelAdd($index)"><span class="glyphicon glyphicon-minus-sign"></span></button>
 
         </div>
-          
+
         <div class="addField">
           <hr>
           <button class="btn btn-success" ng-click="addField()">
             <span class="glyphicon glyphicon-plus-sign"></span> Add Field
           </button>
         </div>
-      
-          
+
+
         <div class="addForeign" ng-if="primaryKeyPresent !== undefined">
           <hr>
           <button class="btn btn-success" ng-click="addForeignKey()">
@@ -118,7 +118,7 @@
             <select ng-model="foreignKeys[$index].origin" style="width:100px">
               <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
             </select>
-          </div>         
+          </div>
         </div>
 
         <div>

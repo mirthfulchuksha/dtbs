@@ -8,7 +8,7 @@ angular.module('DTBS.main')
 
     var emit = function(data) {
       $rootScope.$broadcast('codeParser:new-db-data', data);
-    }
+    };
 
     var fetchCode = function () {
       var dataObj = {data: []};
@@ -84,9 +84,12 @@ angular.module('DTBS.main')
         method: 'GET',
       }).success(function (res) {
         console.log("RESPPP", res);
+        $scope.schemaList = res;
       }).error(function (res) {
         console.log("Cannot fetch schemas");
       });
+      console.log("schemalistttt", $scope.schemaList);
+      return $scope.schemaList;
     };
 
     var update = function (db, storage, user) {

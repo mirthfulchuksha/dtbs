@@ -44,7 +44,7 @@ module.exports = {
   },
 
   createSchemaDoc: function (req, res) {
-    Schema.find({name:req.body.dbName})
+    Schema.findOne({name:req.body.dbName})
     .exec(function (err, schema) {
       if (schema === null) {
         var newSchema = new Schema({

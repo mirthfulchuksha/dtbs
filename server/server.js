@@ -67,7 +67,7 @@ app.get('/auth/callback',
     var username = res.req.user.username;
     var id = res.req.user.id;
     helper.findUser(req, res, username, id);
-    res.redirect('/setup');
+    res.redirect('/');
   });
 
 app.post('/login', function (req, res) {

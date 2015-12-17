@@ -4,18 +4,18 @@ angular.module('DTBS.main')
   $scope.keys = [];
   $scope.foreignKeys = [];
 
-  $scope.options = { 
+  $scope.options = {
     Numeric: [
-      {name: "TINYINT"}, 
-      {name: "SMALLINT"}, 
+      {name: "TINYINT"},
+      {name: "SMALLINT"},
       {name: "MEDIUMINT"},
       {name: "INT"},
       {name: "BIGINT"},
       {name: "FLOATp"},
       {name: "FLOATMD"},
       {name: "DOUBLE"},
-      {name: "DECIMAL"}     
-    ], 
+      {name: "DECIMAL"}
+    ],
     String: [
       {name: "CHAR"},
       {name: "VARCHAR"},
@@ -50,7 +50,7 @@ angular.module('DTBS.main')
       {attr: "UNSIGNED"},
       {attr: "ZEROFILL"},
       {attr: "SERIAL DEFAULT VALUE"}
-    ], 
+    ],
     SMALLINT: [
       {attr: "AUTO_INCREMENT"},
       {attr: "UNSIGNED"},
@@ -100,7 +100,7 @@ angular.module('DTBS.main')
     ],
     TINYTEXT2: [
       {attr: "BINARY"},
-      {attr: "CHARACTER SET"}  
+      {attr: "CHARACTER SET"}
     ],
     TEXT2: [
       {attr: "BINARY"},
@@ -112,7 +112,7 @@ angular.module('DTBS.main')
     ],
     LONGTEXT2: [
       {attr: "BINARY"},
-      {attr: "CHARACTER SET"} 
+      {attr: "CHARACTER SET"}
     ]
   };
 
@@ -150,12 +150,12 @@ angular.module('DTBS.main')
     });
 
     //This loop will find the correct index for the primary key and set it on the parent scope table
-    //this is run every time any update is made to the table to make sure relatioships and variable names are consistent
+    //this is run every time any update is made to the table to make sure relationships and variable names are consistent
     var pkeyIndex = 0;
     $scope.tableStorage[$scope.selectedTable].attrs.concat(keyArr).forEach( function (newKey, index){
       if(newKey.id === primaryKey){
         pkeyIndex = index;
-        $scope.addPrimaryKey(newKey, table);  
+        $scope.addPrimaryKey(newKey, table);
       }
     });
     //combine new keys and new foreign keys to be added to parent scope
@@ -170,47 +170,46 @@ angular.module('DTBS.main')
     $scope.toggleKeyModal();
   };
 
-}])
-
+}]);
 //editing modal window
-.directive('keymodal', function () {
-  return {
-    template: '<div class="modal fade">' + 
-        '<div class="modal-dialog">' + 
-          '<div class="modal-content">' + 
-            '<div class="modal-header">' + 
-              '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
-              '<h4 class="modal-title">{{ title }}</h4>' + 
-            '</div>' + 
-            '<div class="modal-body" ng-transclude></div>' + 
-          '</div>' + 
-        '</div>' + 
-      '</div>',
-    restrict: 'E',
-    transclude: true,
-    replace:true,
-    scope:true,
-    link: function postLink(scope, element, attrs) {
-      scope.title = attrs.title;
+// .directive('keymodal', function () {
+//   return {
+//     template: '<div class="modal fade">' +
+//         '<div class="modal-dialog">' +
+//           '<div class="modal-content">' +
+//             '<div class="modal-header">' +
+//               '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+//               '<h4 class="modal-title">{{ title }}</h4>' +
+//             '</div>' +
+//             '<div class="modal-body" ng-transclude></div>' +
+//           '</div>' +
+//         '</div>' +
+//       '</div>',
+//     restrict: 'E',
+//     transclude: true,
+//     replace:true,
+//     scope:true,
+//     link: function postLink(scope, element, attrs) {
+//       scope.title = attrs.title;
 
-      scope.$watch(attrs.visible, function(value){
-        if(value == true)
-          $(element).modal('show');
-        else
-          $(element).modal('hide');
-      });
+//       scope.$watch(attrs.visible, function(value){
+//         if(value == true)
+//           $(element).modal('show');
+//         else
+//           $(element).modal('hide');
+//       });
 
-      $(element).on('shown.bs.modal', function(){
-        scope.$apply(function(){
-          scope.$parent[attrs.visible] = true;
-        });
-      });
+//       $(element).on('shown.bs.modal', function(){
+//         scope.$apply(function(){
+//           scope.$parent[attrs.visible] = true;
+//         });
+//       });
 
-      $(element).on('hidden.bs.modal', function(){
-        scope.$apply(function(){
-          scope.$parent[attrs.visible] = false;
-        });
-      });
-    }
-  };
-});
+//       $(element).on('hidden.bs.modal', function(){
+//         scope.$apply(function(){
+//           scope.$parent[attrs.visible] = false;
+//         });
+//       });
+//     }
+//   };
+// });

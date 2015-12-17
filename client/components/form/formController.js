@@ -81,6 +81,7 @@ angular.module('DTBS.main')
     $scope.seeKeyModal = false;
     $scope.toggleKeyModal = function () {
       $scope.seeKeyModal = !$scope.seeKeyModal;
+      console.log($scope.seeKeyModal);
     };
 
     $scope.editModal = false;
@@ -132,7 +133,7 @@ angular.module('DTBS.main')
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
-    
+
     $timeout($scope.recoverInfo());
 
   }]);
