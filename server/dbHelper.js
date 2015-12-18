@@ -36,10 +36,10 @@ module.exports = {
       bcrypt.compare(password, user.password, function (err, isMatch) {
         if (err) return console.error(err);
         else if (isMatch) module.exports.genSesh(req, res, user);
-        else res.send(400, "noMatch");
+        else res.send(401, "noMatch");
       });
     } else {
-      res.send(400, "noUser");
+      res.send(401, "noUser");
     }
   },
 
@@ -72,11 +72,11 @@ module.exports = {
     //query
     {name: req.body.dbName}, 
     //update
-    {name: req.body.dbName, language: req.body.dbLang, data: req.body.tableStorage},
+    {user: req.body.dbUser, name: req.body.dbName, language: req.body.dbLang, data: req.body.tableStorage},
     //options to return updated schema
     {'new': true},
     function (err, schema) {
-      if (err) return res.send(500, err);
+      if (err) return res.send(304, err);
       //successful update on schema document
       res.send(200, schema);
     });
