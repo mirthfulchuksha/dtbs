@@ -1,10 +1,15 @@
 <div ng-controller='FormController'>
-
+  <div id='designCanvas'>
+    <svg id="designer" d3-sql></svg>
+    <svg id="svgout" style="display:none" xmlns="http://www.w3.org/2000/svg" snap-sql></svg>
+  </div>
   <div ng-controller="TableController" class="container">
     <hr>
     <div class="editButtonContainer">
       <button ng-click="toggleMyModal()" class="btn btn-default">Create Table</button>
       <button ng-click="toggleEditModal()" class="btn btn-default">Edit Table</button>
+      <button id='mytoggler' ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
+      <button id="savepicture" ng-click="saveSVG(view)" class="btn btn-default">Save Image</button>
     </div>
 
     <tablemodal title="Table Create Form" visible="seeModal">

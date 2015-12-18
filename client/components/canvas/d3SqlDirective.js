@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Bars', ['d3Service', 'd3TableClass', 'd3Data', 'd3Format', function (d3Service, d3TableClass, d3Data, d3Format) {
+.directive('d3Sql', ['d3Service', 'd3TableClass', 'canvasData', 'canvasFormat', function (d3Service, d3TableClass, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -10,11 +10,7 @@ angular.module('DTBS.main')
         var width = 640, height = 350;
 
         // Create the SVG
-        var svg = d3.select(element[0])
-        .append("svg")
-        .attr('id', 'designer')
-        .attr('width', width)
-        .attr('height', height)
+        var svg = d3.selectAll("#designer")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
@@ -32,10 +28,10 @@ angular.module('DTBS.main')
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
-          var container = d3Format.dataBuilder(tableData);
-          var graph = d3Format.fkLinks(container, tableData);
+          var container = canvasFormat.dataBuilder(tableData, true);
+          var graph = canvasFormat.fkLinks(container, tableData);
           
-          var svg = d3.select("svg");
+          var svg = d3.select("#designer");
           //Creates the graph data structure out of the json data
           force.nodes(graph.nodes)
               .links(graph.links)
@@ -93,11 +89,11 @@ angular.module('DTBS.main')
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
-            d3.selectAll("circle")
+            svg.selectAll("circle")
                 .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
                 .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
 
-            d3.selectAll("text").attr("x", function (d) { return d.x; })
+            svg.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
           });
         };
@@ -108,9 +104,9 @@ angular.module('DTBS.main')
           d3TableClass.push(classToSend);
         };
         var dblclick = function (d) {
-          d3.select(this).classed("fixed", d.fixed = !d.fixed);
+          svg.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-        scope.$on('d3:new-data', function (e, data) {
+        scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);

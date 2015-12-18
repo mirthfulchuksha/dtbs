@@ -1,7 +1,8 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', '$location', function ($scope, CodeParser, SaveAndRedirectFactory, $http, $location) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
+  $scope.showModal = false;
   $scope.showLoginModal = true;
   $scope.loggingIn = true;
   $scope.db = {lang: "SQL"};
@@ -24,36 +25,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
 
   $scope.toggleLoginModal = function () {
     $scope.showLoginModal = !$scope.showLoginModal;
-  };
-
-  $scope.saveSVG = function () {
-    var svg_xml = document.getElementById('designer');
-    var serializer = new XMLSerializer();
-    var str = serializer.serializeToString(svg_xml);
-
-    // Create a canvas
-    var canvas = document.createElement('canvas');
-    canvas.height = 350;
-    canvas.width = 640;
-    canvas.style.background = 'white';
-
-    canvg(canvas, str);
-    context = canvas.getContext("2d");
-
-    // set to draw behind current content
-    context.globalCompositeOperation = "destination-over";
-
-    // set background color
-    context.fillStyle = '#fff';
-
-    // draw background / rect on entire canvas
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    var a = document.createElement('a');
-    a.href = canvas.toDataURL("schemas/png");
-    a.download = 'schemas.png';
-    a.click();
-    a.remove();
-    canvas.remove();
   };
 
   $scope.sendUserData = function (options, cb1, cb2) {

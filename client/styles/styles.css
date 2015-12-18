@@ -9,6 +9,8 @@ p {
 
 svg {
   background-color: #fff;
+  width:800px;
+  height:450px
 }
 
 input {
