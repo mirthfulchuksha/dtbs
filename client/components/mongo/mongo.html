@@ -1,55 +1,212 @@
-<form class="navbar-form navbar-left" role="search">
-  <button id="savepicture" ng-click="saveSVG()" class="btn btn-default">Save Image</button>
-  <a href="/logout"><span class="btn btn-default">Logout</span></a>
-</form>
-<div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div>
-    <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
-        <div class="super-wrap">
-          <div class="editor-wrapper grey" ng-controller="EditorController">
-            <div class="navbar-header">
-              <a class="navbar-brand editor-head grey" href="#">code:</a>
-            </div>
-            <form class="navbar-form navbar-left grey dropdown" role="search">
-              <a class="btn btn-default" role="button" id="download"
-                target="_self" href="" download="" ng-click="downloadCode()">
-                <span class="glyphicon glyphicon-save"></span>
-              </a>
-              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Output
-                <span class="caret"></span>
-              </button>
-              <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
-              </a>
-              <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-                <span class="glyphicon glyphicon-wrench"></span>
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
-                <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
-                <li><a href="" ng-click="updateFactory('SQL')">SQL </a></li>
-              </ul>
-            </form>
-            <div id="editor"><textarea ng-model="editorText">/* Your Output will appear here! */</textarea></div>
-          </div>
-          <div id="code_button">>></div>
-        </div>
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/sql");
-    editor.session.setOptions({
-      tabSize: 2,
-      useSoftTabs: true
-    });
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">dtbs</a>
+    </div>
+    <form class="navbar-form navbar-left" role="search">
+      <a href="/logout" class="btn">Logout</a>
+    </form>
+  </div>
+</nav>
 
-    $('#code_button').on('click', function () {
-      var state = parseInt($('.super-wrap').css('right'), 10) > -1;
-      $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
-      $('#code_button').text((state ? '<<': '>>'));
-    });
-    $(".dropdown-menu li a").click(function () {
-      $(".dropdown-toggle").text($(this).text());
-      $(".dropdown-toggle").append('<span class="caret"></span>');
-    });
+<!-- <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div> -->
+<!-- <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div> -->
+<div class="super-wrap">
+  <div class="editor-wrapper grey" ng-controller="EditorController">
+    <div class="navbar-header">
+      <a class="navbar-brand editor-head grey" href="#">code:</a>
+    </div>
+    <form class="navbar-form navbar-left grey dropdown" role="search">
+      <a class="btn btn-default" role="button" id="download"
+        target="_self" href="" download="" ng-click="downloadCode()">
+        <span class="glyphicon glyphicon-save"></span>
+      </a>
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Output
+        <span class="caret"></span>
+      </button>
+      <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+      </a>
+      <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
+        <span class="glyphicon glyphicon-wrench"></span>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
+        <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
+        <li><a href="" ng-click="updateFactory('SQL')">SQL </a></li>
+      </ul>
+    </form>
+    <div id="editor">
+      <textarea ng-model="editorText">/* Your Output will appear here! */</textarea>
+    </div>
+  </div>
+  <div id="code_button">>></div>
+</div>
+
+<div ng-controller='FormController'>
+  <div id='designCanvas'>
+    <svg id="designer" d3-sql></svg>
+    <svg id="svgout" style="display:none" xmlns="http://www.w3.org/2000/svg" snap-sql></svg>
+  </div>
+  <div ng-controller="TableController" class="container">
+    <hr>
+    <div class="editButtonContainer">
+      <button ng-click="toggleMyModal()" class="btn btn-default">Create Table</button>
+      <button ng-click="toggleEditModal()" class="btn btn-default">Edit Table</button>
+      <button id='mytoggler' ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
+      <button id="savepicture" ng-click="saveSVG(view)" class="btn btn-default">Save Image</button>
+    </div>
+
+    <tablemodal title="Table Create Form" visible="seeModal">
+      <form role="form" ng-submit="save(table.name)" name="table_{{table.id}}_form">
+        <div class="form-group">
+          <label for="email">Table Name</label>
+          <input class="form-control" ng-model="table.name" placeholder="Enter table name" required/>
+        </div>
+        <button type="submit" class="btn btn-default">Go</button>
+      </form>
+    </tablemodal>
+  </div>
+  <br>
+
+    <div ng-controller="EditController">
+
+      <editmodal title="Edit Table" visible="editModal">
+        <form role="form" ng-submit="editTable(currentTable)" name="tableEdit">
+          <div class="form-group">
+            <label>Choose Table to Edit:</label>
+              <select ng-model="currentTable" required>
+                <option ng-repeat="currentTable in tableStorage">{{currentTable.name}}</option>
+              </select>
+              <br>
+          <button type="submit" class="btn btn-default">Edit</button>
+
+          <!-- <button ng-click="editTable(currentTable)">Info</button>  -->
+          </div>
+        </form>
+        <button type="submit" class="btn btn-default" class="pull-right" ng-click="editDeleteTable(currentTable)">Delete Table</button>
+      </editmodal>
+
+      <editkeysmodal title="Edit Fields" visible="editKeysModal">
+        <div ng-repeat="savedKey in keyEdit">
+          <label>Column ID: {{savedKey.id}}</label>
+          <button "btn btn-default" ng-click="deleteField(savedKey.id, currentTable)" class="pull-right">Delete Field</button>
+          <hr>
+        </div>
+        <div ng-if="showPKSelection === true">
+          <label>Choose a new primary key (required)</label>
+          <select ng-model="newPrimaryKey" style="width:100px" required>
+            <option ng-repeat="possibleNewKey in keyEdit">{{possibleNewKey.id}}</option>
+          </select>
+          <hr>
+        </div>
+        <button class="btn btn-default" ng-click="editDone(newPrimaryKey)">Done</button>
+      </editkeysmodal>
+
+
+    </div>
+
+    <keymodal title="" id="tableTitle" visible="seeKeyModal">
+
+      <div ng-controller="OutputController">
+
+        <form name="tableForm">
+          <div ng-repeat="key in keys track by $index" style="height:130px;">
+            <label>Column ID</label>
+              <input ng-model="keys[$index].id" type="text" placeholder="Column ID..." required/>
+
+            <label>  Basic Type</label>
+              <select ng-model="keys[$index].basicType" required>
+                <option>Numeric</option>
+                <option>String</option>
+                <option>DateTime</option>
+                <option>Bit</option>
+              </select>
+
+            <label ng-if="keys[$index].basicType">  Type</label>
+              <select ng-model="keys[$index].type" ng-if="keys[$index].basicType" required>
+                <option ng-repeat="option in options[keys[$index].basicType]">{{option.name}}</option>
+              </select>
+              <br><br>
+
+            <label ng-if="keys[$index].basicType">Size</label>
+              <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
+
+            <label ng-if="attributes[keys[$index].type]">Attributes</label>
+              <select class="dropdown" ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes" multiple>
+                <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
+              </select>
+
+            <label ng-if="keys[$index].type"> Not Null?</label>
+              <input type="checkbox" ng-if="keys[$index].type" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="keys[$index].default"/>
+              <button style="float:right; position: absolute; top:45px; right:10px" class="minus" ng-click="cancelAdd($index)"><span class="glyphicon glyphicon-minus-sign"></span></button>
+
+          </div>
+
+          <div class="addField">
+            <hr>
+            <button class="btn btn-success" ng-click="addField()">
+              <span class="glyphicon glyphicon-plus-sign"></span> Add Field
+            </button>
+          </div>
+
+
+          <div class="addForeign" ng-if="primaryKeyPresent !== undefined">
+            <hr>
+            <button class="btn btn-success" ng-click="addForeignKey()">
+                <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key
+            </button>
+            <div ng-repeat="fkey in foreignKeys track by $index">
+              <label>Select which table to connect:</label>
+              <select ng-model="foreignKeys[$index].origin" style="width:100px">
+                <option ng-repeat="table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <hr>
+            <label>Choose the table's primary key (required)</label>
+            <select ng-model="primaryKey" style="width:100px" required>
+              <option ng-repeat="possibleKey in tableStorage[selectedTable].attrs.concat(keys) track by $index">{{possibleKey.id}}</option>
+            </select>
+          </div>
+          <br>
+
+          <button class="btn btn-default" ng-click="tableForm.$valid && addTableAttrChildScope(keys, foreignKeys, tableStorage[selectedTable], primaryKey)">Done</button>
+          <button class="btn btn-default" ng-click="deleteKeys(tableStorage[selectedTable])" class="pull-right">Delete Table</button>
+
+        </form>
+      </div>
+    </keymodal>
+
+  </div>
+<script>
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/monokai");
+  editor.getSession().setMode("ace/mode/sql");
+  editor.session.setOptions({
+    tabSize: 2,
+    useSoftTabs: true
+  });
+  $(document).ready(function() {
+    // $('select').material_select();
+    // $('.modal').change(function() {
+    //   $('select').material_select();
+    // });
+    // $('.modal-trigger').leanModal();
+    // $('#created').on('click', function () {
+    //   $('#createModal').closeModal();
+    // });
+    // $('#edited').on('click', function () {
+    //   $('#editModal').closeModal();
+    // });
+    // $('#code_button').on('click', function () {
+    //   var state = parseInt($('.super-wrap').css('right'), 10) > -1;
+    //   $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
+    //   $('#code_button').text((state ? '<<': '>>'));
+    // });
+  });
 </script>
