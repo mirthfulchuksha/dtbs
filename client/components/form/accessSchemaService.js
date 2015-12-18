@@ -16,6 +16,10 @@ angular.module('DTBS.main')
       return tempSchema;
     };
 
+    var getTempSchemaSize = function () {
+      return Object.keys(tempSchema).length;
+    }
+
     var schemaBuilder = function (structObject, callback) {
       var dataObj = {data: structObject};
       return $http({

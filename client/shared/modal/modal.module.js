@@ -1,9 +1,22 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
-  $scope.showModal = false;
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', '$location', function ($scope, CodeParser, SaveAndRedirectFactory, $http, $location) {
   $scope.showLoginModal = true;
+  $scope.loggingIn = true;
+  $scope.db = {lang: "SQL"};
+
+  $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
+    switch (newValue) {
+      case '/login':
+        $('#loginModal').openModal();
+        break;
+      case '/setup':
+        $('#setupModal').openModal();
+        break;
+      default:
+    }
+  });
 
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
@@ -43,30 +56,75 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     canvas.remove();
   };
 
+  $scope.sendUserData = function (options, cb1, cb2) {
+    $http(options).success(cb1).error(cb2);
+  };
+
   $scope.user = {};
   $scope.login = function () {
-    $http({
-      url: '/login',
-      method: 'POST',
-      data: $scope.user
-    }).success(function (data, status, headers, config) {
-      console.log("Logged in!");
-      $scope.toggleLoginModal();
-    }).error(function (data, status, headers, config) {
-      console.log("Cannot log in");
-    });
-    $scope.user = {};
+      $scope.user.login = true;
+      CodeParser.update(null, null, $scope.user);
+      $scope.sendUserData({
+        url: '/login',
+        method: 'POST',
+        data: $scope.user
+      }, function (res) {
+        $('#loginModal').closeModal();
+        $scope.notValid = false;
+        $location.path('/setup');
+      }, function (res) {
+        if (res === 'noUser') {
+          $scope.noUser = true;
+          $scope.notValid = false;
+        } else {
+          $scope.notValid = true;
+        }
+      });
+      $scope.user = {};
+  };
+
+  $scope.signup = function () {
+    CodeParser.update(null, null, $scope.user);
+    if ($scope.isMatch()) {
+      $scope.sendUserData({
+        url: '/signup',
+        method: 'POST',
+        data: $scope.user
+      }, function () {
+        $('#loginModal').closeModal();
+        $scope.notValid = false;
+        $scope.userExist = false;
+        $location.path('/setup');
+      }, function () {
+        $scope.userExist = true;
+      });
+      $scope.user = {};
+    }
+  };
+
+  $scope.fetchDBs = function () {
+    CodeParser.fetchSchemas();
+  };
+
+  $scope.isMatch = function () {
+    if ($scope.user.password !== $scope.pass2) {
+      $scope.notMatch = true;
+      $scope.noUser = false;
+      $scope.notValid = false;
+      return false;
+    } else {
+      $scope.notMatch = false;
+      return true;
+    }
   };
 
   $scope.githubRedirect = function () {
-    console.log("in the redirect");
     SaveAndRedirectFactory.stashTables();
   };
 
-  $scope.db = {lang: "mySQL"};
   $scope.updateFactory = function () {
     switch ($scope.db.lang) {
-      case "mySQL":
+      case "SQL":
         $scope.db.fileName = $scope.db.lang + '_Schema.sql';
         break;
       case "Bookshelf":
@@ -87,17 +145,7 @@ mymodal.factory('SaveAndRedirectFactory', ['AccessSchemaService', '$http', funct
 
   var stashTables = function () {
     var tables = AccessSchemaService.getTempSchema();
-    console.log(tables);
     window.localStorage.setItem('tempTable', JSON.stringify(tables));
-
-    // return $http({
-    //     method: 'GET',
-    //     url: '/auth/github'
-    //   }).then(function (res) {
-    //     //???
-    //     console.log("does this get called??!");
-    //     return res.data;
-    //   });
   };
 
   return {

@@ -124,7 +124,7 @@ module.exports = {
       schema += "\
   );\n\n";
     }
-
+    schema += '\n';
     res.send(schema, 200);
 
   },

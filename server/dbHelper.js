@@ -58,6 +58,7 @@ module.exports = {
             return console.error(err);
           } else {
             console.log(newSchema, 'saved!');
+            res.send(201, newSchema);
           }
         });
       } else {
@@ -67,13 +68,17 @@ module.exports = {
   },
 
   updateSchemaDoc: function (req, res) {
-    Schema.findOneAndUpdate({
-      name: req.body.dbName,
-      language: req.body.dbLang,
-      data: req.body.tableStorage
-    }, function (err, schema) {
+    Schema.findOneAndUpdate(
+    //query
+    {name: req.body.dbName}, 
+    //update
+    {name: req.body.dbName, language: req.body.dbLang, data: req.body.tableStorage},
+    //options to return updated schema
+    {'new': true},
+    function (err, schema) {
       if (err) return res.send(500, err);
-      console.log("Updated Schema!");
+      //successful update on schema document
+      res.send(200, schema);
     });
   },
 

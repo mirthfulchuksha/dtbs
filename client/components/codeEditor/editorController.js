@@ -40,11 +40,7 @@ angular.module('DTBS.main')
 
       //call the factory function with newly constructed object
       AccessSchemaService.schemaBuilder(separatedTables, function (data) {
-        console.log("tables built");
+        //this callback is never used
       });
     };
-
-    $scope.$on('codeParser:new-db-data', function (e, data) {
-      //this is never called
-    });
   }]);
