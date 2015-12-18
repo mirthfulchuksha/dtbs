@@ -15,7 +15,6 @@
   <script src="shared/modal/modal.module.js"></script>
   <script src="components/designer/sqlDesignerDirective.js"></script>
   <script src="components/designer/snapDirective.js"></script>
-  <!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script> -->
   <script src="components/designer/designerFactory.js"></script>
   <script src="components/designer/designerDataServices.js"></script>
   <script src="components/designer/designerFormatFactory.js"></script>
@@ -35,8 +34,6 @@
   </head>
   <body ng-app="DTBS">
     <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div>
- <!--    <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div>
-    <div class="standardFont" ng-include="'/components/designer/snapView.html'"></div> -->
     <div class="standardFont" ng-view></div>
       <div class="super-wrap">
         <div class="editor-wrapper grey" ng-controller="EditorController">

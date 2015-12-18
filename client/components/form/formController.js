@@ -14,6 +14,7 @@ angular.module('DTBS.main')
     $scope.db = {};
     $scope.selectedTable = 0;
     $scope.primaryKeyPresent;
+    $scope.view = 'd3';
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
 
@@ -27,7 +28,6 @@ angular.module('DTBS.main')
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
       $scope.interactd3();
-      // $scope.interactSnap();
       $scope.toggleKeyModal();
     };
 
@@ -43,7 +43,6 @@ angular.module('DTBS.main')
 
       //updated rendering
       $scope.interactd3();
-      // $scope.interactSnap();
       $scope.selectedTable = 0;
     };
 
@@ -58,18 +57,46 @@ angular.module('DTBS.main')
       d3Data.push(updatedData);
     };
 
-
     var changeTableID = function (num) {
       $scope.id = num;
     }
     
-    $("#mytoggler").click(function() {
+    $scope.toggleView = function () {
       $('#designCanvas').find('svg').toggle();
-    });
+      $scope.view = 'snap';
+    };
+    $scope.saveSVG = function (type) {
+      if (type === 'd3') {
+        svg_xml = document.getElementById('designer');
+      } else {
+        svg_xml = document.getElementById('svgout');
+      }  
+      var serializer = new XMLSerializer();
+      var str = serializer.serializeToString(svg_xml);
 
-    $scope.interactSnap = function () {
-      var newSnapData = angular.copy($scope.tableStorage);
-      snapData.push(newSnapData);
+      // Create a canvas
+      var canvas = document.createElement('canvas');
+      canvas.height = 350;
+      canvas.width = 640;
+      canvas.style.background = 'white';
+
+      canvg(canvas, str);
+      context = canvas.getContext("2d");
+
+      // set to draw behind current content
+      context.globalCompositeOperation = "destination-over";
+
+      // set background color
+      context.fillStyle = '#fff';
+
+      // draw background / rect on entire canvas
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      var a = document.createElement('a');
+      a.href = canvas.toDataURL("schemas/png");
+      a.download = 'schemas.png';
+      a.click();
+      a.remove();
+      canvas.remove();
     };
 
     /*
@@ -151,7 +178,6 @@ angular.module('DTBS.main')
       $scope.tableStorage = data.data;
       $scope.id = Object.keys($scope.tableStorage).length;
       $scope.interactd3();
-      // $scope.interactSnap();
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);

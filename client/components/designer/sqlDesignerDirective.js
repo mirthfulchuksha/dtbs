@@ -10,14 +10,6 @@ angular.module('DTBS.main')
         var width = 640, height = 350;
 
         // Create the SVG
-        // var svg = d3.select(element[0])
-        // .append("svg")
-        // .attr('id', 'designer')
-        // .attr('width', width)
-        // .attr('height', height)
-        // .attr("xmlns", "http://www.w3.org/2000/svg")
-        // .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
-
         var svg = d3.selectAll("#designer")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
