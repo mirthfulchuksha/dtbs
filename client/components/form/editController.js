@@ -53,7 +53,7 @@ angular.module('DTBS.main')
 
   $scope.deleteField = function (fieldId) {
     var foreign = $scope.tablename + "_" + fieldId;
-    
+    console.log($scope.tableStorage);
     //delete requested field and foreign keys linking to the field, if any
     for (var key in $scope.tableStorage){
       for (var i = 0; i < $scope.tableStorage[key]["attrs"].length; i++){  

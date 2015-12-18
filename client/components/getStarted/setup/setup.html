@@ -1,24 +1,24 @@
 <div title="Login/Signup" visible="showSetupModal">
 <!-- <div id="setupModal" class="modal" > -->
   <div class="modal-content">
-    <div class="col s12" ng-if="loggedIn">
+    <div class="col-md-10 col-md-offset-1" ng-if="loggedIn">
       <ul class="tabs" style="background-color:transparent; height:10px">
-        <li id="login" class="tab col s6"><a href="">New</a></li>
-        <li id="signup" class="tab col s6"><a href="" ng-click="fetchDBs()">Saved</a></li>
+        <li id="login" class="tab col-md-6"><a href="">New</a></li>
+        <li id="signup" class="tab col-md-6"><a href="" ng-click="fetchDBs()">Saved</a></li>
       </ul>
     </div>
     <br>
   </div>
   <div class="row">
     <br>
-    <form class="col s12 loginForm" ng-submit="setup()">
-      <div class="col s6">
-        <div class="input-field col s12">
+    <form class="col-md-10 col-md-offset-1 loginForm" ng-submit="setup()">
+      <div class="col-md-6 col-md-offset-1">
+        <div class="input-field col-md-10 col-md-offset-1">
           <input id="dbName" type="text" ng-model="db.name" class="validate">
           <label for="dbName">Database Name</label>
         </div>
       </div>
-      <div class="col s12" style="text-align:center">
+      <div class="col-md-10 col-md-offset-1" style="text-align:center">
         <a class='dropdown-button btn' style="width:400px" href='' data-activates='dropdown1'>Your Databases <span>&#x25BE;</span></a>
         <ul id='dropdown1' class='dropdown-content'>
           <li ng-repeat="schema in schemaList" style="width:220px" ng-model="db.name" value="{{schema.name}}"><a href="">{{schema.name}} </a></li>
