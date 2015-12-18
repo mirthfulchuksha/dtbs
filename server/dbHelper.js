@@ -6,9 +6,10 @@ var bcrypt = require('bcrypt-nodejs');
 module.exports = {
 
   findUser: function (req, res, username, id) {
+    console.log("??", req.body);
+    
     username = req.body.userName || (username + '_gh');
     password = req.body.password || id;
-
     User.findOne({userName: username})
     .exec(function (err, user) {
       if (user || req.body.login) {
@@ -83,7 +84,6 @@ module.exports = {
   },
 
   fetchSchemas: function (req, res) {
-    console.log(req.query.username);
     Schema.find({user: req.query.username}, function (err, schemas) {
       if (err) return console.error(err);
       res.send(schemas);
