@@ -7,11 +7,11 @@ describe('basic test setup', function () {
   var server = 'http://localhost:3000';
 
   //cleans out test schemas
-  beforeEach(function (done) {
+  //beforeEach(function (done) {
     Schema.find({user:"testUser"}).remove(function () {
-      done();
+      //done();
     });
-  });
+  //});
 
   it('can find the index', function (done) {
     request(server + '/', function (err, res) {
@@ -59,7 +59,9 @@ describe('basic test setup', function () {
   it('can fetch schemas', function (done) {
     var username = "testUser";
     request(server + "/setup?username=" + username, function (err, res, body) {
+      body = JSON.parse(body);
       expect(res.statusCode).to.equal(200);
+      expect(body.length).to.equal(1);
       done();
     });
   });
