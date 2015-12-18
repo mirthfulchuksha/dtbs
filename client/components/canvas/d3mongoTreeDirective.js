@@ -84,6 +84,8 @@ angular.module('DTBS.main')
                 .attr("r", function (d) { return Math.sqrt(d.size) / 10 || 4.5; })
                 .style("fill", color)
                 .on("click", click)
+                .on("dblclick", function () {
+                  dblclick(this); })
                 .call(force.drag);
 
             labels = labels.data(nodes, function (d) { return d.id; })
@@ -107,7 +109,7 @@ angular.module('DTBS.main')
                 })
             }; 
           // Toggle children on click.
-          var click = function (d) {
+          var dblclick = function (d) {
             if (!d3.event.defaultPrevented) {
               if (d.children) {
                 d._children = d.children;
@@ -142,7 +144,7 @@ angular.module('DTBS.main')
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-var datajson1 = [{
+          var datajson1 = [{
           "name": "blogSchema",
               "children": [{
               "name": "Date",
@@ -168,7 +170,7 @@ var datajson1 = [{
           {"name": "Body", "size": 5000},
           {"name": "Hidden", "size": 5000}
         ]
-      },{
+        },{
           "name": "blogSchema2",
               "children": [{
               "name": "Date",
@@ -195,9 +197,12 @@ var datajson1 = [{
           {"name": "Hidden", "size": 5000}
         ]
       }];
-      var nextChar = function (c) {
-          return String.fromCharCode(c.charCodeAt(0) + 1);
-      };
+        var nextChar = function (c) {
+            return String.fromCharCode(c.charCodeAt(0) + 1);
+        };
+        var click = function (d) {
+          d3.select(this).classed("fixed", d.fixed = !d.fixed);
+        };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
           for (var key in data) {
