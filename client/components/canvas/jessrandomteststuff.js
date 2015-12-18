@@ -117,10 +117,99 @@ var snapFormatter = function (table) {
     chats_id INT,
     FOREIGN KEY (chats_id) REFERENCES chats(id)
   );
-
-
-
-
+// function to put schemaStorage into datajson format
+var treeFormatter = function (schemaStorage) {
+  var schemaArray = [];
+  for (var key in schemaStorage) {
+    schemaArray.push(schemaStorage[key]);
+  }
+  for (var i = 0; i < schemaArray.length; i++) {
+    var datajson = {};
+    var schema = schemaArray[i];
+    schemaArray.push()
+  }
+};
+var datajson1 = [{
+          "name": "blogSchema",
+              "children": [{
+              "name": "Date",
+                  "children": [{
+                  "name": "Type",
+                      "size": 5000
+              }, {
+                  "name": "Default",
+                      "size": 5000
+              }]
+          }, {
+              "name": "Meta",
+                  "children": [{
+                  "name": "Votes",
+                      "size": 5000
+              }, {
+                  "name": "Favs",
+                      "size": 5000
+              }]
+          },
+          {"name": "Title", "size": 5000},
+          {"name": "Author", "size": 5000},
+          {"name": "Body", "size": 5000},
+          {"name": "Hidden", "size": 5000}
+        ]
+      },{
+          "name": "blogSchema2",
+              "children": [{
+              "name": "Date",
+                  "children": [{
+                  "name": "Type",
+                      "size": 5000
+              }, {
+                  "name": "Default",
+                      "size": 5000
+              }]
+          }, {
+              "name": "Meta",
+                  "children": [{
+                  "name": "Votes",
+                      "size": 5000
+              }, {
+                  "name": "Favs",
+                      "size": 5000
+              }]
+          },
+          {"name": "Title", "size": 5000},
+          {"name": "Author", "size": 5000},
+          {"name": "Body", "size": 5000},
+          {"name": "Hidden", "size": 5000}
+        ]
+      }];
+var schemaStorage = {
+  "1": {
+    "name": "blogSchema",
+    "keys": {
+      "Summary": {"type": "String"},
+      "Metadata": {
+        "type": "Nested Document",
+        "Upvotes": "Number",
+        "Favourites": "Number"
+      },
+      "Title", {"type": "String"},
+      "Body", {"type": "String"},
+      "Date", {"type": "Date"}
+    }
+  },
+  "2": {
+    "name": "stockSchema",
+    "keys": {
+      "Company Code": {"type": "String"},
+      "Company Info": {
+        "type": "Nested Document",
+        "Employees": "Number",
+        "Contact Info": "Number"
+      },
+      "Share Prices", {"type": "Array"}
+    }
+  }
+};
 
 
 

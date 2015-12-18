@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Sql', ['d3Service', 'd3TableClass', 'canvasData', 'canvasFormat', function (d3Service, d3TableClass, canvasData, canvasFormat) {
+.directive('d3Sql', ['d3Service', 'canvasData', 'canvasFormat', function (d3Service, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -98,11 +98,6 @@ angular.module('DTBS.main')
           });
         };
         
-        var click = function (node) {
-          var className = $(node).attr('class');
-          var classToSend = angular.copy(className);
-          d3TableClass.push(classToSend);
-        };
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };

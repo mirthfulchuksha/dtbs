@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoTree', ['d3Service', 'd3TableClass', 'canvasData', 'canvasFormat', function (d3Service, d3TableClass, canvasData, canvasFormat) {
+.directive('d3MongoTree', ['d3Service', 'canvasData', 'canvasFormat', function (d3Service, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -15,7 +15,7 @@ angular.module('DTBS.main')
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
-        scope.render = function (root) {
+        scope.render = function (root, id) {
           var tick = function () {
             link.attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
@@ -34,9 +34,12 @@ angular.module('DTBS.main')
             .charge(-520)
             .on("tick", tick);
 
-          var link = svg.selectAll(".link"),
-            node = svg.selectAll(".node"),
-            labels = svg.selectAll(".labels");
+          var link = svg.selectAll(".link "+id),
+              node = svg.selectAll(".node"+id),
+              labels = svg.selectAll(".labels"+id);
+          // var link = svg.selectAll(".link"),
+          //   node = svg.selectAll(".node"),
+          //   labels = svg.selectAll(".labels");
 
           // Color leaf nodes orange, and packages white or blue.
             //var color = function (d) {
@@ -59,8 +62,8 @@ angular.module('DTBS.main')
             link.exit().remove();
 
             // Enter any new links.
-            link.enter().insert("line", ".node")
-                .attr("class", "link")
+            link.enter().insert("line", ".node "+id)
+                .attr("class", "link "+id)
                 .attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
                 .attr("x2", function (d) { return d.target.x; })
@@ -75,7 +78,7 @@ angular.module('DTBS.main')
 
             // Enter any new nodes.
             node.enter().append("circle")
-                .attr("class", "node")
+                .attr("class", "node "+id)
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
                 .attr("r", function (d) { return Math.sqrt(d.size) / 10 || 4.5; })
@@ -89,7 +92,7 @@ angular.module('DTBS.main')
             labels.exit().remove();
 
             labels.enter().append("text")
-                .attr("class", "labels")
+                .attr("class", "labels "+id)
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
@@ -131,15 +134,15 @@ angular.module('DTBS.main')
           update();
         };
         
-        var click = function (node) {
-          var className = $(node).attr('class');
-          var classToSend = angular.copy(className);
-          d3TableClass.push(classToSend);
-        };
+        // var click = function (node) {
+        //   var className = $(node).attr('class');
+        //   var classToSend = angular.copy(className);
+        //   d3TableClass.push(classToSend);
+        // };
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-        var datajson = {
+var datajson1 = [{
           "name": "blogSchema",
               "children": [{
               "name": "Date",
@@ -165,6 +168,35 @@ angular.module('DTBS.main')
           {"name": "Body", "size": 5000},
           {"name": "Hidden", "size": 5000}
         ]
+      },{
+          "name": "blogSchema2",
+              "children": [{
+              "name": "Date",
+                  "children": [{
+                  "name": "Type",
+                      "size": 5000
+              }, {
+                  "name": "Default",
+                      "size": 5000
+              }]
+          }, {
+              "name": "Meta",
+                  "children": [{
+                  "name": "Votes",
+                      "size": 5000
+              }, {
+                  "name": "Favs",
+                      "size": 5000
+              }]
+          },
+          {"name": "Title", "size": 5000},
+          {"name": "Author", "size": 5000},
+          {"name": "Body", "size": 5000},
+          {"name": "Hidden", "size": 5000}
+        ]
+      }];
+      var nextChar = function (c) {
+          return String.fromCharCode(c.charCodeAt(0) + 1);
       };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
@@ -172,7 +204,14 @@ angular.module('DTBS.main')
             dataArr.push(data[key]);
           }
           svg.selectAll("*").remove();
-          scope.render(datajson);
+          var id = 'a';
+          for (var i = 0; i < datajson1.length; i++) {
+            scope.render(datajson1[i], id);
+            id = nextChar(id);
+          }
+          // datajson1.forEach(function (schema) {
+          //   scope.render(schema);
+          // });
         });
       });
     }};

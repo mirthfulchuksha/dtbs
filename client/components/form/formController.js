@@ -4,9 +4,8 @@ angular.module('DTBS.main')
   '$timeout',
   'CodeParser',
   'canvasData',
-  'd3TableClass',
   'AccessSchemaService',
-  function ($scope, $timeout, CodeParser, canvasData, d3TableClass, AccessSchemaService) {
+  function ($scope, $timeout, CodeParser, canvasData, AccessSchemaService) {
     //object for table storage
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
@@ -165,14 +164,14 @@ angular.module('DTBS.main')
     };
 
     //listener for selection event in d3 service to choose tables
-    $scope.$on('d3:table-class', function (e, data) {
-      //regex to extract the table number in case of additional classes
-      var parsedNum = data.match(/\d+/)[0];
-      $scope.selectedTable = parsedNum;
-      console.log("selecting ", parsedNum);
-      var obj = $scope.tableStorage[$scope.selectedTable];
-      $scope.modalTitle(obj.name);
-    });
+    // $scope.$on('d3:table-class', function (e, data) {
+    //   //regex to extract the table number in case of additional classes
+    //   var parsedNum = data.match(/\d+/)[0];
+    //   $scope.selectedTable = parsedNum;
+    //   console.log("selecting ", parsedNum);
+    //   var obj = $scope.tableStorage[$scope.selectedTable];
+    //   $scope.modalTitle(obj.name);
+    // });
 
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
