@@ -63,12 +63,12 @@ app.get('/auth/github',
   });
 
 app.get('/auth/callback',
-  passport.authenticate('github', { failureRedirect: '/login' }),
+  passport.authenticate('github', { failureRedirect: '/#/login' }),
   function(req, res) {
     var username = res.req.user.username;
     var id = res.req.user.id;
     helper.findUser(req, res, username, id);
-    res.redirect('/');
+    res.redirect('/#/setup');
   });
 
 app.post('/login', function (req, res) {

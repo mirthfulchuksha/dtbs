@@ -1,4 +1,5 @@
-<div id="setupModal" class="modal" >
+<div title="Login/Signup" visible="showSetupModal">
+<!-- <div id="setupModal" class="modal" > -->
   <div class="modal-content">
     <div class="col s12" ng-if="loggedIn">
       <ul class="tabs" style="background-color:transparent; height:10px">
@@ -10,7 +11,7 @@
   </div>
   <div class="row">
     <br>
-    <form class="col s12 loginForm" ng-submit="updateFactory() && setup()">
+    <form class="col s12 loginForm" ng-submit="setup()">
       <div class="col s6">
         <div class="input-field col s12">
           <input id="dbName" type="text" ng-model="db.name" class="validate">
@@ -24,48 +25,58 @@
         </ul>
       </div>
       <br>
-      <div class="col s6" style="text-align:center">
+<!--       <div class="col s6" style="text-align:center">
         <a class='dropdown-button btn' style="width:220px" href='' data-activates='dropdown1'>Database Type <span>&#x25BE;</span></a>
         <ul id='dropdown1' class='dropdown-content'>
           <li style="width:220px" ng-model='db.lang' value="SQL"><a href="">SQL </a></li>
           <li style="width:220px" ng-model='db.lang' value="Mongo"><a href="">Mongo </a></li>
         </ul>
+      </div> -->
+      <div class="form-group">
+        <label for="type">Database Type</label>
+        <div class="dropdown">
+          <select ng-model='db.lang' class="form-control" required>
+            <option value="SQL">SQL</option>
+            <option value="Mongo">Mongo</option>
+          </select>
+        </div>
       </div>
+      <button id="create" type="submit" class="waves-effect waves-green btn-flat">Create</button>
     </form>
   </div>
   <br><br><br>
   <div class="modal-footer">
     <span ng-show="userExist">You already have a database with this name!</span>
-    <button id="create" type="submit" class="modal-action modal-close waves-effect waves-green btn-flat">Create</button>
+    <!-- <button id="create" type="submit" class="waves-effect waves-green btn-flat">Create</button> -->
   </div>
 </div>
 
 <script>
-  $(document).ready(function() {
-    $('.modal-trigger').leanModal();
-    $('#new').on('click', function () {
-      $('#dbName').show();
-      $('#dbList').hide();
-      $('#create').text('Create');
-    });
-    $('#saved').on('click', function () {
-      $('#dbName').hide();
-      $('#dbList').show();
-      $('#create').text('Load');
-    });
-    $('.dropdown-button').dropdown({
-        inDuration: 300,
-        outDuration: 225,
-        constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
-        gutter: 0, // Spacing from edge
-        belowOrigin: true, // Displays dropdown below the button
-        alignment: 'left' // Displays dropdown with edge aligned to the left of button
-      }
-    );
-    $(".dropdown-content li a").click(function () {
-      $(".dropdown-button").text($(this).text());
-      $(".dropdown-button").append('<span>&#x25BE;</span>');
-    });
-  });
+  // $(document).ready(function() {
+    // $('.modal-trigger').leanModal();
+    // $('#new').on('click', function () {
+    //   $('#dbName').show();
+    //   $('#dbList').hide();
+    //   $('#create').text('Create');
+    // });
+    // $('#saved').on('click', function () {
+    //   $('#dbName').hide();
+    //   $('#dbList').show();
+    //   $('#create').text('Load');
+    // });
+    // $('.dropdown-button').dropdown({
+    //     inDuration: 300,
+    //     outDuration: 225,
+    //     constrain_width: false, // Does not change width of dropdown to that of the activator
+    //     hover: true, // Activate on hover
+    //     gutter: 0, // Spacing from edge
+    //     belowOrigin: true, // Displays dropdown below the button
+    //     alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    //   }
+    // );
+    // $(".dropdown-content li a").click(function () {
+    //   $(".dropdown-button").text($(this).text());
+    //   $(".dropdown-button").append('<span>&#x25BE;</span>');
+    // });
+  // });
 </script>
