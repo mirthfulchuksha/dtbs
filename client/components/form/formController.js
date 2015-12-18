@@ -3,10 +3,10 @@ angular.module('DTBS.main')
   '$scope',
   '$timeout',
   'CodeParser',
-  'd3Data',
+  'canvasData',
   'd3TableClass',
   'AccessSchemaService',
-  function ($scope, $timeout, CodeParser, d3Data, d3TableClass, AccessSchemaService) {
+  function ($scope, $timeout, CodeParser, canvasData, d3TableClass, AccessSchemaService) {
     //object for table storage
     $scope.tableStorage = {};
     //incrementing id for table creation in child scopes
@@ -27,7 +27,7 @@ angular.module('DTBS.main')
 
     $scope.deleteTable = function (table) {
       delete $scope.tableStorage[table.id];
-      $scope.interactd3();
+      $scope.interactCanvas();
       $scope.toggleKeyModal();
     };
 
@@ -42,7 +42,7 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id].attrs.unshift(pkey[0]);
 
       //updated rendering
-      $scope.interactd3();
+      $scope.interactCanvas();
       $scope.selectedTable = 0;
     };
 
@@ -51,20 +51,21 @@ angular.module('DTBS.main')
       $scope.primaryKeyPresent = true;
     };
 
-    $scope.interactd3 = function () {
+    $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
       var updatedData = angular.copy($scope.tableStorage);
-      d3Data.push(updatedData);
+      canvasData.push(updatedData);
     };
 
     var changeTableID = function (num) {
       $scope.id = num;
     }
     
-    $scope.toggleView = function () {
+    $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
       $scope.view = 'snap';
     };
+
     $scope.saveSVG = function (type) {
       if (type === 'd3') {
         svg_xml = document.getElementById('designer');
@@ -113,7 +114,7 @@ angular.module('DTBS.main')
 
         var amount = Object.keys(parsedRecovered).length;
         //rebuild visuals        
-        $timeout($scope.interactd3, secondsToWaitBeforeRender * 1000);
+        $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
         $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
         $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 1000);
       } else {
@@ -177,7 +178,7 @@ angular.module('DTBS.main')
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;
       $scope.id = Object.keys($scope.tableStorage).length;
-      $scope.interactd3();
+      $scope.interactCanvas();
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);

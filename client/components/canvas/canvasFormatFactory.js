@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.factory('d3Format', function() {
+.factory('canvasFormat', function() {
 
   var buildCentralNode = function(table, groupNumber) {
     var centralNode = {

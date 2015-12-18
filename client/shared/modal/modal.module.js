@@ -1,8 +1,7 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', 'd3Data', function ($scope, CodeParser, SaveAndRedirectFactory, $http, d3Data) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
   $scope.showModal = false;
   $scope.showLoginModal = true;
   $scope.loggingIn = true;
@@ -20,13 +19,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     }
   });
 
-  // $scope.coolView = true;
-  // when page loads, only the d3 view loads
-  // coolview is set to true
-  // when the view toggles
-    // the d3 svg is removed
-    // the snap svg is added
-
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
   };
@@ -34,51 +26,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   $scope.toggleLoginModal = function () {
     $scope.showLoginModal = !$scope.showLoginModal;
   };
-
-  // $scope.d3View = function () {
-  //   $scope.coolView = true;
-  // };
-
-  // $scope.stodgyView = function () {
-  //   $scope.coolView = false;
-  // };
-
-  
-
-  // $scope.saveSVG = function (type) {
-  //   if (type === 'd3') {
-  //     svg_xml = document.getElementById('designer');
-  //   } else {
-  //     svg_xml = document.getElementById('svgout');
-  //   }  
-  //   // var svg_xml = document.getElementById('designer');
-  //   var serializer = new XMLSerializer();
-  //   var str = serializer.serializeToString(svg_xml);
-
-  //   // Create a canvas
-  //   var canvas = document.createElement('canvas');
-  //   canvas.height = 350;
-  //   canvas.width = 640;
-  //   canvas.style.background = 'white';
-
-  //   canvg(canvas, str);
-  //   context = canvas.getContext("2d");
-
-  //   // set to draw behind current content
-  //   context.globalCompositeOperation = "destination-over";
-
-  //   // set background color
-  //   context.fillStyle = '#fff';
-
-  //   // draw background / rect on entire canvas
-  //   context.fillRect(0, 0, canvas.width, canvas.height);
-  //   var a = document.createElement('a');
-  //   a.href = canvas.toDataURL("schemas/png");
-  //   a.download = 'schemas.png';
-  //   a.click();
-  //   a.remove();
-  //   canvas.remove();
-  // };
 
   $scope.sendUserData = function (options, cb1, cb2) {
     $http(options).success(cb1).error(cb2);

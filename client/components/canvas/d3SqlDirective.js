@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3Sql', ['d3Service', 'd3TableClass', 'd3Data', 'd3Format', function (d3Service, d3TableClass, d3Data, d3Format) {
+.directive('d3Sql', ['d3Service', 'd3TableClass', 'canvasData', 'canvasFormat', function (d3Service, d3TableClass, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -28,8 +28,8 @@ angular.module('DTBS.main')
             .linkDistance(function(d) { return  d.value/2; }) 
             .size([width, height]);
 
-          var container = d3Format.dataBuilder(tableData, true);
-          var graph = d3Format.fkLinks(container, tableData);
+          var container = canvasFormat.dataBuilder(tableData, true);
+          var graph = canvasFormat.fkLinks(container, tableData);
           
           var svg = d3.select("#designer");
           //Creates the graph data structure out of the json data
@@ -106,7 +106,7 @@ angular.module('DTBS.main')
         var dblclick = function (d) {
           svg.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-        scope.$on('d3:new-data', function (e, data) {
+        scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);

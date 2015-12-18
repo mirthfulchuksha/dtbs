@@ -13,10 +13,10 @@ angular.module('DTBS.main')
   }
   return api;
 }])
-.service('d3Data', ['$rootScope', function($rootScope) {
+.service('canvasData', ['$rootScope', function($rootScope) {
   var data;
 
-  var emit = function(data) { $rootScope.$broadcast('d3:new-data', data); }
+  var emit = function(data) { $rootScope.$broadcast('canvas:new-data', data); }
   var api = {
     push: function(datum) {
       data = datum;
@@ -25,17 +25,4 @@ angular.module('DTBS.main')
     }
   }
   return api;
-}])
-.service('snapData', ['$rootScope', function($rootScope) {
-  var data;
-
-  var emit = function(data) { $rootScope.$broadcast('snap:new-data', data); }
-  var api = {
-    push: function(datum) {
-      data = datum;
-      emit(data);
-      return data;
-    }
-  }
-  return api;
-}])
+}]);

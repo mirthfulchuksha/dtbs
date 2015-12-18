@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-.directive('snapSql', ['SnapService', 'd3Data', 'd3Format', function (SnapService, d3Data, d3Format) {
+.directive('snapSql', ['SnapService', 'canvasData', 'canvasFormat', function (SnapService, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -110,7 +110,7 @@ angular.module('DTBS.main')
             group.drag(move, dragger, up);
           });
         };
-        scope.$on('d3:new-data', function (e, data) {
+        scope.$on('canvas:new-data', function (e, data) {
           $("#svgout").empty();
           var dataArr = [];
           for (var key in data) {
@@ -147,8 +147,8 @@ angular.module('DTBS.main')
             dragGroups.push(dragGroup);
           }
           
-          var container = d3Format.dataBuilder(dataArr, false);
-          var graph = d3Format.fkLinks(container, dataArr);
+          var container = canvasFormat.dataBuilder(dataArr, false);
+          var graph = canvasFormat.fkLinks(container, dataArr);
           
           var fkConnections = [];
           graph.links.forEach(function (link) {
