@@ -95,6 +95,7 @@ angular.module('DTBS.main')
 
     var update = function (db, storage, user) {
       dbUser = user ? user.userName : dbUser;
+      console.log("user: ", dbUser);
       if (db) {
         dbName = db.name ? db.name : dbName;
         dbLang = db.lang ? db.lang : dbLang;
