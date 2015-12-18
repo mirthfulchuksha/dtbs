@@ -65,4 +65,30 @@ describe('basic test setup', function () {
       done();
     });
   });
+
+  it('can update schemas', function () {
+    var updatedSchema = {
+      method: 'POST',
+      followAllRedirects: true,
+      dbUser: "testUser",
+      dbLang: "mySQL",
+      dbName: "testDB",
+      tableStorage: {
+        name: 'testTable',
+        id: 1,
+        attrs: [
+          {id: 'key1', type: 'integer'},
+          {id: 'key2', type: 'char'}
+        ],
+        primaryKey : {id: 'key1', type: 'integer'}
+      }
+    }
+
+    request.post({url: server + '/saveSchema', form: updatedSchema}, function (err, response, body) {
+      body = JSON.parse(body);
+      expect(response.statusCode).to.equal(200);
+      expect(body.attrs.length).to.equal(2);
+      done();
+    });
+  });
 })
