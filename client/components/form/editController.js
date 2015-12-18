@@ -27,15 +27,14 @@ angular.module('DTBS.main')
     $scope.toggleEditKeysModal();
   };
 
-  $scope.editDone = function (newPK) {
-    $scope.keyEdit = [];
-    console.log(newPK);
+  $scope.editDone = function (newPrimaryKey) {
+ 
+    console.log(newPrimaryKey);
     //if a new Primary Key has been selected, set primaryKey for table to the new PK object and move the object to the 0 position in attrs array
     if ($scope.showPKSelection === true) {
       for (var key in $scope.tableStorage){
         for (var i = 0; i < $scope.tableStorage[key]["attrs"].length; i++) {
-          if ($scope.tableStorage[key]["attrs"][i].id === newPK) {
-            console.log("changing primarykey");
+          if ($scope.tableStorage[key]["attrs"][i].id === newPrimaryKey) {
             var pkObject = $scope.tableStorage[key]["attrs"].id;
             $scope.tableStorage[key]["attrs"].slice(i, 1);
             $scope.tableStorage[key]["attrs"].unshift(pkObject);
@@ -43,7 +42,7 @@ angular.module('DTBS.main')
           }
         }
       }
-
+      $scope.keyEdit = [];
       $scope.showPKSelection = false;
       $scope.interactd3();
     }

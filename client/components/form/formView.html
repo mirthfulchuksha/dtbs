@@ -51,7 +51,7 @@
       <div ng-if="showPKSelection === true">
         <label>Choose a new primary key (required)</label>
         <select ng-model="newPrimaryKey" style="width:100px" required>
-          <option ng-repeat="possibleNewKey in keyEdit track by $index">{{possibleNewKey.id}}</option>
+          <option ng-repeat="possibleNewKey in keyEdit">{{possibleNewKey.id}}</option>
         </select>
         <hr>
       </div>
