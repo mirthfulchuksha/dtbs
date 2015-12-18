@@ -8,19 +8,24 @@
   },
   "scripts": {
     "start": "node server/server.js",
-    "postinstall": "bower install"
+    "postinstall": "bower install",
+    "test": "npm run test-server",
+    "test-server": "mocha -R spec ./test/serverSpec.js"
   },
   "dependencies": {
     "bcrypt": "^0.8.5",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
     "bower": "1.6.5",
+    "chai": "^3.4.1",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
     "fs": "0.0.2",
+    "mocha": "^2.3.4",
     "mongoose-auto-increment": "^5.0.1",
     "passport": "^0.3.2",
     "passport-github": "^1.0.0",
+    "request": "^2.67.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

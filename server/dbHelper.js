@@ -6,9 +6,10 @@ var bcrypt = require('bcrypt-nodejs');
 module.exports = {
 
   findUser: function (req, res, username, id) {
+    console.log("??", req.body);
+    
     username = req.body.userName || (username + '_gh');
     password = req.body.password || id;
-
     User.findOne({userName: username})
     .exec(function (err, user) {
       if (user || req.body.login) {
