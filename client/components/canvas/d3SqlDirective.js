@@ -104,7 +104,7 @@ angular.module('DTBS.main')
           d3TableClass.push(classToSend);
         };
         var dblclick = function (d) {
-          svg.select(this).classed("fixed", d.fixed = !d.fixed);
+          d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
