@@ -2,19 +2,22 @@
   <div class="medium-6 medium-centered large-4 large-centered columns">
     <form>
       <div class="row column log-in-form">
-        <h4 class="text-center">Log in</h4>
+        <h4 class="text-center">Sign Up</h4>
         <label>Username
           <input id="username" type="text" ng-model="user.userName" required placeholder="Mr. Cool">
         </label>
         <label>Password
           <input id="password" type="password" ng-model="user.password" placeholder="Password">
         </label>
+        <label>Verify Password
+          <input id="password2" type="password" ng-model="pass2" placeholder="Password">
+        </label>
         <br>
-        <p><a type="submit" ng-click="login()" class="button expanded">Log In</a></p>
-        <p><a href="#/signup" class="button expanded">Signup</a></p>
+        <p><a type="submit" ng-click="signup()" class="button expanded">Signup</a></p>
+        <p><a href="#/login" class="button expanded">Log In</a></p>
         <p><a href="/auth/github" target="_blank" class="modal-action modal-close waves-effect waves-green btn-flat">Login/Signup with Github</a></p>
-        <span ng-show="noUser">Not a valid username!</span>
-        <span ng-show="notValid">Incorrect password!</span>
+        <span ng-show="userExist">User already exists!</span>
+        <span ng-show="notMatch">Passwords do not match!</span>
       </div>
     </form>
   </div>

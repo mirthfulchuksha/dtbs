@@ -1,0 +1,19 @@
+<!doctype html>
+<html ng-app="foundationDemoApp">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0-rc.0/angular.js"></script>
+    <script src="https://pineconellc.github.io/angular-foundation/mm-foundation-tpls-0.8.0.js"></script>
+    <script src="test.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="row">
+      <div class="small-12.columns">
+        <div ng-controller="ModalDemoCtrl">
+          <button class="button" ng-click="open()">Open me!</button>
+          <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

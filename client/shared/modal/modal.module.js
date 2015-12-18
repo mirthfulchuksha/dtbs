@@ -6,6 +6,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   $scope.showLoginModal = true;
   $scope.showSetupModal = true;
   $scope.loggingIn = true;
+
   $scope.db = {lang: "SQL"};
 
   $scope.toggleModal = function (){
@@ -78,7 +79,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
         data: $scope.user
       }, function (res) {
         $scope.notValid = false;
-        // toggleLoginModal();
+        $scope.loggedIn = true;
         $location.path('/setup');
       }, function (res) {
         if (res === 'noUser') {
@@ -152,10 +153,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   $scope.setup = function () {
     console.log("called, setup", $scope.db)
     $scope.updateFactory();
-    // $scope.toggleSetupModal();
-    $('.modal').not($(this)).each(function () {
-        $(this).modal('hide');
-    });
     var path = $scope.db.lang === 'SQL' ? '/sql' : '/mongo';
     $location.path(path);
   };

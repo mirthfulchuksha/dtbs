@@ -135,14 +135,9 @@ input {
   height: 50px;
 }
 
-.pass2, #valSignup {
-  display: none;
-}
-
-.select-dropdown {
-  width:20px;
-}
-
-.caret {
-  font-size: 10px;
+.log-in-form {
+  border: 1px solid #cacaca;
+  padding: 10px !important;
+  border-radius: 3px;
+  margin-top: 3em;
 }

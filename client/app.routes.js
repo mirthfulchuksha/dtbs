@@ -15,6 +15,10 @@ angular.module('DTBS', [
     templateUrl: './components/getStarted/login/login.html',
     controller: 'ModalCtrl'
   })
+  .when('/signup', {
+    templateUrl: './components/getStarted/signup/signup.html',
+    controller: 'ModalCtrl'
+  })
   .when('/setup', {
     templateUrl: './components/getStarted/setup/setup.html',
     controller: 'ModalCtrl'
@@ -28,5 +32,8 @@ angular.module('DTBS', [
   })
   .when('/table', {
     templateUrl: './components/form/formView.html'
+  })
+  .when('/test', {
+    templateUrl: './components/test/test.html'
   });
 });
