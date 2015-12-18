@@ -14,7 +14,7 @@ angular.module('DTBS.main')
     $scope.db = {};
     $scope.selectedTable = 0;
     $scope.primaryKeyPresent;
-    $scope.view = 'd3';
+    $scope.view = true;
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
 
@@ -63,12 +63,12 @@ angular.module('DTBS.main')
     
     $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
-      $scope.view = 'snap';
+      $scope.view = !$scope.view;
       //$scope.interactCanvas();
     };
 
-    $scope.saveSVG = function (type) {
-      if (type === 'd3') {
+    $scope.saveSVG = function () {
+      if ($scope.view) {
         svg_xml = document.getElementById('designer');
       } else {
         svg_xml = document.getElementById('svgout');
