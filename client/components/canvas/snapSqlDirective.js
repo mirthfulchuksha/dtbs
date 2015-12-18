@@ -123,6 +123,7 @@ angular.module('DTBS.main')
             return Math.floor(Math.random()*(max-min+1)+min);
           };
           var dragGroups = [];
+          var tableWidth = 140;
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
             var table = dataArr[i];
@@ -130,7 +131,7 @@ angular.module('DTBS.main')
             var startY = randomIntFromInterval(40, 300);
 
             var startYText = startY+15, startXText = startX+20;
-            var tableShape = s.rect(startX, startY, 120, 20);
+            var tableShape = s.rect(startX, startY, tableWidth, 20);
             var tableText = s.text(startXText, startYText, table.name);
             shapes.push(tableShape);
             texts.push(tableText);
@@ -138,8 +139,12 @@ angular.module('DTBS.main')
             table.attrs.forEach(function (field) {
               startY += 20;
               startYText += 20;
-              var fieldShape = s.rect(startX, startY, 120, 20);
-              var fieldText = s.text(startXText, startYText, field.id+"("+field.type+")");
+              var fieldShape = s.rect(startX, startY, tableWidth, 20);
+              if (field.size.length > 0) {
+                var fieldText = s.text(startXText, startYText, field.id+"  "+field.type+"("+field.size+")")
+              } else {
+                var fieldText = s.text(startXText, startYText, field.id+"  "+field.type);
+              }
               shapes.push(fieldShape);
               texts.push(fieldText);
               dragGroup.push(fieldShape, fieldText);
