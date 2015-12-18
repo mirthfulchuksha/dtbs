@@ -44,7 +44,7 @@ angular.module('DTBS.main')
       }
       $scope.keyEdit = [];
       $scope.showPKSelection = false;
-      $scope.interactd3();
+      $scope.interactCanvas();
     }
     
     $scope.toggleEditKeysModal();
@@ -77,7 +77,7 @@ angular.module('DTBS.main')
     }
     
     //re-render visualization after each field deletion
-    $scope.interactd3();
+    $scope.interactCanvas();
 
   };
 
@@ -92,9 +92,7 @@ angular.module('DTBS.main')
         delete $scope.tableStorage[key];
       }
     }
-    $scope.interactd3();
-    console.log($scope.tableStorage);
-    //delete $scope.tableStorage[table.id];
+    $scope.interactCanvas();
 
   };
 
