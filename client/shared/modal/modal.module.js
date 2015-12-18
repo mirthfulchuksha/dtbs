@@ -1,23 +1,12 @@
 var mymodal = angular.module('DTBS.modal', []);
 
 
-mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', function ($scope, CodeParser, SaveAndRedirectFactory, $http) {
+mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory', '$http', '$location', function ($scope, CodeParser, SaveAndRedirectFactory, $http, $location) {
   $scope.showModal = false;
   $scope.showLoginModal = true;
+  $scope.showSetupModal = true;
   $scope.loggingIn = true;
   $scope.db = {lang: "SQL"};
-
-  $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
-    switch (newValue) {
-      case '/login':
-        $('#loginModal').openModal();
-        break;
-      case '/setup':
-        $('#setupModal').openModal();
-        break;
-      default:
-    }
-  });
 
   $scope.toggleModal = function (){
     $scope.showModal = !$scope.showModal;
@@ -25,6 +14,54 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
 
   $scope.toggleLoginModal = function () {
     $scope.showLoginModal = !$scope.showLoginModal;
+  };
+
+  $scope.toggleSetupModal = function () {
+    $scope.showSetupModal = !$scope.showSetupModal;
+  };
+
+  $scope.$watch(function() { return $location.path(); }, function(newValue, oldValue){
+    switch (newValue) {
+      case '/login':
+        // $('#loginModal').openModal();
+        break;
+      case '/setup':
+        // $('#setupModal').openModal();
+        // toggleLoginModal();
+        break;
+      default:
+        // toggleSetupModal();
+    }
+  });
+
+  $scope.saveSVG = function () {
+    var svg_xml = document.getElementById('designer');
+    var serializer = new XMLSerializer();
+    var str = serializer.serializeToString(svg_xml);
+
+    // Create a canvas
+    var canvas = document.createElement('canvas');
+    canvas.height = 350;
+    canvas.width = 640;
+    canvas.style.background = 'white';
+
+    canvg(canvas, str);
+    context = canvas.getContext("2d");
+
+    // set to draw behind current content
+    context.globalCompositeOperation = "destination-over";
+
+    // set background color
+    context.fillStyle = '#fff';
+
+    // draw background / rect on entire canvas
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    var a = document.createElement('a');
+    a.href = canvas.toDataURL("schemas/png");
+    a.download = 'schemas.png';
+    a.click();
+    a.remove();
+    canvas.remove();
   };
 
   $scope.sendUserData = function (options, cb1, cb2) {
@@ -40,8 +77,8 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
         method: 'POST',
         data: $scope.user
       }, function (res) {
-        $('#loginModal').closeModal();
         $scope.notValid = false;
+        // toggleLoginModal();
         $location.path('/setup');
       }, function (res) {
         if (res === 'noUser') {
@@ -62,7 +99,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
         method: 'POST',
         data: $scope.user
       }, function () {
-        $('#loginModal').closeModal();
+        // $('#loginModal').closeModal();
         $scope.notValid = false;
         $scope.userExist = false;
         $location.path('/setup');
@@ -94,6 +131,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.updateFactory = function () {
+    console.log("called")
     switch ($scope.db.lang) {
       case "SQL":
         $scope.db.fileName = $scope.db.lang + '_Schema.sql';
@@ -109,6 +147,17 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     }
     $scope.toggleModal();
     CodeParser.update($scope.db);
+  };
+
+  $scope.setup = function () {
+    console.log("called, setup", $scope.db)
+    $scope.updateFactory();
+    // $scope.toggleSetupModal();
+    $('.modal').not($(this)).each(function () {
+        $(this).modal('hide');
+    });
+    var path = $scope.db.lang === 'SQL' ? '/sql' : '/mongo';
+    $location.path(path);
   };
 }]);
 

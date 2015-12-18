@@ -1,4 +1,4 @@
-<div id="loginModal" class="modal">
+<div title="Login/Signup" visible="showLoginModal">
   <div class="modal-content">
       <div class="col s12">
         <ul class="tabs" style="background-color:transparent; height:10px">
@@ -42,20 +42,20 @@
 </div>
 
 <script>
-  $(document).ready(function() {
-    $('.modal-trigger').leanModal({
-      dismissible: true,
-      complete: function () {$('.lean-overlay').remove();}
-      });
-    $('#signup').on('click', function () {
-      $('.pass2').show();
-      $('#valSignup').show();
-      $('#valLogin').hide();
-    });
-    $('#login').on('click', function () {
-      $('.pass2').hide();
-      $('#valLogin').show();
-       $('#valSignup').hide();
-    });
-  });
+  // $(document).ready(function() {
+    // $('.modal-trigger').leanModal({
+    //   dismissible: true,
+    //   complete: function () {$('.lean-overlay').remove();}
+    //   });
+    // $('#signup').on('click', function () {
+    //   $('.pass2').show();
+    //   $('#valSignup').show();
+    //   $('#valLogin').hide();
+    // });
+    // $('#login').on('click', function () {
+    //   $('.pass2').hide();
+    //   $('#valLogin').show();
+    //    $('#valSignup').hide();
+    // });
+  // });
 </script>
