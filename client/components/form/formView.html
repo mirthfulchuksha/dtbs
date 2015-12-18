@@ -47,22 +47,15 @@
         <label>Column ID: {{savedKey.id}}</label>
         <button "btn btn-default" ng-click="deleteField(savedKey.id, currentTable)" class="pull-right">Delete Field</button>
         <hr>
-        <!--
-          <input ng-model="savedKey.id"/>
-        <label>Type</label>
-          <select ng-model="savedKey.type">
-            <option ng-repeat="option in options[savedKey.basicType]">{{option.name}}</option>
-          </select>
-       <!--   <input ng-model="savedKey.type"/> -->
-        <!--<label>Size</label>
-          <input ng-model="savedKey.size"/>
-        <label>Attributes</label>
-          <input ng-model="savedKey.attributes">
-        <label>Null?</label>
-          <input ng-model="savedKey.default">
-      </div>-->
-    </div>
-      <button class="btn btn-default" ng-click="editDone()">Done</button>
+      </div>
+      <div ng-if="showPKSelection === true">
+        <label>Choose a new primary key (required)</label>
+        <select ng-model="newPrimaryKey" style="width:100px" required>
+          <option ng-repeat="possibleNewKey in keyEdit track by $index">{{possibleNewKey.id}}</option>
+        </select>
+        <hr>
+      </div>
+      <button class="btn btn-default" ng-click="editDone(newPrimaryKey)">Done</button>
     </editkeysmodal>
 
 
