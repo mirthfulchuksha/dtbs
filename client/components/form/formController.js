@@ -64,7 +64,6 @@ angular.module('DTBS.main')
     $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
       $scope.view = !$scope.view;
-      //$scope.interactCanvas();
     };
 
     $scope.saveSVG = function () {
