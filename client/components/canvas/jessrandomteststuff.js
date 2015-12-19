@@ -250,38 +250,38 @@ var datajson1 = [{
           {"name": "Hidden", "size": 5000}
         ]
       }];
-var schemaStorage = {
-  "1": {
-    "name": "blogSchema",
-    "keys": {
-      "Summary": {"type": "String"},
-      "Metadata": {
-        "type": "Nested Document",
-        "Upvotes": {"type": "Number"},
-        "Favourites": {
-          "type": "Nested Document",
-          "User": {"type": "String"},
-          "Email": {"type": "String"}
+      var schemaStorage = {
+        "1": {
+          "name": "blogSchema",
+          "keys": {
+            "Summary": {"type": "String"},
+            "Metadata": {
+              "type": "Nested Document",
+              "Upvotes": {"type": "Number"},
+              "Favourites": {
+                "type": "Nested Document",
+                "User": {"type": "String"},
+                "Email": {"type": "String"}
+              }
+            },
+            "Title": {"type": "String"},
+            "Body": {"type": "String"},
+            "Date": {"type": "Date"}
+          }
+        },
+        "2": {
+          "name": "stockSchema",
+          "keys": {
+            "Company Code": {"type": "String"},
+            "Company Info": {
+              "type": "Nested Document",
+              "Employees": {"type": "Number"},
+              "Contact Info": {"type": "Number"}
+            },
+            "Share Prices": {"type": "Array"}
+          }
         }
-      },
-      "Title": {"type": "String"},
-      "Body": {"type": "String"},
-      "Date": {"type": "Date"}
-    }
-  },
-  "2": {
-    "name": "stockSchema",
-    "keys": {
-      "Company Code": {"type": "String"},
-      "Company Info": {
-        "type": "Nested Document",
-        "Employees": {"type": "Number"},
-        "Contact Info": {"type": "Number"}
-      },
-      "Share Prices": {"type": "Array"}
-    }
-  }
-};
+      };
 
 
 
