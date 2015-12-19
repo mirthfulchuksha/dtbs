@@ -12,4 +12,17 @@ angular.module('DTBS.main')
     }
   }
   return api;
+}])
+.service('mongoData', ['$rootScope', function($rootScope) {
+  var data;
+
+  var emit = function(data) { $rootScope.$broadcast('mongo:new-data', data); }
+  var api = {
+    push: function(datum) {
+      data = datum;
+      emit(data);
+      return data;
+    }
+  }
+  return api;
 }]);

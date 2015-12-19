@@ -1,6 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoTree', ['d3Service', 'canvasData', 'canvasFormat', function (d3Service, canvasData, canvasFormat) {
+.directive('d3MongoTree', ['d3Service', 'mongoData', 'treeFormat', function (d3Service, mongoData, treeFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -144,74 +144,55 @@ angular.module('DTBS.main')
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-          var datajson1 = [{
-          "name": "blogSchema",
-              "children": [{
-              "name": "Date",
-                  "children": [{
-                  "name": "Type",
-                      "size": 5000
-              }, {
-                  "name": "Default",
-                      "size": 5000
-              }]
-          }, {
-              "name": "Meta",
-                  "children": [{
-                  "name": "Votes",
-                      "size": 5000
-              }, {
-                  "name": "Favs",
-                      "size": 5000
-              }]
+        var schemaStorage = {
+          "1": {
+            "name": "blogSchema",
+            "keys": {
+              "Summary": {"type": "String"},
+              "Metadata": {
+                "type": "Nested Document",
+                "Upvotes": {"type": "Number"},
+                "Favourites": {
+                  "type": "Nested Document",
+                  "User": {"type": "String"},
+                  "Email": {"type": "String"}
+                }
+              },
+              "Title": {"type": "String"},
+              "Body": {"type": "String"},
+              "Date": {"type": "Date"}
+            }
           },
-          {"name": "Title", "size": 5000},
-          {"name": "Author", "size": 5000},
-          {"name": "Body", "size": 5000},
-          {"name": "Hidden", "size": 5000}
-        ]
-        },{
-          "name": "blogSchema2",
-              "children": [{
-              "name": "Date",
-                  "children": [{
-                  "name": "Type",
-                      "size": 5000
-              }, {
-                  "name": "Default",
-                      "size": 5000
-              }]
-          }, {
-              "name": "Meta",
-                  "children": [{
-                  "name": "Votes",
-                      "size": 5000
-              }, {
-                  "name": "Favs",
-                      "size": 5000
-              }]
-          },
-          {"name": "Title", "size": 5000},
-          {"name": "Author", "size": 5000},
-          {"name": "Body", "size": 5000},
-          {"name": "Hidden", "size": 5000}
-        ]
-      }];
+          "2": {
+            "name": "stockSchema",
+            "keys": {
+              "Company Code": {"type": "String"},
+              "Company Info": {
+                "type": "Nested Document",
+                "Employees": {"type": "Number"},
+                "Contact Info": {"type": "Number"}
+              },
+              "Share Prices": {"type": "Array"}
+            }
+          }
+        };
         var nextChar = function (c) {
             return String.fromCharCode(c.charCodeAt(0) + 1);
         };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-        scope.$on('canvas:new-data', function (e, data) {
+        scope.$on('mongo:new-data', function (e, data) {
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
           }
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var id = 'a';
-          for (var i = 0; i < datajson1.length; i++) {
-            scope.render(datajson1[i], id);
+          for (var i = 0; i < schemaData.length; i++) {
+            scope.render(schemaData[i], id);
             id = nextChar(id);
           }
           // datajson1.forEach(function (schema) {

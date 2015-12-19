@@ -118,6 +118,32 @@ var snapFormatter = function (table) {
     FOREIGN KEY (chats_id) REFERENCES chats(id)
   );
 // function to put schemaStorage into datajson format
+// accepts a field and returns an array of that field's children
+var buildNested = function (doc, documentName) {
+  var result = [];
+  var subroutine = function (doc, documentName) {
+    // Base Case: if the type is not nested document
+    if (doc.type !== "Nested Document") {
+      var child = {};
+      child.name = documentName;
+      child.size = 5000;
+      return child;
+    } else {
+      // type is nested document, we want to 
+      var obj = {};
+      obj.name = documentName;
+      obj.children = [];
+      for (var key in doc) {
+        if (key !== "type") {
+          obj.children.push(subroutine(doc[key], key));
+        }
+      }
+      return obj;
+    }
+  };
+  result = subroutine(doc, documentName);
+  return result.children;
+};
 var treeFormatter = function (schemaStorage) {
   var schemaArray = [];
   var finalArray = [];
@@ -170,32 +196,7 @@ var doc = {
 };
 var documentName = "Metadata";
 
-// accepts a field and returns an array of that field's children
-var buildNested = function (doc, documentName) {
-  var result = [];
-  var subroutine = function (doc, documentName) {
-    // Base Case: if the type is not nested document
-    if (doc.type !== "Nested Document") {
-      var child = {};
-      child.name = documentName;
-      child.size = 5000;
-      return child;
-    } else {
-      // type is nested document, we want to 
-      var obj = {};
-      obj.name = documentName;
-      obj.children = [];
-      for (var key in doc) {
-        if (key !== "type") {
-          obj.children.push(subroutine(doc[key], key));
-        }
-      }
-      return obj;
-    }
-  };
-  result = subroutine(doc, documentName);
-  return result.children;
-};
+
 var datajson1 = [{
           "name": "blogSchema",
               "children": [{
