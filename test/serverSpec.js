@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var request = require('request');
 
 var Schema = require('../server/db/models/schema');
+var User = require('../server/db/models/user');
 
 describe('basic test setup', function () {
   var server = 'http://localhost:3000';
@@ -66,7 +67,7 @@ describe('basic test setup', function () {
     });
   });
 
-  it('can update schemas', function () {
+  it('can update schemas', function (done) {
     var updatedSchema = {
       method: 'POST',
       followAllRedirects: true,
@@ -87,8 +88,30 @@ describe('basic test setup', function () {
     request.post({url: server + '/saveSchema', form: updatedSchema}, function (err, response, body) {
       body = JSON.parse(body);
       expect(response.statusCode).to.equal(200);
-      expect(body.attrs.length).to.equal(2);
+      expect(body.data.attrs.length).to.equal(2);
       done();
     });
   });
+
+  it('doesn\'t allow unauthorized users to sign in', function (done) {
+    var newUser = {
+      method: 'POST',
+      followAllRedirects: true,
+      userName: "evilUser",
+      password: "evilPass"
+    }
+
+    request.post({url: server + '/login', form: newUser}, function (err, response, body) {
+      expect(response.statusCode).to.equal(403);
+      done();
+    });
+  });
+
+  User.findOne({userName:"evilUser"}).remove(function () {
+      //these don't seem to work...
+    });
+
+  User.findOne({userName:"testUser"}).remove(function () {
+      //done();
+    });
 })

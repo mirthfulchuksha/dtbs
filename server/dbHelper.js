@@ -8,27 +8,57 @@ module.exports = {
   findUser: function (req, res, username, id) {
     console.log("??", req.body);
     
-    username = req.body.userName || (username + '_gh');
-    password = req.body.password || id;
+    username = req.body.userName;
+    password = req.body.password;
     User.findOne({userName: username})
     .exec(function (err, user) {
-      if (user || req.body.login) {
+      if (user) {
         module.exports.login(req, res, username, password, user);
       } else {
-        module.exports.signup(req, res, username, password);
+        //they're coming from github but making a new profile
+        res.send(403, "incorrect username");
       }
     });
   },
 
-  signup: function (req, res, username, password) {
-    var newUser = new User({
-      userName: username,
-      password: password
+  githubHandler: function (req, res, username, id) {
+    User.findOne({userName: username + '_gh'})
+    .exec(function (err, user) {
+      if(user) {
+        module.exports.login(req, res, username, id, user);
+      } else {
+        var newUser = {
+          userName: username + '_gh',
+          password: id
+        }
+        newUser.save(function (err, newUser) {
+          if (err) return console.error(err);
+
+          console.log("saved!");
+          module.exports.genSesh(req, res, newUser);
+        });
+      }
     });
-    newUser.save(function (err, newUser) {
-      if (err) return console.error(err);
-      console.log("saved!");
-      module.exports.genSesh(req, res, newUser);
+  },
+
+  signup: function (req, res) {
+    var newUser = new User({
+      userName: req.body.userName,
+      password: req.body.password
+    });
+
+    User.findOne({userName: req.body.userName})
+    .exec(function (err, user) {
+      if (user) {
+        res.send(403, "User already exists");
+      } else {
+        newUser.save(function (err, newUser) {
+          if (err) return console.error(err);
+          
+          console.log("saved!");
+          module.exports.genSesh(req, res, newUser);
+        });
+      }
     });
   },
 
@@ -37,7 +67,7 @@ module.exports = {
       bcrypt.compare(password, user.password, function (err, isMatch) {
         if (err) return console.error(err);
         else if (isMatch) module.exports.genSesh(req, res, user);
-        else res.send(401, "noMatch");
+        else res.send(401, "incorrect password");
       });
     } else {
       res.send(401, "noUser");
@@ -91,6 +121,7 @@ module.exports = {
   },
 
   genSesh: function (req, res, user) {
+    console.log("sesh", req.session);
     if (req.session) {
       req.session.regenerate(function () {
         req.session.user = user;
