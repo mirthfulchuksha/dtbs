@@ -35,6 +35,12 @@ angular.module('DTBS.main')
           force.nodes(graph.nodes)
               .links(graph.links)
               .start();
+              
+          force.gravity(0.3);
+
+          force.charge(function(node) {
+            return -300;
+          });
 
           //Create all the line svgs but without locations yet
           var link = svg.selectAll(".link")

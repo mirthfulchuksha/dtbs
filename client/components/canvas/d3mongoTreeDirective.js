@@ -30,9 +30,15 @@ angular.module('DTBS.main')
           };
           var force = d3.layout.force()
             .size([width, height])
-            .linkDistance(30)
+            .linkDistance(20)
             .charge(-520)
             .on("tick", tick);
+
+          force.gravity(0.3);
+
+          force.charge(function(node) {
+            return -300;
+          });
 
           var link = svg.selectAll(".link "+id),
               node = svg.selectAll(".node"+id),
