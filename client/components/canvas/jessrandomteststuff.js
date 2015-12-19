@@ -120,14 +120,81 @@ var snapFormatter = function (table) {
 // function to put schemaStorage into datajson format
 var treeFormatter = function (schemaStorage) {
   var schemaArray = [];
+  var finalArray = [];
+  // Format into array of objects
   for (var key in schemaStorage) {
     schemaArray.push(schemaStorage[key]);
   }
+  // Loop through each schema object in the array
   for (var i = 0; i < schemaArray.length; i++) {
-    var datajson = {};
+    var jsonSchema = {};
     var schema = schemaArray[i];
-    schemaArray.push()
+    jsonSchema.name = schema.name;
+    jsonSchema.children = [];
+    console.log(jsonSchema, "json schema");
+    console.log(schema, "schema");
+    for (var key in schema.keys) {
+      var field = {};
+      field.name = key;
+      console.log(schema.keys[key], "schema.keys[key]")
+      if (schema.keys[key].type !== "Nested Document") {
+        field.size = 5000;
+      } else {
+        field.children = buildNested(schema.keys[key], field.name);
+      }
+      jsonSchema.children.push(field);
+    } 
+    finalArray.push(jsonSchema);
   }
+  return finalArray;
+};
+
+var doc = {
+  "type": "Nested Document",
+  "Upvotes": {
+    "type": "Number"
+  },
+  "Favourites": {
+    "type": "Nested Document",
+    "User": {
+      "type": "Nested Document",
+      "Name": {
+        "type": "Nested Document",
+        "value": {"type": "String"}
+      }
+    },
+    "Email": {
+      "type": "String"
+    }
+  }
+};
+var documentName = "Metadata";
+
+// accepts a field and returns an array of that field's children
+var buildNested = function (doc, documentName) {
+  var result = [];
+  var subroutine = function (doc, documentName) {
+    // Base Case: if the type is not nested document
+    if (doc.type !== "Nested Document") {
+      var child = {};
+      child.name = documentName;
+      child.size = 5000;
+      return child;
+    } else {
+      // type is nested document, we want to 
+      var obj = {};
+      obj.name = documentName;
+      obj.children = [];
+      for (var key in doc) {
+        if (key !== "type") {
+          obj.children.push(subroutine(doc[key], key));
+        }
+      }
+      return obj;
+    }
+  };
+  result = subroutine(doc, documentName);
+  return result.children;
 };
 var datajson1 = [{
           "name": "blogSchema",
@@ -189,12 +256,16 @@ var schemaStorage = {
       "Summary": {"type": "String"},
       "Metadata": {
         "type": "Nested Document",
-        "Upvotes": "Number",
-        "Favourites": "Number"
+        "Upvotes": {"type": "Number"},
+        "Favourites": {
+          "type": "Nested Document",
+          "User": {"type": "String"},
+          "Email": {"type": "String"}
+        }
       },
-      "Title", {"type": "String"},
-      "Body", {"type": "String"},
-      "Date", {"type": "Date"}
+      "Title": {"type": "String"},
+      "Body": {"type": "String"},
+      "Date": {"type": "Date"}
     }
   },
   "2": {
@@ -203,10 +274,10 @@ var schemaStorage = {
       "Company Code": {"type": "String"},
       "Company Info": {
         "type": "Nested Document",
-        "Employees": "Number",
-        "Contact Info": "Number"
+        "Employees": {"type": "Number"},
+        "Contact Info": {"type": "Number"}
       },
-      "Share Prices", {"type": "Array"}
+      "Share Prices": {"type": "Array"}
     }
   }
 };
