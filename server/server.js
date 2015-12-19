@@ -104,6 +104,10 @@ app.post('/mongo', function (req, res, next) {
   util.parseMongo(req, res, next);
 });
 
+app.post('/mongoose', function (req, res, next) {
+  util.parseORMMongoose(req, res, next);
+});
+
 app.post('/build', function (req, res, next) {
   util.buildTables(req, res, next);
 });
