@@ -155,6 +155,8 @@ describe('code parser', function () {
     var toBeBuilt = {data: {1: arr1, 2: arr2}};
     //sends it as a list not an object...
     request.post({url: server + '/build', form: toBeBuilt}, function (err, response, body) {
+      var data = JSON.parse(body).data;
+      expect(Object.keys(data).length).to.equal(2);
       done();
     });
   });
