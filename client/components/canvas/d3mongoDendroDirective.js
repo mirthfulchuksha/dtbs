@@ -95,31 +95,19 @@ angular.module('DTBS.main')
             }
           }
         };
-        // {
-        //   "name": "Collection",
-        //   "keys": {
-        //     "Schema1": {},
-        //     "Schema2": {},
-        //     "schema3": {}
-        //   }
-        // }
         scope.$on('mongo:new-data', function (e, data) {
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
             "children": schemaData
           };
-          console.log(schemaData, "schemaData");
-          console.log(rootNode, "root node");
-          // for (var i = 0; i < schemaData.length; i++) {
           scope.render(rootNode);
-          // }
         });
       });
     }};

@@ -106,7 +106,7 @@ angular.module('DTBS.main')
                 })
             }; 
           // Toggle children on click.
-          var dblclick = function (d) {
+          var click = function (d) {
             if (!d3.event.defaultPrevented) {
               if (d.children) {
                 d._children = d.children;
@@ -184,14 +184,19 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
-          var id = 'a';
-          for (var i = 0; i < schemaData.length; i++) {
-            scope.render(schemaData[i], id);
-            id = nextChar(id);
-          }
+          // var id = 'a';
+          // for (var i = 0; i < schemaData.length; i++) {
+          //   scope.render(schemaData[i], id);
+          //   id = nextChar(id);
+          // }
+          var rootNode = {
+            "name": "Collection",
+            "children": schemaData
+          };
+          scope.render(rootNode);
         });
       });
     }};
