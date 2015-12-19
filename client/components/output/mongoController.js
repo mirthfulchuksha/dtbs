@@ -14,7 +14,7 @@ angular.module('DTBS.main')
     $scope.typeEdit = 'none'; 
     $scope.addingKey = false;
     $scope.nestedList = []; //this will store list of nested documents that keys can be added to, including top level
-    $scope.view = 'd3';
+    $scope.view = 'tree';
     var secondsToWaitBeforeSave = 0; //??
     var secondsToWaitBeforeRender = 1; //??
 
@@ -85,8 +85,8 @@ angular.module('DTBS.main')
     };
 
     $scope.toggleCanvasView = function () {
-      $('#designCanvas').find('svg').toggle();
-      $scope.view = 'snap';
+      $('#mongoDesignCanvas').find('svg').toggle();
+      $scope.view = 'dendro';
     };
 
     $scope.saveSVG = function (type) {
