@@ -130,18 +130,17 @@ module.exports = {
   },
 
   parseMongo: function (req, res, next) {
-    console.log("mongo bod", req.body);
     var schema = "";
     var dbName = req.body.dbName;
     var tableStructArray = req.body.data;
-    schema += "use " + dbName + "\n";
+    schema += "use " + dbName + "\n\n";
 
     for(var tableNum = 0; tableNum < tableStructArray.length; tableNum++) {
       var currTable = tableStructArray[tableNum];
       //this can also be done with options to fix the size of the collection (TODO)
-      schema += "db.createCollection(" + currTable.name + ")\n";
+      schema += "db.createCollection(" + currTable.name + ")\n\n";
     }
-    res.send(200, schema);
+    res.send(schema, 200);
   },
 
   parseORMSequelize: function (req, res, next) {
