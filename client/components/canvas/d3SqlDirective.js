@@ -1,13 +1,13 @@
 angular.module('DTBS.main')
 
-.directive('d3Sql', ['d3Service', 'd3TableClass', 'canvasData', 'canvasFormat', function (d3Service, d3TableClass, canvasData, canvasFormat) {
+.directive('d3Sql', ['d3Service', 'canvasData', 'canvasFormat', function (d3Service, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 640, height = 350;
+        var width = 1000, height = 350;
 
         // Create the SVG
         var svg = d3.selectAll("#designer")
@@ -98,13 +98,8 @@ angular.module('DTBS.main')
           });
         };
         
-        var click = function (node) {
-          var className = $(node).attr('class');
-          var classToSend = angular.copy(className);
-          d3TableClass.push(classToSend);
-        };
         var dblclick = function (d) {
-          svg.select(this).classed("fixed", d.fixed = !d.fixed);
+          d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];

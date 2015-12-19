@@ -3,10 +3,9 @@ angular.module('DTBS.main')
   '$scope',
   '$timeout',
   'CodeParser',
-  'canvasData',
-  'd3TableClass',
+  'mongoData',
   'AccessSchemaService',
-  function ($scope, $timeout, CodeParser, canvasData, d3TableClass, AccessSchemaService) {
+  function ($scope, $timeout, CodeParser, mongoData, AccessSchemaService) {
     //object for schema storage
     $scope.schemaStorage = {};
     $scope.currentSchema = {keys: {}}; //will need to add name: attr: id: and a list: as a new schema is created.
@@ -46,9 +45,7 @@ angular.module('DTBS.main')
         $scope.currentSchema.id = $scope.id;
         $scope.currentSchema.name = name;
       };
-
       $scope.addingKey = true;
-
     };
 
     $scope.saveKey = function (name, value) {
@@ -76,20 +73,20 @@ angular.module('DTBS.main')
       //take currentSchema that has been entered, set $scope.schemaStorage[$scope.currentID] = $scope.currentSchema
       $scope.currentSchema = {keys: {}};
       $scope.id++
+      $scope.interactCanvas();
     };
 
 
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
-      var updatedData = angular.copy($scope.tableStorage);
-      canvasData.push(updatedData);
+      var updatedData = angular.copy($scope.schemaStorage);
+      mongoData.push(updatedData);
     };
 
     $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
       $scope.view = 'snap';
-      //$scope.interactCanvas();
     };
 
     $scope.saveSVG = function (type) {

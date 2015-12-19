@@ -1,9 +1,9 @@
 angular.module('DTBS.main')
 
-.service('d3TableClass', ['$rootScope', function($rootScope) {
+.service('canvasData', ['$rootScope', function($rootScope) {
   var data;
 
-  var emit = function(data) { $rootScope.$broadcast('d3:table-class', data); }
+  var emit = function(data) { $rootScope.$broadcast('canvas:new-data', data); }
   var api = {
     push: function(datum) {
       data = datum;
@@ -13,10 +13,10 @@ angular.module('DTBS.main')
   }
   return api;
 }])
-.service('canvasData', ['$rootScope', function($rootScope) {
+.service('mongoData', ['$rootScope', function($rootScope) {
   var data;
 
-  var emit = function(data) { $rootScope.$broadcast('canvas:new-data', data); }
+  var emit = function(data) { $rootScope.$broadcast('mongo:new-data', data); }
   var api = {
     push: function(datum) {
       data = datum;
