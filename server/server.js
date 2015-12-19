@@ -67,7 +67,8 @@ app.get('/auth/callback',
   function(req, res) {
     var username = res.req.user.username;
     var id = res.req.user.id;
-    helper.findUser(req, res, username, id);
+    helper.githubHandler(req, res, username, id);
+    //helper.findUser(req, res, username, id);
     res.redirect('/#/setup');
   });
 
@@ -83,7 +84,7 @@ app.get('/logout', function (req, res) {
 });
 
 app.post('/signup', function (req, res) {
-  helper.findUser(req, res);
+  helper.signup(req, res);
 });
 
 app.get('/setup', function(req, res) {
