@@ -42,8 +42,7 @@ angular.module('DTBS.main')
               .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
               .attr("text-anchor", "middle")
               .text(function(d) {
-                return "String";
-                // return dataType[d.target.name];
+                return d.target.type;
               });
 
           var node = svg.selectAll(".dendronode")
@@ -100,13 +99,14 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
             "children": schemaData
           };
+          console.log(rootNode);
           scope.render(rootNode);
         });
       });

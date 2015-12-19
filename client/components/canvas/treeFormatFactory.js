@@ -8,10 +8,12 @@ angular.module('DTBS.main')
         var child = {};
         child.name = documentName;
         child.size = 5000;
+        child.type = doc.type;
         return child;
       } else {
         var obj = {};
         obj.name = documentName;
+        obj.type = doc.type;
         obj.children = [];
         for (var key in doc) {
           if (key !== "type") {
@@ -24,6 +26,7 @@ angular.module('DTBS.main')
     result = subroutine(doc, documentName);
     return result.children;
   };
+
   var treeFormatter = function (schemaStorage) {
     var schemaArray = [];
     var finalArray = [];
@@ -40,6 +43,7 @@ angular.module('DTBS.main')
       for (var key in schema.keys) {
         var field = {};
         field.name = key;
+        field.type = schema.keys[key].type;
         if (schema.keys[key].type !== "Nested Document") {
           field.size = 5000;
         } else {
