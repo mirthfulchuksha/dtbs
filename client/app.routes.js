@@ -20,7 +20,8 @@ angular.module('DTBS', [
     controller: 'ModalCtrl'
   })
   .when('/mongo', {
-    templateUrl: './components/mongo/mongo.html'
+    templateUrl: './components/mongo/mongo.html',
+    controller: 'MongoController'
   })
   .when('/sql', {
     templateUrl: './components/sql/sql.html'
