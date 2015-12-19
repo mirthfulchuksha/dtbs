@@ -17,6 +17,11 @@ var bookshelfTypeDict = {
   'Bit': 'integer'
 };
 
+var mongooseTypeDict = {
+  'Numeric': 'Number',
+  'String': 'String'
+};
+
 var basicTypes = { 
     Numeric: [
       "TINYINT", 
@@ -150,24 +155,24 @@ module.exports = {
     console.log(mongoStruct);
 
     schema += "\
-    var mongoose = require('mongoose');\n\n";
+  var mongoose = require('mongoose');\n\n";
 
     for(var collectionNum = 0; collectionNum < mongoStruct.length; collectionNum++){
       var currentCollection = mongoStruct[collectionNum];
 
       var modelTitle = currentCollection.name + "Model";
       schema += "\
-    var " + modelTitle + " = mongoose.Schema({\n";
+  var " + modelTitle + " = mongoose.Schema({\n";
       for(var key in currentCollection.keys) {
         schema += "\
-      "+ key + ": " + currentCollection.keys[key].type + ",\n"
+    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n"
       }
       schema +="\
-    });\n\n";
+  });\n\n";
 
       var capitalizedTitle = capitalize(currentCollection.name);
       schema += "\
-    var " + capitalizedTitle + " = mongoose.model('" + capitalizedTitle + "', " + modelTitle + ");\n\n"; 
+  var " + capitalizedTitle + " = mongoose.model('" + capitalizedTitle + "', " + modelTitle + ");\n\n"; 
     }
     res.send(schema, 200);
   },
