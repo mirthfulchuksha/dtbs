@@ -196,6 +196,8 @@ module.exports = {
     var rawTableData = req.body.data;
     var finishedTableStorage = {};
 
+
+    console.log(rawTableData);
     //loop through raw data and process it via inputParser()
     for(var tableId in rawTableData) {
       finishedTableStorage[tableId] = inputParser(rawTableData[tableId], tableId);
