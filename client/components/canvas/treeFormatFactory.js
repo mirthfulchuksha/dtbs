@@ -4,14 +4,12 @@ angular.module('DTBS.main')
   var buildNested = function (doc, documentName) {
     var result = [];
     var subroutine = function (doc, documentName) {
-      // Base Case: if the type is not nested document
       if (doc.type !== "Nested Document") {
         var child = {};
         child.name = documentName;
         child.size = 5000;
         return child;
       } else {
-        // type is nested document, we want to 
         var obj = {};
         obj.name = documentName;
         obj.children = [];

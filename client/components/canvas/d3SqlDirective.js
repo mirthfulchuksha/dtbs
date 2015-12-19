@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 640, height = 350;
+        var width = 1000, height = 350;
 
         // Create the SVG
         var svg = d3.selectAll("#designer")

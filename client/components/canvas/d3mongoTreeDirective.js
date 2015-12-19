@@ -37,9 +37,6 @@ angular.module('DTBS.main')
           var link = svg.selectAll(".link "+id),
               node = svg.selectAll(".node"+id),
               labels = svg.selectAll(".labels"+id);
-          // var link = svg.selectAll(".link"),
-          //   node = svg.selectAll(".node"),
-          //   labels = svg.selectAll(".labels");
 
           // Color leaf nodes orange, and packages white or blue.
             //var color = function (d) {
@@ -187,17 +184,14 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var id = 'a';
           for (var i = 0; i < schemaData.length; i++) {
             scope.render(schemaData[i], id);
             id = nextChar(id);
           }
-          // datajson1.forEach(function (schema) {
-          //   scope.render(schema);
-          // });
         });
       });
     }};
