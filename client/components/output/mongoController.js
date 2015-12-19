@@ -75,9 +75,7 @@ angular.module('DTBS.main')
       //SAVE SCHEMA
       //take currentSchema that has been entered, set $scope.schemaStorage[$scope.currentID] = $scope.currentSchema
       $scope.currentSchema = {keys: {}};
-      console.log($scope.id);
       $scope.id++
-      console.log($scope.id);
     };
 
 
