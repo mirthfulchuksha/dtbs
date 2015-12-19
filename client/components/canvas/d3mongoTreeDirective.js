@@ -30,7 +30,7 @@ angular.module('DTBS.main')
           };
           var force = d3.layout.force()
             .size([width, height])
-            .linkDistance(20)
+            .linkDistance(50)
             .charge(-520)
             .on("tick", tick);
 

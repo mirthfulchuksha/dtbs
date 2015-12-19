@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 640, height = 350, root;
+        var width = 600, height = 350, root;
         var color = d3.scale.category20();
 
         // Create the SVG
@@ -17,7 +17,7 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var cluster = d3.layout.cluster()
-                          .size([height, width - 160]);
+                          .size([height, width]);
 
           var diagonal = d3.svg.diagonal()
                            .projection(function(d) { return [d.y, d.x]; });

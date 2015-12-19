@@ -35,7 +35,7 @@ angular.module('DTBS.main')
           force.nodes(graph.nodes)
               .links(graph.links)
               .start();
-              
+
           force.gravity(0.3);
 
           force.charge(function(node) {
@@ -101,6 +101,12 @@ angular.module('DTBS.main')
             svg.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
           });
+          var k = 0;
+          // Slows down the initial tick of the force layout
+          while ((force.alpha() > 1e-2) && (k < 150)) {
+              force.tick(),
+              k = k + 3;
+          }
         };
         
         var dblclick = function (d) {
