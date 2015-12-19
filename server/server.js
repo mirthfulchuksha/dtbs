@@ -100,6 +100,10 @@ app.post('/update', function (req, res, next) {
   util.parseTable(req, res, next);
 });
 
+app.post('/mongo', function (req, res, next) {
+  util.parseMongo(req, res, next);
+});
+
 app.post('/build', function (req, res, next) {
   util.buildTables(req, res, next);
 });
