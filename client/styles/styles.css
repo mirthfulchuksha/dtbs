@@ -110,26 +110,26 @@ input {
   font: 10px sans-serif;
 }
 
-/*.node circle {
+.dendronode circle {
   fill: teal;
   stroke: steelblue;
   stroke-width: 1.5px;
 }
 
-.node {
+.dendronode {
   font: 16px sans-serif;
 }
 
-.link {
+.dendrolink {
   fill: none;
   stroke: #ccc;
   stroke-width: 1.5px;
 }
-.link .label {
+.dendrolinklabel {
   stroke: none;
   fill: black;
   font: 10px sans-serif;
-}*/
+}
 
 #code_button {
   display:block;
