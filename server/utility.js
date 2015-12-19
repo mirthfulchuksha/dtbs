@@ -17,6 +17,11 @@ var bookshelfTypeDict = {
   'Bit': 'integer'
 };
 
+var mongooseTypeDict = {
+  'Numeric': 'Number',
+  'String': 'String'
+};
+
 var basicTypes = { 
     Numeric: [
       "TINYINT", 
@@ -127,6 +132,49 @@ module.exports = {
     schema += '\n';
     res.send(schema, 200);
 
+  },
+
+  parseMongo: function (req, res, next) {
+    var schema = "";
+    var dbName = req.body.dbName;
+    var tableStructArray = req.body.data;
+    schema += "use " + dbName + "\n\n";
+
+    for(var tableNum = 0; tableNum < tableStructArray.length; tableNum++) {
+      var currTable = tableStructArray[tableNum];
+      //this can also be done with options to fix the size of the collection (TODO)
+      schema += "db.createCollection(" + currTable.name + ")\n\n";
+    }
+    res.send(schema, 200);
+  },
+
+  parseORMMongoose: function (req, res, next) {
+    var schema = "";
+    var dbName = req.body.dbName;
+    var mongoStruct = req.body.data;
+    console.log(mongoStruct);
+
+    schema += "\
+  var mongoose = require('mongoose');\n\n";
+
+    for(var collectionNum = 0; collectionNum < mongoStruct.length; collectionNum++){
+      var currentCollection = mongoStruct[collectionNum];
+
+      var modelTitle = currentCollection.name + "Model";
+      schema += "\
+  var " + modelTitle + " = mongoose.Schema({\n";
+      for(var key in currentCollection.keys) {
+        schema += "\
+    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n"
+      }
+      schema +="\
+  });\n\n";
+
+      var capitalizedTitle = capitalize(currentCollection.name);
+      schema += "\
+  var " + capitalizedTitle + " = mongoose.model('" + capitalizedTitle + "', " + modelTitle + ");\n\n"; 
+    }
+    res.send(schema, 200);
   },
 
   parseORMSequelize: function (req, res, next) {
@@ -311,6 +359,11 @@ var buildFks = function (inputArr) {
   }
   return fks;
 };
+
+var capitalize = function (string) {
+  return string[0].toUpperCase() + string.slice(1);
+}
+
 var sizeFormatter = function (basicType) {
   var insideParens = /\(([^)]+)\)/;
   var executedParse = insideParens.exec(basicType);
