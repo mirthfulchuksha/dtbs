@@ -33,9 +33,9 @@
         <span class="glyphicon glyphicon-wrench"></span>
       </a>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
-        <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
-        <li><a href="" ng-click="updateFactory('SQL')">SQL </a></li>
+        <li><a href="" ng-click="updateFactory('Mongoose')">Mongoose </a></li>
+        <li><a href="" ng-click="updateFactory('ActiveRecord')">Active Record </a></li>
+        <li><a href="" ng-click="updateFactory('Mongo')">Mongo </a></li>
       </ul>
     </form>
     <div id="editor">
@@ -45,21 +45,21 @@
   <div id="code_button">>></div>
 </div>
 
-<div ng-controller='FormController'>
+<div ng-controller='MongoController'>
   <div id='designCanvas'>
     <svg id="designer" d3-sql></svg>
     <svg id="svgout" style="display:none" xmlns="http://www.w3.org/2000/svg" snap-sql></svg>
   </div>
-  <div ng-controller="TableController" class="container">
-    <hr>
-    <div class="editButtonContainer">
-      <button ng-click="toggleMyModal()" class="btn btn-default">Create Table</button>
-      <button ng-click="toggleEditModal()" class="btn btn-default">Edit Table</button>
-      <button id='mytoggler' ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
-      <button id="savepicture" ng-click="saveSVG(view)" class="btn btn-default">Save Image</button>
-    </div>
+  <!--<div ng-controller="TableController" class="container"> -->
+  <hr>
+  <div class="editButtonContainer">
+    <button ng-click="toggleEditModal('createMongo')" class="btn btn-default">Create Schema</button>
+    <button ng-click="toggleEditModal('editMongo')" class="btn btn-default">Edit Schema</button>
+    <button id='mytoggler' ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
+    <button id="savepicture" ng-click="saveSVG(view)" class="btn btn-default">Save Image</button>
+  </div>
 
-    <tablemodal title="Table Create Form" visible="seeModal">
+<!--   <tablemodal title="Table Create Form" visible="seeModal">
       <form role="form" ng-submit="save(table.name)" name="table_{{table.id}}_form">
         <div class="form-group">
           <label for="email">Table Name</label>
@@ -69,27 +69,80 @@
       </form>
     </tablemodal>
   </div>
-  <br>
+  <br> -->>
 
-    <div ng-controller="EditController">
+   <!-- <div ng-controller="EditController"> -->
 
-      <editmodal title="Edit Table" visible="editModal">
-        <form role="form" ng-submit="editTable(currentTable)" name="tableEdit">
-          <div class="form-group">
-            <label>Choose Table to Edit:</label>
-              <select ng-model="currentTable" required>
-                <option ng-repeat="currentTable in tableStorage">{{currentTable.name}}</option>
-              </select>
-              <br>
-          <button type="submit" class="btn btn-default">Edit</button>
+  <mongoeditmodal title="Add/Edit Schema" visible="visibleEditModal">
+    <form role="form" name="schemaEdit">
 
-          <!-- <button ng-click="editTable(currentTable)">Info</button>  -->
-          </div>
-        </form>
-        <button type="submit" class="btn btn-default" class="pull-right" ng-click="editDeleteTable(currentTable)">Delete Table</button>
-      </editmodal>
+    <!--First, add div that allows user to add a new table name.  visible if $scope.typeEdit === 'createMongo' -->
+      <div class="create" ng-show="typeEdit === 'createMongo'">
+        <label>Schema Name: </label>
+        <!-- needs an ng-model name -->
+          <input type="text" placeholder="Type name..." ng-model="currentSchema.name" required/>
+      </div>
 
-      <editkeysmodal title="Edit Fields" visible="editKeysModal">
+    <!-- Next, add div that allows user to select a schema to edit. visible if $scope.typeEdit = 'editMongo' -->
+      <div class="edit" ng-show="typeEdit === 'editMongo'">
+        <label>Choose Schema to Edit:</label>
+          <select ng-model="currentSchema" ng-change="setSchema(currentSchema.name)" required>
+            <option ng-repeat="currentSchema in schemaStorage">{{currentSchema.name}}</option>
+          </select>
+        <hr>
+      </div>
+
+      <!-- Here, list of keys/values that can be deleted -->
+      <div ng-repeat="key in currentSchema.keys">
+        <label>Key: {{key}} Type: {{key.type}}</label>
+        <button "btn btn-default" ng-click="deleteKey(key, currentSchema)" class="pull-right">Delete Key</button>
+        <hr>
+      </div>
+      
+
+
+
+      <!--Here, ability to add key/value pair to the schema
+              -chose where to add the key/value pair (dropdown filled by $scope.nestedList)
+              -chose key name
+              -choose value type
+              -if value type is Mixed - object, choose if it will be nested document
+                -if nested document, add it to the list to choose from when adding keys/values  -->
+      <div class="addKey">
+        <hr>
+        <button class="btn btn-success" ng-click="addKey(currentSchema.name)">
+          <span class="glyphicon glyphicon-plus-sign"></span> Add Key
+        </button>
+      </div>
+      <hr>
+      <br>
+
+      <div ng-show="addingKey === true">
+        <label>Key Name:</label>
+          <input ng-model="keyName" placeholder="Enter key name" required/>
+
+        <label>Data Type:</label>
+          <select ng-model="keyValue" required>
+            <option>String</option>
+            <option>Number</option>
+            <option>Date</option>
+            <option>Buffer</option>
+            <option>Boolean</option>
+            <option>Mixed Object</option>
+            <option>Mixed Array</option>
+            <option>ObjectID</option>
+            <option>Array</option>
+          </select>
+        <button "btn btn-default" ng-click="saveKey(keyName, keyValue)" class="pull-right">Save Key</button>
+      </div>
+      <br>  
+
+      </form>
+    <button type="submit" class="btn btn-default" ng-click="editDone()">Done</button>
+    <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema)">Delete Schema</button>
+  </mongoeditmodal>
+
+      <!-- <editkeysmodal title="Edit Fields" visible="editKeysModal">
         <div ng-repeat="savedKey in keyEdit">
           <label>Column ID: {{savedKey.id}}</label>
           <button "btn btn-default" ng-click="deleteField(savedKey.id, currentTable)" class="pull-right">Delete Field</button>
@@ -103,7 +156,7 @@
           <hr>
         </div>
         <button class="btn btn-default" ng-click="editDone(newPrimaryKey)">Done</button>
-      </editkeysmodal>
+      </editkeysmodal> -->
 
 
     </div>
@@ -191,7 +244,7 @@
     tabSize: 2,
     useSoftTabs: true
   });
-  $(document).ready(function() {
+  //$(document).ready(function() {
     // $('select').material_select();
     // $('.modal').change(function() {
     //   $('select').material_select();
@@ -208,5 +261,5 @@
     //   $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
     //   $('#code_button').text((state ? '<<': '>>'));
     // });
-  });
+//  });
 </script>
