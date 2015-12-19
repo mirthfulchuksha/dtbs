@@ -37,12 +37,9 @@ angular.module('DTBS.main')
       var schema = schemaArray[i];
       jsonSchema.name = schema.name;
       jsonSchema.children = [];
-      console.log(jsonSchema, "json schema");
-      console.log(schema, "schema");
       for (var key in schema.keys) {
         var field = {};
         field.name = key;
-        console.log(schema.keys[key], "schema.keys[key]")
         if (schema.keys[key].type !== "Nested Document") {
           field.size = 5000;
         } else {
