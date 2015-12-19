@@ -29,29 +29,44 @@ angular.module('DTBS.main')
     };
 
     $scope.setSchema = function (schemaName) {
-      console.log(schemaName);
+      console.log("I'm setSchema and I just got called");
+      //set currentSchema to the schema selected by name 
       for (var key in $scope.schemaStorage){
-        if ($scope.schemaStorage.key["name"] === schemaName){
-          $scope.currentSchema = $scope.schemaStorage.key;
-          console.log($scope.currentSchema);
+        if ($scope.schemaStorage[key]["name"] === schemaName){
+          console.log($scope.schemaStorage[key]);
+          $scope.currentSchema = $scope.schemaStorage[key];
+          $scope.currentSchema['keys'] = $scope.schemaStorage[key]['keys'];
+          console.log($scope.currentSchema, "this is the currentSchema when editing");
         }
       }
+      $scope.showAddKey = true;
+      console.log($scope.currentSchema["keys"], "this is where i see if the keys show up");
+      //need add field button to show up here
+      //$scope.addingKey = true;
+      
     };
 
     $scope.addKey = function (name) {
-      console.log($scope.currentSchema);
-      //checked and name is coming through
-      if ($scope.currentSchema === {}){ //not sure if this works
+      console.log($scope.currentSchema.id);
+      if (!$scope.currentSchema.name){ 
         $scope.currentSchema.id = $scope.id;
         $scope.currentSchema.name = name;
       };
       $scope.addingKey = true;
+      console.log($scope.currentSchema.id);
+      console.log($scope.currentSchema);
     };
 
     $scope.saveKey = function (name, value) {
       var key = name;
-      $scope.currentSchema.keys[name] = {type: value}; 
-      console.log($scope.currentSchema.keys);
+      $scope.currentSchema['keys'][name] = {type: value}; 
+      console.log($scope.currentSchema, "this is the currentSchema when making a new schema")
+      //clear the fields of the add field form
+      var currentName = document.getElementById("name");
+      var currentType = document.getElementById("type");
+      currentName.value = '';
+      currentType.value = '';
+
       $scope.addingKey = false;
     }
 
@@ -66,13 +81,16 @@ angular.module('DTBS.main')
     };
 
     $scope.editDone = function () {
+
       $scope.toggleEditModal('none');
+      //need to make sure this is really working, right now have dups
+      // ***** need something like if there is a .keys and a name, do the line below.  Otherwise, 
+      // ******* do not set schemaStorage and DO NOT increment the id.
+      // this is making an extra dot fly around
       $scope.schemaStorage[$scope.id] = $scope.currentSchema;
-      console.log($scope.schemaStorage);
-      //SAVE SCHEMA
-      //take currentSchema that has been entered, set $scope.schemaStorage[$scope.currentID] = $scope.currentSchema
       $scope.currentSchema = {keys: {}};
-      $scope.id++
+      $scope.showAddKey = false;
+      $scope.id++;
       $scope.interactCanvas();
     };
 

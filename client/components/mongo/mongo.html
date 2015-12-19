@@ -75,14 +75,14 @@
         <hr>
       </div>
 
-      <div ng-repeat="(key, val) in currentSchema.keys">
+      <div data-ng-repeat="(key, val) in currentSchema['keys']">
         <hr>
         <label>Key: {{key}}   Type: {{val.type}}</label>
         <button "btn btn-default" ng-click="deleteKey(key, currentSchema)" class="pull-right">Delete Key</button>
         <br>
       </div>
       
-      <div class="addKey" ng-show="currentSchema.name">
+      <div class="addKey" ng-show="currentSchema.name || showAddKey === true">
         <hr>
         <button class="btn btn-success" ng-click="addKey(currentSchema.name)">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Key
@@ -93,10 +93,10 @@
 
       <div ng-show="addingKey === true">
         <label>Key Name:</label>
-          <input ng-model="keyName" placeholder="Enter key name" required/>
+          <input id="name" ng-model="keyName" placeholder="Enter key name" required/>
 
         <label>Data Type:</label>
-          <select ng-model="keyValue" required>
+          <select id="type" ng-model="keyValue" required>
             <option>String</option>
             <option>Number</option>
             <option>Date</option>
