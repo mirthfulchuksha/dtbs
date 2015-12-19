@@ -1,7 +1,7 @@
 <div class="row">
   <div class="medium-6 medium-centered large-4 large-centered columns">
     <form>
-      <div class="row column log-in-form">
+      <div class="row column log-in-form login">
         <h4 class="text-center">Sign Up</h4>
         <label>Username
           <input id="username" type="text" ng-model="user.userName" required placeholder="Mr. Cool">
@@ -15,10 +15,20 @@
         <br>
         <p><a type="submit" ng-click="signup()" class="button expanded">Signup</a></p>
         <p><a href="#/login" class="button expanded">Log In</a></p>
-        <p><a href="/auth/github" target="_blank" class="modal-action modal-close waves-effect waves-green btn-flat">Login/Signup with Github</a></p>
+        <br>
+        <p><a href="/auth/github" target="_blank" class="github">Login/Signup with Github
+          <i class="fi-social-github" style="font-size:16px"></i></a></p>
         <span ng-show="userExist">User already exists!</span>
         <span ng-show="notMatch">Passwords do not match!</span>
       </div>
     </form>
   </div>
 </div>
+
+<footer class="footer" style="bottom: 0; position: absolute; height:3em; padding-top:1em">
+  <div class="row">
+    <div class="small-12 columns">
+      <p class="copyright">Copyright Mirthful Chuksha © 2015</p>
+    </div>
+  </div>
+</footer>

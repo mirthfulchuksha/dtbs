@@ -5,9 +5,6 @@ angular.module('DTBS', [
   ])
 .config(function ($routeProvider, $httpProvider) {
   $routeProvider
-    // .when('/', {
-    //   templateUrl: './components/form/formView.html'
-    // });
   .when('/', {
     templateUrl: './components/getStarted/splash/splash.html'
   })

@@ -190,21 +190,10 @@
     useSoftTabs: true
   });
   $(document).ready(function() {
-    // $('select').material_select();
-    // $('.modal').change(function() {
-    //   $('select').material_select();
-    // });
-    // $('.modal-trigger').leanModal();
-    // $('#created').on('click', function () {
-    //   $('#createModal').closeModal();
-    // });
-    // $('#edited').on('click', function () {
-    //   $('#editModal').closeModal();
-    // });
-    // $('#code_button').on('click', function () {
-    //   var state = parseInt($('.super-wrap').css('right'), 10) > -1;
-    //   $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
-    //   $('#code_button').text((state ? '<<': '>>'));
-    // });
+    $('#code_button').on('click', function () {
+      var state = parseInt($('.super-wrap').css('right'), 10) > -1;
+      $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
+      $('#code_button').text((state ? '<<': '>>'));
+    });
   });
 </script>

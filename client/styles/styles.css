@@ -1,6 +1,11 @@
 body {
   height: 100%;
   width: 100%;
+  background: #e8e8e8 !important; /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover,  #e8e8e8 51%, #e8e8e8 51%, #afafaf 99%) !important; /* FF3.6-15 */
+  background: -webkit-radial-gradient(center, ellipse cover,  #e8e8e8 51%,#e8e8e8 51%,#afafaf 99%) !important; /* Chrome10-25,Safari5.1-6 */
+  background: radial-gradient(ellipse at center,  #e8e8e8 51%,#e8e8e8 51%,#afafaf 99%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', endColorstr='#afafaf',GradientType=1 ) !important; /* IE6-9 fallback on horizontal gradient */
 }
 
 p {
@@ -135,9 +140,226 @@ input {
   height: 50px;
 }
 
-.log-in-form {
-  border: 1px solid #cacaca;
-  padding: 10px !important;
-  border-radius: 3px;
-  margin-top: 3em;
+.parallax-background {
+  background-color: #292c2f;
+  height: 620px;
+  background-image: url('./assets/jess.jpg');
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+  background-size: cover;
+  position: fixed;
+  width: 100%;
+}
+
+.intro-text {
+  font-size: 50px;
+  color: #fff;
+  text-align: center;
+  margin-top: 15%;
+}
+.parallax-content {
+  max-width: 100%;
+  position: relative;
+  top: 500px;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+.row {
+  max-width: 1400px; }
+
+/**/
+.features {
+  text-align: center;
+}
+.blurb p {
+  padding: 0 1em 0 1em;
+  font-size: 14px;
+}
+.features hr {
+  width: 25%;
+  margin: 1rem auto;
+}
+.features .round-icon {
+  background: #ff0084; /* Old browsers */
+  background: -moz-linear-gradient(top,  #ff0084 0%, #a50060 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #ff0084 0%,#a50060 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #ff0084 0%,#a50060 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0084', endColorstr='#a50060',GradientType=0 ); /* IE6-9 */
+  border-radius: 50%;
+  display: table;
+  height: 100px;
+  margin: -61px auto 1rem;
+  width: 100px;
+  font-size: 3rem;
+}
+.features .round-icon span {
+  color: #fff;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+@media only screen and (max-width: 40em) {
+  .features .columns {
+    margin-bottom: 5rem;
+  }
+}
+
+/**/
+.getStarted {
+  margin-top: 4em;
+  font-size: 16px;
+  text-transform: uppercase;
+  text-align: center;
+}
+.getStarted a {
+  background-color: #93006c; /* Old browsers */
+  width: 150px;
+}
+.getStarted a:hover {
+  background-color: #4B0060;
+}
+
+/**/
+.team {
+  width: 100%;
+  text-align: center;
+  margin-top: 2em;
+  padding: 4em 0 4em 0;
+  background-color: #E8E8E8;
+}
+.profile {
+  text-align: left;
+  margin-bottom: 2em;
+  height: 100px;
+}
+.bio {
+  font-size: 12px;
+  float: left;
+}
+.bio a {
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4B0060;
+}
+@media only screen and (min-width: 40.063em) {
+  .footer .columns:nth-child(n+2) {
+    border-left: 1px solid #b3b3b3;
+    min-height: 175px;
+  }
+}
+.footer-links {
+  margin: 0 auto;
+  list-style-type: none;
+  text-align: left;
+  float: left;
+  padding-left:1em;
+}
+.footer-links li {
+  margin-top: 1em;
+  padding-top: 1em;
+}
+.figure {
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  border: solid #4B0060 4px;
+  overflow:hidden;
+  background-color: #4B0060;
+  float: left;
+  margin-top: -.2em;
+  margin-right: .3em;
+}
+
+.footer {
+  background-color: #292c2f;
+  text-align: center;
+  font-size: 1.2rem;
+  height:5em;
+  padding-top: 1em;
+  width: 100%;
+  text-transform: uppercase;
+}
+.footer p.copyright {
+  color: #8f9296;
+  font-size: 0.5em;
+  margin: 0;
+}
+.footer .links a {
+  font-size: .8em;
+  list-style: none;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 3rem 0 2rem;
+  margin: 0;
+}
+
+/**/
+.github {
+  color: #93006c;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.github:hover {
+  color: #4B0060;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.profile-card, .login{
+  padding: 1rem !important;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  margin: 2rem 0;
+  background-color: #fff;
+  font-size: 12px;
+}
+.profile-card img {
+  width: 8rem;
+  display: block;
+  margin: 2rem auto;
+  text-align: center;
+  border-radius: 50%;
+  box-shadow: 2px 2px 5px #888888;
+}
+.profile-card .profile-info {
+  padding: 1rem;
+}
+.profile-card .profile-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 0;
+  color: #4B0060;
+  text-align: center;
+  text-transform: uppercase;
+}
+.profile-card .profile-info p {
+  text-align: center;
+}
+.profile-card .profile-info .inline-list {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.profile-card .profile-info .inline-list li {
+  float: none;
+  display: inline-block;
+}
+.profile-card .profile-info .inline-list i.fi-social-github {
+  font-size: 1.5rem;
+  color: #333;
+}
+.profile-card .profile-info .inline-list i.fi-social-github:hover {
+  color: #4B0060;
+}
+.login {
+  margin-top: 5em;
+}
+
+.button.expanded {
+  background-color: #D10084; /* Old browsers */
+  width: 150px;
+}
+.button.expanded:hover {
+  background-color: #93006c;
 }
