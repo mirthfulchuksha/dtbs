@@ -25,13 +25,13 @@ angular.module('DTBS.main')
         $scope.typeEdit = value;
       }
       $scope.visibleEditModal = !$scope.visibleEditModal;
-      console.log($scope.currentSchema);
 
     };
 
     $scope.setSchema = function (schemaName) {
+      console.log(schemaName);
       for (var key in $scope.schemaStorage){
-        if ($scope.schemaStorage.key["id"] === schemaName){
+        if ($scope.schemaStorage.key["name"] === schemaName){
           $scope.currentSchema = $scope.schemaStorage.key;
           console.log($scope.currentSchema);
         }
@@ -75,8 +75,6 @@ angular.module('DTBS.main')
       $scope.id++
       $scope.interactCanvas();
     };
-
-
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.

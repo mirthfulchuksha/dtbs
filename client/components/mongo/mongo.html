@@ -69,8 +69,8 @@
 
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
-          <select ng-model="currentSchema" ng-change="setSchema(currentSchema.name)" required>
-            <option ng-repeat="currentSchema in schemaStorage">{{currentSchema.name}}</option>
+          <select ng-model="currentSchema" ng-change="setSchema(currentSchema)" required>
+            <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
         <hr>
       </div>
