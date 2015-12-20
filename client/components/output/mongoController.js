@@ -25,58 +25,85 @@ angular.module('DTBS.main')
         $scope.typeEdit = value;
       }
       $scope.visibleEditModal = !$scope.visibleEditModal;
-      console.log($scope.currentSchema);
 
     };
 
     $scope.setSchema = function (schemaName) {
+
+      //set currentSchema to the schema selected by name 
+      // **********  keys are not showing up in the editing area
       for (var key in $scope.schemaStorage){
-        if ($scope.schemaStorage.key["id"] === schemaName){
-          $scope.currentSchema = $scope.schemaStorage.key;
-          console.log($scope.currentSchema);
+        if ($scope.schemaStorage[key]["name"] === schemaName){
+          $scope.currentSchema = $scope.schemaStorage[key];
         }
       }
+      $scope.showAddKey = true;
+
     };
 
     $scope.addKey = function (name) {
-      console.log($scope.currentSchema);
-      //checked and name is coming through
-      if ($scope.currentSchema === {}){ //not sure if this works
-        $scope.currentSchema.id = $scope.id;
+
+      if (!$scope.currentSchema[name]){ 
+        $scope.currentSchema['id'] = $scope.id;  //**this is causing th issue
         $scope.currentSchema.name = name;
       };
       $scope.addingKey = true;
+
     };
 
     $scope.saveKey = function (name, value) {
       var key = name;
-      $scope.currentSchema.keys[name] = {type: value}; 
-      console.log($scope.currentSchema.keys);
+      $scope.currentSchema['keys'][name] = {type: value}; 
+      console.log($scope.currentSchema, "this is the currentSchema when making a new schema")
+      //clear the fields of the add field form
+      var currentName = document.getElementById("name");
+      var currentType = document.getElementById("type");
+      currentName.value = '';
+      currentType.value = '';
+
       $scope.addingKey = false;
     }
 
-    $scope.deleteKey = function () {
-      //reach into $scope.currentSchema, find the selected key, delete it
+    $scope.deleteKey = function (keyName, schema) {
+
+      delete $scope.currentSchema['keys'][keyName];
+      console.log($scope.currentSchema, "this is the currentSchema after a key is deleted");
 
     };
   
     $scope.deleteSchema = function (schema) {
       //delete schema from schemaStorage and clear $scope.schemaStorage
+      var id = $scope.currentSchema['id'];
+      if ($scope.schemaStorage[id]){
+        delete $scope.schemaStorage[id];
+      }
+      console.log($scope.schemaStorage);
+
+      $scope.currentSchema = {keys: {}};
+      var newName = document.getElementById("newName");
+      newName.value = '';
+      $scope.showAddKey = false;
+      $scope.toggleEditModal('none');
+      $scope.interactCanvas();
 
     };
 
     $scope.editDone = function () {
+
       $scope.toggleEditModal('none');
-      $scope.schemaStorage[$scope.id] = $scope.currentSchema;
-      console.log($scope.schemaStorage);
-      //SAVE SCHEMA
-      //take currentSchema that has been entered, set $scope.schemaStorage[$scope.currentID] = $scope.currentSchema
+      //need to make sure this is really working, right now have dups
+      // ***** need something like if there is a .keys and a name, do the line below.  Otherwise, 
+      // ******* do not set schemaStorage and DO NOT increment the id.
+      // this is making an extra dot fly around
+      if ($scope.currentSchema['name']){
+        $scope.schemaStorage[$scope.id] = $scope.currentSchema;
+        console.log($scope.schemaStorage);
+        $scope.id++;
+      }
       $scope.currentSchema = {keys: {}};
-      $scope.id++
+      $scope.showAddKey = false;
       $scope.interactCanvas();
     };
-
-
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.

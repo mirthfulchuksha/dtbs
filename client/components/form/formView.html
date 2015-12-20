@@ -78,13 +78,13 @@
               <option>Bit</option>
             </select>
 
-          <label ng-if="keys[$index].basicType">  Type</label>
+          <label ng-if="keys[$index].basicType" required>  Type</label>
             <select ng-model="keys[$index].type" ng-if="keys[$index].basicType" required>
               <option ng-repeat="option in options[keys[$index].basicType]">{{option.name}}</option>
             </select>
             <br><br>
 
-          <label ng-if="keys[$index].basicType">Size</label>
+          <label ng-if="keys[$index].basicType" required>Size</label>
             <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
 
           <label ng-if="attributes[keys[$index].type]">Attributes</label>
