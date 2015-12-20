@@ -99,8 +99,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
