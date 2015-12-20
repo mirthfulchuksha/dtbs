@@ -101,6 +101,7 @@ input {
   padding: 5px;
 }
 
+/*d3 Force Layout Styles ===========================*/
 .link {
   stroke: #ccc;
 }
@@ -110,6 +111,7 @@ input {
   font: 10px sans-serif;
 }
 
+/*Dendrogram Styles ===========================*/
 .dendronode circle {
   fill: teal;
   stroke: steelblue;
@@ -130,6 +132,24 @@ input {
   fill: black;
   font: 10px sans-serif;
 }
+
+/*Tree Layout Styles ===========================*/
+.treelabel {
+  font: 8px sans-serif;
+}
+/*.treenode {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.treenode {
+    font: 10px sans-serif;
+}
+.treelink {
+    fill: none;
+    stroke: #ff8888;
+    stroke-width: 1.5px;
+}*/
 
 #code_button {
   display:block;
