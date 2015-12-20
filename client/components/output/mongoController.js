@@ -85,7 +85,6 @@ angular.module('DTBS.main')
       var newName = document.getElementById("newName");
       newName.value = '';
       $scope.showAddKey = false;
-      document.getElementById('mongoedit').reset();
       $scope.toggleEditModal('none');
       $scope.interactCanvas();
 
@@ -95,12 +94,12 @@ angular.module('DTBS.main')
 
       $scope.toggleEditModal('none');
 
+      //FUCKED UP
       if ($scope.edit === true){
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
-        // ********  something happening here where things are being duplicated))))
-        //var edit = document.getElementById("editing");
-        //edit.value = '';
-      } else if ($scope.currentSchema['name'] !== undefined || $scope.currentSchema['name'] === ''){
+        var edit = document.getElementById("editing");
+        edit.value = '';
+      } else if ($scope.currentSchema['name'] !== undefined){
         $scope.schemaStorage[$scope.id] = $scope.currentSchema;
         $scope.id++;
       }
@@ -109,7 +108,6 @@ angular.module('DTBS.main')
       $scope.edit = false;  
       $scope.showAddKey = false;
       $scope.interactCanvas();
-      //document.getElementById('mongoedit').reset();
     };
 
     $scope.interactCanvas = function () {
