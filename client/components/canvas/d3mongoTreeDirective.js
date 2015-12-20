@@ -92,7 +92,11 @@ angular.module('DTBS.main')
                   }
                 })
                 .attr("stroke", function (d) {
-                  return "white";
+                  if (d.type === "Nested Document") {
+                    return color(d.index);
+                  } else {
+                    return "white";
+                  }
                 })
                 .attr("stroke-width", function (d) {
                   return 4;
