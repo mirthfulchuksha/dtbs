@@ -15,7 +15,7 @@ angular.module('DTBS.main')
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
-        scope.render = function (root, id) {
+        scope.render = function (root) {
           var tick = function () {
             link.attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
@@ -31,7 +31,7 @@ angular.module('DTBS.main')
           var force = d3.layout.force()
             .size([width, height])
             .linkDistance(function (d) {
-              // if it is of type nested document, make it longer
+              // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
                 return 120; 
               } else {
@@ -41,9 +41,9 @@ angular.module('DTBS.main')
             .charge(-300)
             .on("tick", tick);
 
-          var link = svg.selectAll(".link"+id),
-              node = svg.selectAll(".node"+id),
-              labels = svg.selectAll(".labels"+id);
+          var link = svg.selectAll(".link"),
+              node = svg.selectAll(".node"),
+              labels = svg.selectAll(".labels");
 
           var update = function () {
             var nodes = flatten(root),
@@ -62,8 +62,8 @@ angular.module('DTBS.main')
             link.exit().remove();
 
             // Enter any new links.
-            link.enter().insert("line", ".node "+id)
-                .attr("class", "link "+id)
+            link.enter().insert("line", ".node")
+                .attr("class", "link")
                 .attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
                 .attr("x2", function (d) { return d.target.x; })
@@ -75,10 +75,10 @@ angular.module('DTBS.main')
 
             // Exit any old nodes.
             node.exit().remove();
-
+          // stroke width 4, stroke width white / colored for nested
             // Enter any new nodes.
             node.enter().append("circle")
-                .attr("class", "node "+id)
+                .attr("class", "node")
                 .style("fill", function (d) {
                   return color(d.weight);
                 })
@@ -86,10 +86,16 @@ angular.module('DTBS.main')
                 .attr("cy", function (d) { return d.y; })
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
-                    return 16;
+                    return 45/2;
                   } else {
-                    return 9;
+                    return 25/2;
                   }
+                })
+                .attr("stroke", function (d) {
+                  return "white";
+                })
+                .attr("stroke-width", function (d) {
+                  return 4;
                 })
                 .on("click", click)
                 .on("dblclick", function () {
@@ -102,20 +108,20 @@ angular.module('DTBS.main')
             labels.exit().remove();
 
             labels.enter().append("text")
-                .attr("class", "label "+id)
+                .attr("class", "label")
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
                 .attr("dy", ".31em")
                 .text(function (d) { return d.name; })
-                .style("font-size", function (d) {
+                .style("font-weight", function (d) {
                   if (d.name === "Collection") {
-                      return 16;
+                      return "bold";
                   } else {
-                    return 10;
+                    return "normal";
                   }
                 });
-            }; 
+            };
           // Toggle children on click.
           var click = function (d) {
             if (!d3.event.defaultPrevented) {
@@ -179,9 +185,6 @@ angular.module('DTBS.main')
             }
           }
         };
-        var nextChar = function (c) {
-            return String.fromCharCode(c.charCodeAt(0) + 1);
-        };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
@@ -190,8 +193,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           // var id = 'a';
           // for (var i = 0; i < schemaData.length; i++) {
