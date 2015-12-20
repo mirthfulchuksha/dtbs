@@ -29,32 +29,26 @@ angular.module('DTBS.main')
     };
 
     $scope.setSchema = function (schemaName) {
-      console.log("I'm setSchema and I just got called");
+
       //set currentSchema to the schema selected by name 
+      // **********  keys are not showing up in the editing area
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
-          console.log($scope.schemaStorage[key]);
           $scope.currentSchema = $scope.schemaStorage[key];
-          $scope.currentSchema['keys'] = $scope.schemaStorage[key]['keys'];
-          console.log($scope.currentSchema, "this is the currentSchema when editing");
         }
       }
       $scope.showAddKey = true;
-      console.log($scope.currentSchema["keys"], "this is where i see if the keys show up");
-      //need add field button to show up here
-      //$scope.addingKey = true;
-      
+
     };
 
     $scope.addKey = function (name) {
-      console.log($scope.currentSchema.id);
-      if (!$scope.currentSchema.name){ 
-        $scope.currentSchema.id = $scope.id;
+
+      if (!$scope.currentSchema[name]){ 
+        $scope.currentSchema['id'] = $scope.id;  //**this is causing th issue
         $scope.currentSchema.name = name;
       };
       $scope.addingKey = true;
-      console.log($scope.currentSchema.id);
-      console.log($scope.currentSchema);
+
     };
 
     $scope.saveKey = function (name, value) {
@@ -70,13 +64,27 @@ angular.module('DTBS.main')
       $scope.addingKey = false;
     }
 
-    $scope.deleteKey = function () {
-      //reach into $scope.currentSchema, find the selected key, delete it
+    $scope.deleteKey = function (keyName, schema) {
+
+      delete $scope.currentSchema['keys'][keyName];
+      console.log($scope.currentSchema, "this is the currentSchema after a key is deleted");
 
     };
   
     $scope.deleteSchema = function (schema) {
       //delete schema from schemaStorage and clear $scope.schemaStorage
+      var id = $scope.currentSchema['id'];
+      if ($scope.schemaStorage[id]){
+        delete $scope.schemaStorage[id];
+      }
+      console.log($scope.schemaStorage);
+
+      $scope.currentSchema = {keys: {}};
+      var newName = document.getElementById("newName");
+      newName.value = '';
+      $scope.showAddKey = false;
+      $scope.toggleEditModal('none');
+      $scope.interactCanvas();
 
     };
 
@@ -87,10 +95,13 @@ angular.module('DTBS.main')
       // ***** need something like if there is a .keys and a name, do the line below.  Otherwise, 
       // ******* do not set schemaStorage and DO NOT increment the id.
       // this is making an extra dot fly around
-      $scope.schemaStorage[$scope.id] = $scope.currentSchema;
+      if ($scope.currentSchema['name']){
+        $scope.schemaStorage[$scope.id] = $scope.currentSchema;
+        console.log($scope.schemaStorage);
+        $scope.id++;
+      }
       $scope.currentSchema = {keys: {}};
       $scope.showAddKey = false;
-      $scope.id++;
       $scope.interactCanvas();
     };
 

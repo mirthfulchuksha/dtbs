@@ -64,22 +64,23 @@
 
       <div class="create" ng-show="typeEdit === 'createMongo'">
         <label>Schema Name: </label>
-          <input type="text" placeholder="Type name..." ng-model="currentSchema.name" required/>
+          <input id="newName" type="text" placeholder="Type name..." ng-model="currentSchema.name" required/>
       </div>
 
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
-          <select ng-model="currentSchema" ng-change="setSchema(currentSchema)" required>
+          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
             <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
-        <hr>
       </div>
 
-      <div data-ng-repeat="(key, val) in currentSchema['keys']">
-        <hr>
-        <label>Key: {{key}}   Type: {{val.type}}</label>
-        <button "btn btn-default" ng-click="deleteKey(key, currentSchema)" class="pull-right">Delete Key</button>
-        <br>
+      <div>
+        <div ng-repeat="(key, val) in currentSchema['keys']">
+          <hr>
+          <label>Key: {{key}}   Type: {{val.type}}</label>
+          <button "btn btn-default" ng-click="deleteKey(key, currentSchema)" class="pull-right">Delete Key</button>
+          <br>
+        </div>
       </div>
       
       <div class="addKey" ng-show="currentSchema.name || showAddKey === true">
