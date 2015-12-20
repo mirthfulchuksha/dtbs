@@ -13,6 +13,7 @@ angular.module('DTBS.main')
     $scope.id = 0;
     $scope.typeEdit = 'none'; 
     $scope.addingKey = false;
+    $scope.edit = false;
     $scope.nestedList = []; //this will store list of nested documents that keys can be added to, including top level
     $scope.view = true;
     var secondsToWaitBeforeSave = 0; //??
@@ -35,6 +36,7 @@ angular.module('DTBS.main')
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
           $scope.currentSchema = $scope.schemaStorage[key];
+          $scope.edit = true;
         }
       }
       $scope.showAddKey = true;
@@ -83,6 +85,7 @@ angular.module('DTBS.main')
       var newName = document.getElementById("newName");
       newName.value = '';
       $scope.showAddKey = false;
+      document.getElementById('mongoedit').reset();
       $scope.toggleEditModal('none');
       $scope.interactCanvas();
 
@@ -91,18 +94,22 @@ angular.module('DTBS.main')
     $scope.editDone = function () {
 
       $scope.toggleEditModal('none');
-      //need to make sure this is really working, right now have dups
-      // ***** need something like if there is a .keys and a name, do the line below.  Otherwise, 
-      // ******* do not set schemaStorage and DO NOT increment the id.
-      // this is making an extra dot fly around
-      if ($scope.currentSchema['name']){
+
+      if ($scope.edit === true){
+        $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
+        // ********  something happening here where things are being duplicated))))
+        //var edit = document.getElementById("editing");
+        //edit.value = '';
+      } else if ($scope.currentSchema['name'] !== undefined || $scope.currentSchema['name'] === ''){
         $scope.schemaStorage[$scope.id] = $scope.currentSchema;
-        console.log($scope.schemaStorage);
         $scope.id++;
       }
+
       $scope.currentSchema = {keys: {}};
+      $scope.edit = false;  
       $scope.showAddKey = false;
       $scope.interactCanvas();
+      //document.getElementById('mongoedit').reset();
     };
 
     $scope.interactCanvas = function () {

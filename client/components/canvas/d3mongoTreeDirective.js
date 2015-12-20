@@ -80,7 +80,6 @@ angular.module('DTBS.main')
             node.enter().append("circle")
                 .attr("class", "node "+id)
                 .style("fill", function (d) {
-                  console.log(d, "D");
                   return color(d.weight);
                 })
                 .attr("cx", function (d) { return d.x; })

@@ -60,7 +60,7 @@
   </div>
 
   <mongoeditmodal title="Add/Edit Schema" visible="visibleEditModal">
-    <form role="form" name="schemaEdit">
+    <form role="form" id="mongoedit">
 
       <div class="create" ng-show="typeEdit === 'createMongo'">
         <label>Schema Name: </label>
@@ -69,7 +69,8 @@
 
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
-          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
+          <select id="editing" ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
+            <option value="none"></option>
             <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
       </div>
