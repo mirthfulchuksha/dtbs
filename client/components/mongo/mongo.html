@@ -47,7 +47,7 @@
 
 <div ng-controller='MongoController'>
 
-  <div id='designCanvas'>
+  <div id='mongoDesignCanvas'>
     <svg id="tree" d3-mongo-tree></svg>
     <svg id="dendro" style="display:none" d3-mongo-dendro></svg>
   </div>
@@ -56,7 +56,7 @@
     <button ng-click="toggleEditModal('createMongo')" class="btn btn-default">Create Schema</button>
     <button ng-click="toggleEditModal('editMongo')" class="btn btn-default">Edit Schema</button>
     <button id='mytoggler' ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
-    <button id="savepicture" ng-click="saveSVG(view)" class="btn btn-default">Save Image</button>
+    <button id="savepicture" ng-click="saveSVG()" class="btn btn-default">Save Image</button>
   </div>
 
   <mongoeditmodal title="Add/Edit Schema" visible="visibleEditModal">

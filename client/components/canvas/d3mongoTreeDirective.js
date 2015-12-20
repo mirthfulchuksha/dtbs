@@ -30,22 +30,25 @@ angular.module('DTBS.main')
           };
           var force = d3.layout.force()
             .size([width, height])
-            .linkDistance(30)
-            .charge(-520)
+            .linkDistance(function (d) {
+              // if it is of type nested document, make it longer
+              if (d.target.type === "Nested Document") {
+                return 120; 
+              } else {
+                return 30;
+              }
+            })
+            .charge(-300)
             .on("tick", tick);
 
-          var link = svg.selectAll(".link "+id),
+          var link = svg.selectAll(".link"+id),
               node = svg.selectAll(".node"+id),
               labels = svg.selectAll(".labels"+id);
-
-          // Color leaf nodes orange, and packages white or blue.
-            //var color = function (d) {
-            //  return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
-          //}
 
           var update = function () {
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
+
 
             // Restart the force layout.
             force.nodes(nodes)
@@ -76,10 +79,19 @@ angular.module('DTBS.main')
             // Enter any new nodes.
             node.enter().append("circle")
                 .attr("class", "node "+id)
+                .style("fill", function (d) {
+                  console.log(d, "D");
+                  return color(d.weight);
+                })
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
-                .attr("r", function (d) { return Math.sqrt(d.size) / 10 || 4.5; })
-                .style("fill", color)
+                .attr("r", function (d) {
+                  if (d.name === "Collection") {
+                    return 16;
+                  } else {
+                    return 9;
+                  }
+                })
                 .on("click", click)
                 .on("dblclick", function () {
                   dblclick(this); })
@@ -91,22 +103,22 @@ angular.module('DTBS.main')
             labels.exit().remove();
 
             labels.enter().append("text")
-                .attr("class", "labels "+id)
+                .attr("class", "label "+id)
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
                 .attr("dy", ".31em")
                 .text(function (d) { return d.name; })
-                .style("fill-opacity", function (d) {
-                  var opacity = 1;
-                  if (d.name === "parentnode") {
-                      opacity = 0;
+                .style("font-size", function (d) {
+                  if (d.name === "Collection") {
+                      return 16;
+                  } else {
+                    return 10;
                   }
-                  return opacity;
-                })
+                });
             }; 
           // Toggle children on click.
-          var dblclick = function (d) {
+          var click = function (d) {
             if (!d3.event.defaultPrevented) {
               if (d.children) {
                 d._children = d.children;
@@ -132,12 +144,7 @@ angular.module('DTBS.main')
           };
           update();
         };
-        
-        // var click = function (node) {
-        //   var className = $(node).attr('class');
-        //   var classToSend = angular.copy(className);
-        //   d3TableClass.push(classToSend);
-        // };
+
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
@@ -184,14 +191,19 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
-          var id = 'a';
-          for (var i = 0; i < schemaData.length; i++) {
-            scope.render(schemaData[i], id);
-            id = nextChar(id);
-          }
+          // var id = 'a';
+          // for (var i = 0; i < schemaData.length; i++) {
+          //   scope.render(schemaData[i], id);
+          //   id = nextChar(id);
+          // }
+          var rootNode = {
+            "name": "Collection",
+            "children": schemaData
+          };
+          scope.render(rootNode);
         });
       });
     }};

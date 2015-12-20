@@ -67,12 +67,9 @@ angular.module('DTBS.main')
               line.line.attr({path: path});
             } else {
               var color = "#000";
-              var arrow = this.polygon([0, 10, 6, 10, 2, 0, 0, 10]).attr({ fill: 'black' }).transform('r270');
-              var circle = this.polygon().attr({fill: 'black'}).transform('r270');
-              var marker = arrow.marker(0, 0, 10, 10, 0, 5);
               return {
-                bg: bg && bg.split && this.path(path).attr({stroke: bg.split("|")[0], fill: "none", "stroke-width": bg.split("|")[1] || 3, markerEnd: marker}),
-                line: this.path(path).attr({stroke: color, fill: "none", markerEnd: marker}),
+                bg: bg && bg.split && this.path(path).attr({stroke: bg.split("|")[0], fill: "none", "stroke-width": bg.split("|")[1] || 3 }),
+                line: this.path(path).attr({stroke: color, fill: "none" }),
                 from: obj1,
                 to: obj2
               };

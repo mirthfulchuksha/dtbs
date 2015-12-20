@@ -24,7 +24,7 @@ angular.module('DTBS.main')
           var force = d3.layout.force()
             .charge(-500)
             //.linkDistance(80)
-            .linkDistance(function(d) { return  d.value/2; }) 
+            .linkDistance(function(d) { return  d.value; }) 
             .size([width, height]);
 
           var container = canvasFormat.dataBuilder(tableData, true);
@@ -36,12 +36,22 @@ angular.module('DTBS.main')
               .links(graph.links)
               .start();
 
+          force.charge(function(node) {
+            return -300;
+          });
+
           //Create all the line svgs but without locations yet
           var link = svg.selectAll(".link")
               .data(graph.links)
               .enter().append("line")
-              // .attr("stroke-width", "2")
-              .style("stroke", "black")
+              .style("stroke", "grey")
+              .style("stroke-dasharray", function (d) {
+                if (d.value === 160) {
+                  return ("3, 3")
+                } else {
+                  return;
+                }
+              })
               .attr("class", "link");
 
           var node = svg.selectAll(".node")
@@ -63,12 +73,12 @@ angular.module('DTBS.main')
                 if (d.origin) {
                   // need to give it a stroke that matches the color of its link
                   return color(d.origin);
+                } else {
+                  return "white";
                 }
               })
               .attr("stroke-width", function (d) {
-                if (d.origin) {
                   return 4;
-                }
               })
               .style("fill", function (d) {
                 return color(d.group);
@@ -95,6 +105,12 @@ angular.module('DTBS.main')
             svg.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
           });
+          var k = 0;
+          // Slows down the initial tick of the force layout
+          while ((force.alpha() > 1e-2) && (k < 150)) {
+              force.tick(),
+              k = k + 3;
+          }
         };
         
         var dblclick = function (d) {
@@ -110,7 +126,7 @@ angular.module('DTBS.main')
         });
       });
     }};
-}]);
+}]); 
 
 
 
