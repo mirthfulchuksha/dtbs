@@ -10,8 +10,6 @@
   </div>
 </nav>
 
-<!-- <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div> -->
-<!-- <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div> -->
 <div class="super-wrap">
   <div class="editor-wrapper grey" ng-controller="EditorController">
     <div class="navbar-header">
@@ -69,8 +67,7 @@
 
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
-          <select id="editing" ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
-            <option value="none"></option>
+          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required> 
             <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
       </div>
@@ -109,13 +106,13 @@
             <option>ObjectID</option>
             <option>Array</option>
           </select>
-        <button "btn btn-default" ng-click="saveKey(keyName, keyValue)" class="pull-right">Save Key</button>
+        <button "btn btn-default" ng-click="saveKey(keyName, keyValue); keyValue='0'; keyName=''" class="pull-right">Save Key</button>
       </div>
       <br>  
 
       </form>
-    <button type="submit" class="btn btn-default" ng-click="editDone()">Done</button>
-    <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema)">Delete Schema</button>
+    <button type="submit" class="btn btn-default" ng-click="editDone(); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''">Done</button>
+    <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''">Delete Schema</button>
   </mongoeditmodal>
 
 </div>
