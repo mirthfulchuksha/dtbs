@@ -42,6 +42,8 @@ angular.module('DTBS.main')
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
           $scope.currentSchema = $scope.schemaStorage[key];
+          console.log($scope.currentSchema);
+          console.log($scope.schemaStorage);
           $scope.edit = true;
           $scope.showAddKey = true;
         }
@@ -51,10 +53,12 @@ angular.module('DTBS.main')
     //When Add Key button is pressed, show the form fields for adding key/value pair.
     //If schema is new, set the selected name and current $scope.id on the currentSchema object.
     $scope.addKey = function (name) {
-
-      if (!$scope.currentSchema[name]){ 
+      console.log($scope.currentSchema['name'], "watch this when first creating and then when editing the same thing");
+      console.log($scope.id);  //need to increment scope being ++ here, or maybe implement a switch like, kkkkkkl
+      if (!$scope.currentSchema['name']){ 
         $scope.currentSchema['id'] = $scope.id; 
-        $scope.currentSchema.name = name;
+        $scope.currentSchema['name'] = name;
+        console.log($scope.currentSchema['name']);
       };
       $scope.addingKey = true;
     };
@@ -63,12 +67,6 @@ angular.module('DTBS.main')
     $scope.saveKey = function (name, value) {
 
       $scope.currentSchema['keys'][name] = {type: value}; 
-
-      //Clear the fields of the add field form
-      // var currentName = document.getElementById("name");
-      // var currentType = document.getElementById("type");
-      // currentName.value = '';
-      // currentType.value = '';
 
       $scope.addingKey = false;
     }
@@ -89,11 +87,6 @@ angular.module('DTBS.main')
 
       $scope.currentSchema = {keys: {}};
 
-      // var newName = document.getElementById("newName");
-      // var currentName = document.getElementById("name");
-      // newName.value = '';
-      // currentName.value = '';
-
       $scope.edit = false;
       $scope.showAddKey = false;
       $scope.toggleEditModal('none');
@@ -108,8 +101,7 @@ angular.module('DTBS.main')
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
 
       } else if ($scope.currentSchema.id !== undefined) {
-        $scope.schemaStorage[$scope.id] = $scope.currentSchema;
-        $scope.id++;
+        $scope.schemaStorage[$scope.id] = $scope.currentSchema; //this is part of the prob because at this point the scope is incremented.
       }
 
       $scope.toggleEditModal('none');
@@ -117,6 +109,8 @@ angular.module('DTBS.main')
       $scope.edit = false;  
       $scope.showAddKey = false;
       $scope.interactCanvas();
+
+      console.log($scope.schemaStorage);
     };
 
     $scope.interactCanvas = function () {

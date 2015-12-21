@@ -109,10 +109,12 @@
         <button "btn btn-default" ng-click="saveKey(keyName, keyValue); keyValue='0'; keyName=''" class="pull-right">Save Key</button>
       </div>
       <br>  
-
       </form>
+
     <button type="submit" class="btn btn-default" ng-click="editDone(); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''">Done</button>
+    
     <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''">Delete Schema</button>
+
   </mongoeditmodal>
 
 </div>
