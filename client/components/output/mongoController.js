@@ -41,7 +41,6 @@ angular.module('DTBS.main')
 
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
-
           $scope.currentSchema = $scope.schemaStorage[key];
           $scope.edit = true;
           $scope.showAddKey = true;
@@ -77,18 +76,10 @@ angular.module('DTBS.main')
 
       var id = $scope.currentSchema['id']; 
       delete $scope.schemaStorage[id];
-
-      //reset currentSchema, hide form elements and modal.
-      $scope.currentSchema = {keys: {}};
-      $scope.edit = false;
-      $scope.showAddKey = false;
-      $scope.toggleEditModal('none');
-
-      //update visualization
-      $scope.interactCanvas();
+      $scope.resetAndUpdate();
     };
 
-    //If currentSchema has an id set, replace it on the storage object. If the currentSchema does not have an id, set it and add to the storage object.
+    //If currentSchema has an id set, replace it on the storage object. If the currentSchema does not have an id, set id and add to the storage object.
     $scope.editDone = function () {
 
       if ($scope.edit === true){  
@@ -100,14 +91,7 @@ angular.module('DTBS.main')
         $scope.id++;
       }
 
-      //reset currentSchema, hide form elements and modal.
-      $scope.currentSchema = {keys: {}};
-      $scope.edit = false;    
-      $scope.showAddKey = false;
-      $scope.toggleEditModal('none');
-
-      //update visualization
-      $scope.interactCanvas();
+      $scope.resetAndUpdate();
     };
 
     //reset variables, hide form elements and modal, update d3
@@ -117,6 +101,7 @@ angular.module('DTBS.main')
       $scope.currentSchema = {keys: {}};
       $scope.edit = false;    
       $scope.showAddKey = false;
+      $scope.addingKey = false;
       $scope.toggleEditModal('none');
 
       //update visualization
