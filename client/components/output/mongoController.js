@@ -41,9 +41,8 @@ angular.module('DTBS.main')
 
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
+
           $scope.currentSchema = $scope.schemaStorage[key];
-          console.log($scope.currentSchema);
-          console.log($scope.schemaStorage);
           $scope.edit = true;
           $scope.showAddKey = true;
         }
@@ -53,12 +52,9 @@ angular.module('DTBS.main')
     //When Add Key button is pressed, show the form fields for adding key/value pair.
     //If schema is new, set the selected name and current $scope.id on the currentSchema object.
     $scope.addKey = function (name) {
-      console.log($scope.currentSchema['name'], "watch this when first creating and then when editing the same thing");
-      console.log($scope.id);  //need to increment scope being ++ here, or maybe implement a switch like, kkkkkkl
+
       if (!$scope.currentSchema['name']){ 
-        $scope.currentSchema['id'] = $scope.id; 
         $scope.currentSchema['name'] = name;
-        console.log($scope.currentSchema['name']);
       };
       $scope.addingKey = true;
     };
@@ -67,7 +63,6 @@ angular.module('DTBS.main')
     $scope.saveKey = function (name, value) {
 
       $scope.currentSchema['keys'][name] = {type: value}; 
-
       $scope.addingKey = false;
     }
 
@@ -75,42 +70,57 @@ angular.module('DTBS.main')
     $scope.deleteKey = function (keyName, schema) {
 
       delete $scope.currentSchema['keys'][keyName];
-
     };
   
-    //Delete the selected schema from the storage object if present.  Hide add/editing forms.
+    //Delete the selected schema from the storage object if present.  
     $scope.deleteSchema = function (schema) {
 
-      var id = $scope.currentSchema['id'];
-   
+      var id = $scope.currentSchema['id']; 
       delete $scope.schemaStorage[id];
 
+      //reset currentSchema, hide form elements and modal.
       $scope.currentSchema = {keys: {}};
-
       $scope.edit = false;
       $scope.showAddKey = false;
       $scope.toggleEditModal('none');
-      $scope.interactCanvas();
 
+      //update visualization
+      $scope.interactCanvas();
     };
 
-    //If currentSchema has an id set, add to the storage object. If the schema already exists on the storage object, replace it.
+    //If currentSchema has an id set, replace it on the storage object. If the currentSchema does not have an id, set it and add to the storage object.
     $scope.editDone = function () {
 
-      if ($scope.edit === true){
+      if ($scope.edit === true){  
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
 
-      } else if ($scope.currentSchema.id !== undefined) {
-        $scope.schemaStorage[$scope.id] = $scope.currentSchema; //this is part of the prob because at this point the scope is incremented.
+      } else if ($scope.currentSchema['id'] === undefined) {
+        $scope.currentSchema['id'] = $scope.id;
+        $scope.schemaStorage[$scope.id] = $scope.currentSchema; 
+        $scope.id++;
       }
 
-      $scope.toggleEditModal('none');
+      //reset currentSchema, hide form elements and modal.
       $scope.currentSchema = {keys: {}};
-      $scope.edit = false;  
+      $scope.edit = false;    
       $scope.showAddKey = false;
-      $scope.interactCanvas();
+      $scope.toggleEditModal('none');
 
-      console.log($scope.schemaStorage);
+      //update visualization
+      $scope.interactCanvas();
+    };
+
+    //reset variables, hide form elements and modal, update d3
+    $scope.resetAndUpdate = function () { 
+
+      //reset currentSchema, hide form elements and modal.
+      $scope.currentSchema = {keys: {}};
+      $scope.edit = false;    
+      $scope.showAddKey = false;
+      $scope.toggleEditModal('none');
+
+      //update visualization
+      $scope.interactCanvas();
     };
 
     $scope.interactCanvas = function () {
