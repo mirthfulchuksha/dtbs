@@ -65,11 +65,32 @@ angular.module('DTBS.main')
     $scope.saveKey = function (name, value, nested, location) {
 
       $scope.currentSchema['keys'][name] = {type: value};
-
+      console.log(location);
       //if type is mixed and it is a nested document, add a keys object to the key that is being saved to currentSchema
+
+      //pass in an array to a function. for each item in the array add ['keys'][argument] to $scope.currentSchema
+
+      if (location !== 'Main Document'){
+        //potentially make another function here that takes split(from below), passes it into the function, and then in a hardcoded way
+        //makes the correct path for insertion of the key/value pair
+        console.log('not!');
+      } 
+
+      }
+
+
       if (nested){
         $scope.currentSchema['keys'][name]['keys'] = {};
+        $scope.nestedDocuments.push(location + ' > ' + name);
+        //$scope.currentLocation = 
+        var split = $scope.nestedDocuments[$scope.nestedDocuments.length - 1].split(' > ');
+        console.log(split);
+        console.log(split.length);
+        console.log($scope.nestedDocuments);
       }
+      //if location != 'Main Document' then some way to nest the key and value pair
+
+      //else
       $scope.addingKey = false;
       console.log($scope.currentSchema);
     
