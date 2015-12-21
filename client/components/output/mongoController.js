@@ -15,7 +15,10 @@ angular.module('DTBS.main')
     $scope.id = 0;
 
     //Not sure about how this will be used for nested objects yet. *************************
-    //$scope.nestedList = []; 
+    $scope.currentNested = '';
+    $scope.nestedDocuments = ['Main Document']; 
+    $scope.nestedLocation = $scope.nestedDocuments[0];
+
 
     //Variables used to show/hide form fields and d3/canvas elements.
     $scope.typeEdit = 'none'; 
@@ -59,11 +62,18 @@ angular.module('DTBS.main')
     };
 
     //Save each key/value pair to the currentSchema object when save key button is pressed.
-    $scope.saveKey = function (name, value) {
+    $scope.saveKey = function (name, value, nested, location) {
 
-      $scope.currentSchema['keys'][name] = {type: value}; 
+      $scope.currentSchema['keys'][name] = {type: value};
+
+      //if type is mixed and it is a nested document, add a keys object to the key that is being saved to currentSchema
+      if (nested){
+        $scope.currentSchema['keys'][name]['keys'] = {};
+      }
       $scope.addingKey = false;
-    }
+      console.log($scope.currentSchema);
+    
+    };
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
     $scope.deleteKey = function (keyName, schema) {
