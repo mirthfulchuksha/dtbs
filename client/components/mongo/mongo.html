@@ -114,12 +114,17 @@
             <option>Array</option>
           </select>
         
-        <div ng-show="keyValue === 'Mixed'">
+        <div ng-show="keyValue === 'Mixed' && (depth[nestedLocation] == undefined || depth[nestedLocation] < 10)">
         <label>Nested document?<label>
           <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="nestedDocument"/>
         </div>
 
-        <button "btn btn-default" ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nested='Main Document'" class="pull-right">Save Key</button>
+        <div ng-show="keyValue === 'Mixed' && depth[nestedLocation] === 10">
+          <br>
+          <p>Nested documents > 10 deep not supported.</p>
+        </div>
+
+        <button "btn btn-default" ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedDocuments[0]" class="pull-right">Save Key</button>
         <br>
         <hr>
       </div>

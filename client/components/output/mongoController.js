@@ -13,16 +13,13 @@ angular.module('DTBS.main')
     $scope.currentSchema = {keys: {}}; 
     //Unique number used as key for each schema saved to $scope.schemaStorage.
     $scope.id = 0;
+    //Depth information 
+    $scope.depth = { 'Main Document': 1};
+    //Array of choices for location
+    $scope.nestedDocuments = ['Main Document'];
 
-    //Not sure about how this will be used for nested objects yet. *************************
-    //$scope.currentNested = ''; //don't know why i had this here
-
-    //have to remember to reset everything to initial values in the resetAndUpdate() function
-    //$scope.nestedLevels = {}; //this will use location as a key and then the length of the location as the value, used for turning on message that
-                              //nesting > 10 is not supported
-    $scope.nestedDocuments = ['Main Document']; 
-    $scope.nestedLocation = 'Main Document';//$scope.nestedDocuments[0]; this sets initial value of the select box
-
+    //set initial value of location select box
+    $scope.nestedLocation = 'Main Document';
 
     //Variables used to show/hide form fields and d3/canvas elements.
     $scope.typeEdit = 'none'; 
@@ -49,6 +46,11 @@ angular.module('DTBS.main')
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
           $scope.currentSchema = $scope.schemaStorage[key];
+          //add reference to location object here
+          $scope.depth = $scope.schemaStorage[key]['depth'];
+          console.log($scope.depth, 'depth once current schema is loaded up');
+          $scope.nestedDocuments = $scope.schemaStorage[key]['nestedDocuments'];
+          console.log($scope.nestedDocuments, 'nested documents array once current schema loaded up');
           $scope.edit = true;
           $scope.showAddKey = true;
         }
@@ -69,33 +71,23 @@ angular.module('DTBS.main')
     $scope.saveKey = function (name, value, nested, location) {
 
       var insertValue;
-      var currentLocation = location.split(' > ');
-      var currentDepth = currentLocation.length;
+
+      console.log($scope.depth, 'here is the depth object');
 
       if (nested){
         insertValue = {type: 'Nested Document', keys: {}};
+        var currentLocation = location.split(' > ');
+        var currentDepth = currentLocation.length;
         $scope.nestedDocuments.push(location + ' > ' + name);
+        $scope.depth[$scope.nestedDocuments[$scope.nestedDocuments.length - 1]] = currentDepth + 1;
       } else {
         insertValue = {type: value};
       }
 
+      
+      $scope.currentSchema['keys'][name] = insertValue; 
+   
 
-
-      if (location === 'Main Document'){
-        $scope.currentSchema['keys'][name] = insertValue; 
-      } else {}
-
-      // if (nested){
-      //   $scope.currentSchema['keys'][name] = {};
-      //   $scope.currentSchema['keys'][name]['keys'] = {};
-      //   console.log($scope.currentSchema['keys'][name]);
-      //   $scope.nestedDocuments.push(location + ' > ' + name);
-      //   //$scope.currentLocation = 
-      //   var split = $scope.nestedDocuments[$scope.nestedDocuments.length - 1].split(' > ');
-      //   console.log(split);
-      //   console.log(split.length);
-      //   console.log($scope.nestedDocuments);
-      // }
 
       $scope.addingKey = false;
       console.log($scope.currentSchema);
@@ -121,25 +113,32 @@ angular.module('DTBS.main')
 
       if ($scope.edit === true){  
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
+        $scope.schemaStorage[$scope.currentSchema['id']]['depth'] = $scope.depth;
+        $scope.schemaStorage[$scope.currentSchema['id']]['nestedDocuments'] = $scope.nestedDocuments;
 
       } else if ($scope.currentSchema['id'] === undefined) {
         $scope.currentSchema['id'] = $scope.id;
         $scope.schemaStorage[$scope.id] = $scope.currentSchema; 
+        $scope.schemaStorage[$scope.id]['depth'] = $scope.depth;
+        $scope.schemaStorage[$scope.id]['nestedDocuments'] = $scope.nestedDocuments;
         $scope.id++;
       }
-
+      console.log($scope.schemaStorage, 'check to see that depth and nesting are included');
       $scope.resetAndUpdate();
     };
 
     //reset variables, hide form elements and modal, update d3
     $scope.resetAndUpdate = function () { 
 
-      //reset currentSchema, hide form elements and modal.
+      //reset currentSchema, depth, and nested documents array.  Hide form elements and modal.
       $scope.currentSchema = {keys: {}};
+      $scope.depth = { 'Main Document': 1};
+      $scope.nestedDocuments = ['Main Document'];
       $scope.edit = false;    
       $scope.showAddKey = false;
       $scope.addingKey = false;
       $scope.toggleEditModal('none');
+
 
       //update visualization
       $scope.interactCanvas();
