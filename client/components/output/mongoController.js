@@ -40,17 +40,15 @@ angular.module('DTBS.main')
       $scope.visibleEditModal = !$scope.visibleEditModal;
     };
 
-    //Setting a schema during editing to the currentSchema object.
+    //Setting all relevant variables to the selected schema's information during editing.
     $scope.setSchema = function (schemaName) {
 
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
+
           $scope.currentSchema = $scope.schemaStorage[key];
-          //add reference to location object here
           $scope.depth = $scope.schemaStorage[key]['depth'];
-          console.log($scope.depth, 'depth once current schema is loaded up');
           $scope.nestedDocuments = $scope.schemaStorage[key]['nestedDocuments'];
-          console.log($scope.nestedDocuments, 'nested documents array once current schema loaded up');
           $scope.edit = true;
           $scope.showAddKey = true;
         }
@@ -67,12 +65,11 @@ angular.module('DTBS.main')
       $scope.addingKey = true;
     };
 
-    //Save each key/value pair to the currentSchema object when save key button is pressed.
+    //Save each key/value pair to the correct location in the currentSchema object when save key button is pressed.
+    //update depth and nestedDocuments
     $scope.saveKey = function (name, value, nested, location) {
 
       var insertValue;
-
-      console.log($scope.depth, 'here is the depth object');
 
       if (nested){
         insertValue = {type: 'Nested Document', keys: {}};
@@ -80,11 +77,13 @@ angular.module('DTBS.main')
         var currentDepth = currentLocation.length;
         $scope.nestedDocuments.push(location + ' > ' + name);
         $scope.depth[$scope.nestedDocuments[$scope.nestedDocuments.length - 1]] = currentDepth + 1;
+
       } else {
         insertValue = {type: value};
       }
+  
+      //Here is where we have to actually insert in the values in the different levels 
 
-      
       $scope.currentSchema['keys'][name] = insertValue; 
    
 
@@ -123,7 +122,6 @@ angular.module('DTBS.main')
         $scope.schemaStorage[$scope.id]['nestedDocuments'] = $scope.nestedDocuments;
         $scope.id++;
       }
-      console.log($scope.schemaStorage, 'check to see that depth and nesting are included');
       $scope.resetAndUpdate();
     };
 
@@ -138,7 +136,6 @@ angular.module('DTBS.main')
       $scope.showAddKey = false;
       $scope.addingKey = false;
       $scope.toggleEditModal('none');
-
 
       //update visualization
       $scope.interactCanvas();
