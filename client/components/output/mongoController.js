@@ -15,9 +15,13 @@ angular.module('DTBS.main')
     $scope.id = 0;
 
     //Not sure about how this will be used for nested objects yet. *************************
-    $scope.currentNested = '';
+    //$scope.currentNested = ''; //don't know why i had this here
+
+    //have to remember to reset everything to initial values in the resetAndUpdate() function
+    //$scope.nestedLevels = {}; //this will use location as a key and then the length of the location as the value, used for turning on message that
+                              //nesting > 10 is not supported
     $scope.nestedDocuments = ['Main Document']; 
-    $scope.nestedLocation = $scope.nestedDocuments[0];
+    $scope.nestedLocation = 'Main Document';//$scope.nestedDocuments[0]; this sets initial value of the select box
 
 
     //Variables used to show/hide form fields and d3/canvas elements.
@@ -64,33 +68,35 @@ angular.module('DTBS.main')
     //Save each key/value pair to the currentSchema object when save key button is pressed.
     $scope.saveKey = function (name, value, nested, location) {
 
-      $scope.currentSchema['keys'][name] = {type: value};
-      console.log(location);
-      //if type is mixed and it is a nested document, add a keys object to the key that is being saved to currentSchema
-
-      //pass in an array to a function. for each item in the array add ['keys'][argument] to $scope.currentSchema
-
-      if (location !== 'Main Document'){
-        //potentially make another function here that takes split(from below), passes it into the function, and then in a hardcoded way
-        //makes the correct path for insertion of the key/value pair
-        console.log('not!');
-      } 
-
-      }
-
+      var insertValue;
+      var currentLocation = location.split(' > ');
+      var currentDepth = currentLocation.length;
 
       if (nested){
-        $scope.currentSchema['keys'][name]['keys'] = {};
+        insertValue = {type: 'Nested Document', keys: {}};
         $scope.nestedDocuments.push(location + ' > ' + name);
-        //$scope.currentLocation = 
-        var split = $scope.nestedDocuments[$scope.nestedDocuments.length - 1].split(' > ');
-        console.log(split);
-        console.log(split.length);
-        console.log($scope.nestedDocuments);
+      } else {
+        insertValue = {type: value};
       }
-      //if location != 'Main Document' then some way to nest the key and value pair
 
-      //else
+
+
+      if (location === 'Main Document'){
+        $scope.currentSchema['keys'][name] = insertValue; 
+      } else {}
+
+      // if (nested){
+      //   $scope.currentSchema['keys'][name] = {};
+      //   $scope.currentSchema['keys'][name]['keys'] = {};
+      //   console.log($scope.currentSchema['keys'][name]);
+      //   $scope.nestedDocuments.push(location + ' > ' + name);
+      //   //$scope.currentLocation = 
+      //   var split = $scope.nestedDocuments[$scope.nestedDocuments.length - 1].split(' > ');
+      //   console.log(split);
+      //   console.log(split.length);
+      //   console.log($scope.nestedDocuments);
+      // }
+
       $scope.addingKey = false;
       console.log($scope.currentSchema);
     
