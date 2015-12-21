@@ -70,24 +70,43 @@ angular.module('DTBS.main')
     $scope.saveKey = function (name, value, nested, location) {
 
       var insertValue;
+      var currentLocation = location.split(' > ');
+      var currentDepth = currentLocation.length;
 
       if (nested){
+
         insertValue = {type: 'Nested Document', keys: {}};
-        var currentLocation = location.split(' > ');
-        var currentDepth = currentLocation.length;
         $scope.nestedDocuments.push(location + ' > ' + name);
         $scope.depth[$scope.nestedDocuments[$scope.nestedDocuments.length - 1]] = currentDepth + 1;
 
       } else {
         insertValue = {type: value};
       }
-  
-      //Here is where we have to actually insert in the values in the different levels 
+      console.log(currentLocation);//gives the array of values
+      console.log(currentDepth);
 
-      $scope.currentSchema['keys'][name] = insertValue; 
+      if (currentDepth === 1){
+        $scope.currentSchema['keys'][name] = insertValue; 
+      } else if (currentDepth === 2) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][name] = insertValue;
+      } else if (currentDepth === 3) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][name] = insertValue;
+      } else if (currentDepth === 4) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][name] = insertValue;
+      } else if (currentDepth === 5) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][name] = insertValue;
+      } else if (currentDepth === 6) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][name] = insertValue;
+      } else if (currentDepth === 7) { 
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][name] = insertValue;
+      } else if (currentDepth === 8) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][currentLocation[7]]['keys'][name] = insertValue;
+      } else if (currentDepth === 9) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][currentLocation[7]]['keys'][currentLocation[8]]['keys'][name] = insertValue;
+      } else if (currentDepth === 10) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][currentLocation[7]]['keys'][currentLocation[8]]['keys'][currentLocation[9]]['keys'][name] = insertValue;
+      }
    
-
-
       $scope.addingKey = false;
       console.log($scope.currentSchema);
     
@@ -96,6 +115,7 @@ angular.module('DTBS.main')
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
     $scope.deleteKey = function (keyName, schema) {
 
+      //**************** need functionality for deleting nested keys
       delete $scope.currentSchema['keys'][keyName];
     };
   
