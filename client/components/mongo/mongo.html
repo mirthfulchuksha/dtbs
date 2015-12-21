@@ -73,10 +73,10 @@
       </div>
 
       <div>
-        <div ng-repeat="(key, val) in currentSchema['keys']">
+        <div ng-repeat="(key,val) in allKeys"> <!--currentSchema['keys']"> -->
           <hr>
-          <label>Key: {{key}}   Type: {{val.type}}</label>
-          <button "btn btn-default" ng-click="deleteKey(key, currentSchema)" class="pull-right">Delete Key</button>
+          <label>Key: {{key}} Type: {{val}}</label>
+          <button "btn btn-default" ng-click="deleteKey(key, val, allKeys)" class="pull-right">Delete Key</button>
           <br>
         </div>
       </div>

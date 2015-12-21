@@ -9,17 +9,24 @@ angular.module('DTBS.main')
 
     //Object to store current collection of schemas.
     $scope.schemaStorage = {};
+
     //Object for storing schema that is being created or edited.
     $scope.currentSchema = {keys: {}}; 
+
     //Unique number used as key for each schema saved to $scope.schemaStorage.
     $scope.id = 0;
     //Depth information 
-    $scope.depth = { 'Main Document': 1};
+
+    $scope.depth = { 'Main': 1};
     //Array of choices for location
-    $scope.nestedDocuments = ['Main Document'];
+
+    $scope.nestedDocuments = ['Main'];
+
+    //Object used to track location of keys for deleting purposes
+    $scope.allKeys = {};
 
     //set initial value of location select box
-    $scope.nestedLocation = 'Main Document';
+    $scope.nestedLocation = 'Main';
 
     //Variables used to show/hide form fields and d3/canvas elements.
     $scope.typeEdit = 'none'; 
@@ -49,6 +56,7 @@ angular.module('DTBS.main')
           $scope.currentSchema = $scope.schemaStorage[key];
           $scope.depth = $scope.schemaStorage[key]['depth'];
           $scope.nestedDocuments = $scope.schemaStorage[key]['nestedDocuments'];
+          $scope.allKeys = $scope.schemaStorage[key]['allKeys'];
           $scope.edit = true;
           $scope.showAddKey = true;
         }
@@ -72,16 +80,22 @@ angular.module('DTBS.main')
       var insertValue;
       var currentLocation = location.split(' > ');
       var currentDepth = currentLocation.length;
+      // console.log(value);
+      // $scope.allKeys[name] = value + ' Location: ' + location;
+      // console.log($scope.allKeys);
+      //make one more object that holds name and location, refer to that for editing?
 
       if (nested){
 
         insertValue = {type: 'Nested Document', keys: {}};
         $scope.nestedDocuments.push(location + ' > ' + name);
         $scope.depth[$scope.nestedDocuments[$scope.nestedDocuments.length - 1]] = currentDepth + 1;
-
       } else {
         insertValue = {type: value};
       }
+
+      $scope.allKeys[name] = insertValue.type + ' Location: ' + location;
+      console.log($scope.allKeys);
       console.log(currentLocation);//gives the array of values
       console.log(currentDepth);
 
@@ -109,14 +123,15 @@ angular.module('DTBS.main')
    
       $scope.addingKey = false;
       console.log($scope.currentSchema);
-    
     };
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
     $scope.deleteKey = function (keyName, schema) {
 
       //**************** need functionality for deleting nested keys
-      delete $scope.currentSchema['keys'][keyName];
+      //use location info contained in allkeys[keyName] to find thing to delete
+      //need to remove the keyname from allKeys object
+      //delete $scope.currentSchema['keys'][keyName];
     };
   
     //Delete the selected schema from the storage object if present.  
@@ -134,15 +149,19 @@ angular.module('DTBS.main')
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
         $scope.schemaStorage[$scope.currentSchema['id']]['depth'] = $scope.depth;
         $scope.schemaStorage[$scope.currentSchema['id']]['nestedDocuments'] = $scope.nestedDocuments;
+        $scope.schemaStorage[$scope.currentSchema['id']]['allKeys'] = $scope.allKeys;
 
       } else if ($scope.currentSchema['id'] === undefined) {
         $scope.currentSchema['id'] = $scope.id;
         $scope.schemaStorage[$scope.id] = $scope.currentSchema; 
         $scope.schemaStorage[$scope.id]['depth'] = $scope.depth;
         $scope.schemaStorage[$scope.id]['nestedDocuments'] = $scope.nestedDocuments;
+        $scope.schemaStorage[$scope.id]['allKeys'] = $scope.allKeys;
         $scope.id++;
       }
       $scope.resetAndUpdate();
+
+      console.log($scope.schemaStorage);
     };
 
     //reset variables, hide form elements and modal, update d3
@@ -150,8 +169,9 @@ angular.module('DTBS.main')
 
       //reset currentSchema, depth, and nested documents array.  Hide form elements and modal.
       $scope.currentSchema = {keys: {}};
-      $scope.depth = { 'Main Document': 1};
-      $scope.nestedDocuments = ['Main Document'];
+      $scope.depth = { 'Main': 1};
+      $scope.nestedDocuments = ['Main'];
+      $scope.allKeys = {};
       $scope.edit = false;    
       $scope.showAddKey = false;
       $scope.addingKey = false;
