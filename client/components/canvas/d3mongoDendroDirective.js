@@ -22,18 +22,17 @@ angular.module('DTBS.main')
           var diagonal = d3.svg.diagonal()
                            .projection(function(d) { return [d.y, d.x]; });
 
-          svg.append("g")
-          .attr("transform", "translate(100,30)");
-
           var nodes = cluster.nodes(root),
               links = cluster.links(nodes);
             
           var linkg = svg.selectAll(".dendrolink")
               .data(cluster.links(nodes))
               .enter().append("g")
-              .attr("class", "dendrolink");
+              .attr("class", "dendrolink")
+              .attr("transform", "translate(100,30)");
           linkg.append("path")
               .attr("class", "dendrolink")
+              // .attr("transform", "translate(100,30)")
               .attr("d", diagonal);
                 
           linkg.append("text")
@@ -49,15 +48,19 @@ angular.module('DTBS.main')
               .data(nodes)
               .enter().append("g")
               .attr("class", "dendronode")
-              .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+              .attr("transform", function(d) {
+                console.log(d, "D")
+                return "translate(" + d.y + "," + d.x + ")"; });
 
           node.append("circle")
+              .attr("transform", "translate(100,30)")
               .attr("r", 5);
 
           node.append("text")
               .attr("dx", function(d) { return d.children ? -8 : 8; })
               .attr("dy", 3)
               .attr("class", "dendrolinklabel")
+              .attr("transform", "translate(100,30)")
               .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
               .text(function(d) { return d.name; });
         };
