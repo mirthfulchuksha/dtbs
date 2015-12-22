@@ -118,62 +118,60 @@ var snapFormatter = function (table) {
     FOREIGN KEY (chats_id) REFERENCES chats(id)
   );
 // function to put schemaStorage into datajson format
-// accepts a field and returns an array of that field's children
 var buildNested = function (doc, documentName) {
-  var result = [];
-  var subroutine = function (doc, documentName) {
-    // Base Case: if the type is not nested document
-    if (doc.type !== "Nested Document") {
-      var child = {};
-      child.name = documentName;
-      child.size = 5000;
-      return child;
-    } else {
-      // type is nested document, we want to 
-      var obj = {};
-      obj.name = documentName;
-      obj.children = [];
-      for (var key in doc) {
-        if (key !== "type") {
-          obj.children.push(subroutine(doc[key], key));
-        }
-      }
-      return obj;
-    }
-  };
-  result = subroutine(doc, documentName);
-  return result.children;
-};
-var treeFormatter = function (schemaStorage) {
-  var schemaArray = [];
-  var finalArray = [];
-  // Format into array of objects
-  for (var key in schemaStorage) {
-    schemaArray.push(schemaStorage[key]);
-  }
-  // Loop through each schema object in the array
-  for (var i = 0; i < schemaArray.length; i++) {
-    var jsonSchema = {};
-    var schema = schemaArray[i];
-    jsonSchema.name = schema.name;
-    jsonSchema.children = [];
-    console.log(jsonSchema, "json schema");
-    console.log(schema, "schema");
-    for (var key in schema.keys) {
-      var field = {};
-      field.name = key;
-      console.log(schema.keys[key], "schema.keys[key]")
-      if (schema.keys[key].type !== "Nested Document") {
-        field.size = 5000;
+    var result = [];
+    var subroutine = function (doc, documentName) {
+      if (doc.type !== "Nested Document") {
+        var child = {};
+        child.name = documentName;
+        child.size = 5000;
+        child.type = doc.type;
+        return child;
       } else {
-        field.children = buildNested(schema.keys[key], field.name);
+        var obj = {};
+        obj.name = documentName;
+        obj.type = doc.type;
+        obj.children = [];
+        for (var key in doc.keys) {
+          if (key !== "type") {
+            obj.children.push(subroutine(doc.keys[key], key));
+          }
+        }
+        return obj;
       }
-      jsonSchema.children.push(field);
-    } 
-    finalArray.push(jsonSchema);
-  }
-  return finalArray;
-};
+    };
+    result = subroutine(doc, documentName);
+    return result.children;
+  };
+
+  var treeFormatter = function (schemaStorage) {
+    var schemaArray = [];
+    var finalArray = [];
+    // Format into array of objects
+    for (var key in schemaStorage) {
+      schemaArray.push(schemaStorage[key]);
+    }
+    // Loop through each schema object in the array
+    for (var i = 0; i < schemaArray.length; i++) {
+      var jsonSchema = {};
+      var schema = schemaArray[i];
+      jsonSchema.name = schema.name;
+      jsonSchema.children = [];
+      for (var key in schema.keys) {
+        var field = {};
+        field.name = key;
+        field.type = schema.keys[key].type;
+        if (schema.keys[key].type !== "Nested Document") {
+          field.size = 5000;
+        } else {
+          field.children = buildNested(schema.keys[key], field.name);
+        }
+        jsonSchema.children.push(field);
+      } 
+      finalArray.push(jsonSchema);
+    }
+    return finalArray;
+  };
 
 var doc = {
   "type": "Nested Document",
@@ -280,6 +278,29 @@ var datajson1 = [{
             },
             "Share Prices": {"type": "Array"}
           }
+        }
+      };
+      var schemaStorage2 = {
+        "0": {
+          "keys": {
+            "Summary": {"type": "String"},
+            "Metadata": {
+              "type": "Nested Document",
+              "keys": {
+                "Upvotes": {"type": "Number"},
+                "Favorites": {"type": "Nested Document",
+                  "keys": {
+                    "User": {"type": "String"},
+                    "Email": {"type": "String"}
+                  }
+                }
+              }
+            },
+            "Title": {"type": "String"},
+            "Body": {"type": "String"},
+            "Date": {"type": "Date"}
+          },
+          "name": "blogSchema"
         }
       };
 

@@ -15,9 +15,9 @@ angular.module('DTBS.main')
         obj.name = documentName;
         obj.type = doc.type;
         obj.children = [];
-        for (var key in doc) {
+        for (var key in doc.keys) {
           if (key !== "type") {
-            obj.children.push(subroutine(doc[key], key));
+            obj.children.push(subroutine(doc.keys[key], key));
           }
         }
         return obj;

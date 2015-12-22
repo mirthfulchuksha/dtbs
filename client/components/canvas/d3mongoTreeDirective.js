@@ -193,11 +193,12 @@ angular.module('DTBS.main')
         };
         scope.$on('mongo:new-data', function (e, data) {
           var dataArr = [];
+          console.log(data);
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           // var id = 'a';
           // for (var i = 0; i < schemaData.length; i++) {
