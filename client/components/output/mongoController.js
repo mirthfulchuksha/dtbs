@@ -132,47 +132,47 @@ angular.module('DTBS.main')
       var location = val.split(': ');
       var locateString = location[1];
       var locateArray = locateString.split(' > ');
-      console.log(locateArray, 'this is the passed in location array'); //this also has the keys in it from index 1 to the end.
       var locateDepth = locateArray.length;
       var keyList = [];
 
-      console.log($scope.nestedDocuments, 'nestedDocuments at beginning');
       //Delete potential locations for keys to be placed by altering $scope.nestedDocuments array
-      for (var i = 1; i < $scope.nestedDocuments.length; i++) {
 
-        var savedLocationArray = $scope.nestedDocuments[i].split(' > ');
-        console.log(savedLocationArray, 'this is the saved location array');
+      //******  there is a bug in here *************
+      if (locateArray.length > 1 || $scope.nestedDocuments.length > 1){
+        for (var i = 1; i < $scope.nestedDocuments.length; i++) {
 
-        if (savedLocationArray.length >= locateArray.length){
-          console.log('right length to do something');
-          for (var j = 1; j < locateArray.length; j++){
-            if (savedLocationArray[j] !== locateArray[j]){
-              break;
-            }
-            if (j === locateArray.length - 1){
-              console.log(savedLocationArray, locateArray, 'this should show if these are the same');
-              if (savedLocationArray.length > locateArray.length){
-                //get all the keys in this length and store them so they can be deleted
-                keyList = keyList.concat(savedLocationArray.slice(locateArray.length));
-                console.log(keyList, 'here is a list of keys to delete from All Keys');
+          var savedLocationArray = $scope.nestedDocuments[i].split(' > ');
+
+          if (savedLocationArray.length >= locateArray.length){
+
+            for (var j = 1; j < locateArray.length; j++){
+              if (savedLocationArray[j] !== locateArray[j]){
+                break;
               }
-              $scope.nestedDocuments.splice(i, 1);
-              i--;
-              console.log($scope.nestedDocuments, 'nestedDocuments at end');
+              if (j === locateArray.length - 1){
+
+                //if (savedLocationArray.length > locateArray.length){
+
+                  //get all the keys in this length and store them so they can be deleted
+                  keyList = keyList.concat(savedLocationArray.slice(locateArray.length));
+
+                //}
+
+                $scope.nestedDocuments.splice(i, 1);
+                i--;
+              }
             }
           }
         }
+        //Delete references to keys nested inside of deleted key - removes key from list of keys that can be edited in the schema.
+        for (var i = 1; i < keyList.length; i++){
+          if (keyList[i] !== 'Main'){
+            delete $scope.allKeys[keyList[i]];
+          }      
+        }
+        keyList = []; 
       }
-
-     //Delete references to keys nested inside of deleted key - removes key from list of keys that can be edited in the schema.
-     console.log($scope.allKeys, 'before deleting');
-     for (var i = 1; i < keyList.length; i++){
-       if (keyList[i] !== 'Main'){
-        delete $scope.allKeys[keyList[i]];
-       }      
-     }
-     console.log($scope.allKeys, 'after deleting'); 
-
+      //******  there is a bug above ***********
 
       if (locateDepth === 1){
         delete $scope.currentSchema['keys'][key]; 
@@ -196,7 +196,7 @@ angular.module('DTBS.main')
         delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][locateArray[8]]['keys'][locateArray[9]]['keys'][key];
       }
 
-      keyList = [];
+      delete $scope.allKeys[key];
 
     };
   
