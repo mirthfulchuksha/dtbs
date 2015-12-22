@@ -126,12 +126,58 @@ angular.module('DTBS.main')
     };
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
-    $scope.deleteKey = function (keyName, schema) {
+    $scope.deleteKey = function (key, val) {
 
-      //**************** need functionality for deleting nested keys
-      //use location info contained in allkeys[keyName] to find thing to delete
-      //need to remove the keyname from allKeys object
-      //delete $scope.currentSchema['keys'][keyName];
+      //first, process val to get location information
+      var location = val.split(': ');
+      var locateString = location[1];
+      var locateArray = locateString.split(' > ');
+      var locateDepth = locateArray.length;
+      //fix nested documents
+
+      console.log($scope.allKeys);
+      //delete all keys from $scope.allKeys that are nested in the item being deleted
+      for (var item in $scope.allKeys){
+        var place = $scope.allKeys[item].split(': ');
+        console.log(place);
+        var placeString = place[1];
+        var placeArray = placeString.split(' > ');
+        console.log(placeArray);
+        console.log(locateArray);
+        if (placeArray === locateArray || placeArray.slice(0, locateDepth) === locateArray) {
+          delete $scope.allKeys[item];
+        }
+      }
+      console.log($scope.allKeys);
+      //need to remove from nestedDocuments list as well, can build a list of that as we go along with the above.
+      // for (var i = 1; i < nestedDocuments.length; i++){
+
+      // }
+
+      if (locateDepth === 1){
+        delete $scope.currentSchema['keys'][key]; 
+      } else if (locateDepth === 2) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][key];
+      } else if (locateDepth === 3) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][key];
+      } else if (locateDepth === 4) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][key];
+      } else if (locateDepth === 5) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][key];
+      } else if (locateDepth === 6) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][key];
+      } else if (locateDepth === 7) { 
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][key];
+      } else if (locateDepth === 8) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][key];
+      } else if (locateDepth === 9) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][locateArray[8]]['keys'][key];
+      } else if (locateDepth === 10) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][locateArray[8]]['keys'][locateArray[9]]['keys'][key];
+      }
+
+      delete $scope.allKeys[key];
+
     };
   
     //Delete the selected schema from the storage object if present.  
