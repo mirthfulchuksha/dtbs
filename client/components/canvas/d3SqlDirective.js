@@ -13,13 +13,28 @@ angular.module('DTBS.main')
         var svg = d3.selectAll("#designer")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
+
+        scope.random = function (min,max) {
+          return Math.floor(Math.random() * (max - min + 1) + min);
+        };
        
         scope.render = function (tableData) {
           // Global array to track table classes for deletion
           scope.schemas = [];
 
+
           // Set up the colour scale
-          var color = d3.scale.category20();
+          // var color = d3.scale.category20();
+          var colorLength = 75, colors = [];
+          var color = d3.scale.linear().domain([1,colorLength])
+                .interpolate(d3.interpolateHcl)
+                .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+
+          tableData.forEach(function (table) {
+            var tableColor = Math.floor(Math.random() * colorLength + 1);
+            colors.push(tableColor);
+          });
+
           //Set up the force layout
           var force = d3.layout.force()
             .charge(-500)
@@ -81,7 +96,7 @@ angular.module('DTBS.main')
                   return 4;
               })
               .style("fill", function (d) {
-                return color(d.group);
+                return color(colors[d.group-1]);
               });
           // append the field/table name
           node.append("text")
