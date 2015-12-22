@@ -75,7 +75,6 @@ angular.module('DTBS.main')
 
             // Exit any old nodes.
             node.exit().remove();
-          // stroke width 4, stroke width white / colored for nested
             // Enter any new nodes.
             node.enter().append("circle")
                 .attr("class", "node")
