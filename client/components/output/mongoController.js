@@ -9,16 +9,24 @@ angular.module('DTBS.main')
 
     //Object to store current collection of schemas.
     $scope.schemaStorage = {};
+
     //Object for storing schema that is being created or edited.
     $scope.currentSchema = {keys: {}}; 
+
     //Unique number used as key for each schema saved to $scope.schemaStorage.
     $scope.id = 0;
+    //Depth information 
 
-    //Not sure about how this will be used for nested objects yet. *************************
-    $scope.currentNested = '';
-    $scope.nestedDocuments = ['Main Document']; 
-    $scope.nestedLocation = $scope.nestedDocuments[0];
+    $scope.depth = { 'Main': 1};
+    //Array of choices for location
 
+    $scope.nestedDocuments = ['Main'];
+
+    //Object used to track location of keys for deleting purposes
+    $scope.allKeys = {};
+
+    //set initial value of location select box
+    $scope.nestedLocation = 'Main';
 
     //Variables used to show/hide form fields and d3/canvas elements.
     $scope.typeEdit = 'none'; 
@@ -39,12 +47,16 @@ angular.module('DTBS.main')
       $scope.visibleEditModal = !$scope.visibleEditModal;
     };
 
-    //Setting a schema during editing to the currentSchema object.
+    //Setting all relevant variables to the selected schema's information during editing.
     $scope.setSchema = function (schemaName) {
 
       for (var key in $scope.schemaStorage){
         if ($scope.schemaStorage[key]["name"] === schemaName){
+
           $scope.currentSchema = $scope.schemaStorage[key];
+          $scope.depth = $scope.schemaStorage[key]['depth'];
+          $scope.nestedDocuments = $scope.schemaStorage[key]['nestedDocuments'];
+          $scope.allKeys = $scope.schemaStorage[key]['allKeys'];
           $scope.edit = true;
           $scope.showAddKey = true;
         }
@@ -61,24 +73,131 @@ angular.module('DTBS.main')
       $scope.addingKey = true;
     };
 
-    //Save each key/value pair to the currentSchema object when save key button is pressed.
+    //Save each key/value pair to the correct location in the currentSchema object when save key button is pressed.
+    //update depth and nestedDocuments
     $scope.saveKey = function (name, value, nested, location) {
 
-      $scope.currentSchema['keys'][name] = {type: value};
+      var insertValue;
+      var currentLocation = location.split(' > ');
+      var currentDepth = currentLocation.length;
+      // console.log(value);
+      // $scope.allKeys[name] = value + ' Location: ' + location;
+      // console.log($scope.allKeys);
+      //make one more object that holds name and location, refer to that for editing?
 
-      //if type is mixed and it is a nested document, add a keys object to the key that is being saved to currentSchema
       if (nested){
-        $scope.currentSchema['keys'][name]['keys'] = {};
+
+        insertValue = {type: 'Nested Document', keys: {}};
+        $scope.nestedDocuments.push(location + ' > ' + name);
+        $scope.depth[$scope.nestedDocuments[$scope.nestedDocuments.length - 1]] = currentDepth + 1;
+      } else {
+        insertValue = {type: value};
       }
+
+      $scope.allKeys[name] = insertValue.type + ' Location: ' + location;
+      console.log($scope.allKeys);
+      console.log(currentLocation);//gives the array of values
+      console.log(currentDepth);
+
+      if (currentDepth === 1){
+        $scope.currentSchema['keys'][name] = insertValue; 
+      } else if (currentDepth === 2) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][name] = insertValue;
+      } else if (currentDepth === 3) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][name] = insertValue;
+      } else if (currentDepth === 4) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][name] = insertValue;
+      } else if (currentDepth === 5) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][name] = insertValue;
+      } else if (currentDepth === 6) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][name] = insertValue;
+      } else if (currentDepth === 7) { 
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][name] = insertValue;
+      } else if (currentDepth === 8) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][currentLocation[7]]['keys'][name] = insertValue;
+      } else if (currentDepth === 9) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][currentLocation[7]]['keys'][currentLocation[8]]['keys'][name] = insertValue;
+      } else if (currentDepth === 10) {
+        $scope.currentSchema['keys'][currentLocation[1]]['keys'][currentLocation[2]]['keys'][currentLocation[3]]['keys'][currentLocation[4]]['keys'][currentLocation[5]]['keys'][currentLocation[6]]['keys'][currentLocation[7]]['keys'][currentLocation[8]]['keys'][currentLocation[9]]['keys'][name] = insertValue;
+      }
+   
       $scope.addingKey = false;
       console.log($scope.currentSchema);
-    
     };
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
-    $scope.deleteKey = function (keyName, schema) {
+    $scope.deleteKey = function (key, val) {
 
-      delete $scope.currentSchema['keys'][keyName];
+      //first, process val to get location information
+      var location = val.split(': ');
+      var locateString = location[1];
+      var locateArray = locateString.split(' > ');
+      var locateDepth = locateArray.length;
+      var keyList = [];
+
+      //Delete potential locations for keys to be placed by altering $scope.nestedDocuments array
+
+      //******  there is a bug in here *************
+      if (locateArray.length > 1 || $scope.nestedDocuments.length > 1){
+        for (var i = 1; i < $scope.nestedDocuments.length; i++) {
+
+          var savedLocationArray = $scope.nestedDocuments[i].split(' > ');
+
+          if (savedLocationArray.length >= locateArray.length){
+
+            for (var j = 1; j < locateArray.length; j++){
+              if (savedLocationArray[j] !== locateArray[j]){
+                break;
+              }
+              if (j === locateArray.length - 1){
+
+                //if (savedLocationArray.length > locateArray.length){
+
+                  //get all the keys in this length and store them so they can be deleted
+                  keyList = keyList.concat(savedLocationArray.slice(locateArray.length));
+
+                //}
+
+                $scope.nestedDocuments.splice(i, 1);
+                i--;
+              }
+            }
+          }
+        }
+        //Delete references to keys nested inside of deleted key - removes key from list of keys that can be edited in the schema.
+        for (var i = 1; i < keyList.length; i++){
+          if (keyList[i] !== 'Main'){
+            delete $scope.allKeys[keyList[i]];
+          }      
+        }
+        keyList = []; 
+      }
+      //******  there is a bug above ***********
+
+      if (locateDepth === 1){
+        delete $scope.currentSchema['keys'][key]; 
+      } else if (locateDepth === 2) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][key];
+      } else if (locateDepth === 3) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][key];
+      } else if (locateDepth === 4) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][key];
+      } else if (locateDepth === 5) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][key];
+      } else if (locateDepth === 6) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][key];
+      } else if (locateDepth === 7) { 
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][key];
+      } else if (locateDepth === 8) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][key];
+      } else if (locateDepth === 9) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][locateArray[8]]['keys'][key];
+      } else if (locateDepth === 10) {
+        delete $scope.currentSchema['keys'][locateArray[1]]['keys'][locateArray[2]]['keys'][locateArray[3]]['keys'][locateArray[4]]['keys'][locateArray[5]]['keys'][locateArray[6]]['keys'][locateArray[7]]['keys'][locateArray[8]]['keys'][locateArray[9]]['keys'][key];
+      }
+
+      delete $scope.allKeys[key];
+
     };
   
     //Delete the selected schema from the storage object if present.  
@@ -94,21 +213,31 @@ angular.module('DTBS.main')
 
       if ($scope.edit === true){  
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
+        $scope.schemaStorage[$scope.currentSchema['id']]['depth'] = $scope.depth;
+        $scope.schemaStorage[$scope.currentSchema['id']]['nestedDocuments'] = $scope.nestedDocuments;
+        $scope.schemaStorage[$scope.currentSchema['id']]['allKeys'] = $scope.allKeys;
 
       } else if ($scope.currentSchema['id'] === undefined) {
         $scope.currentSchema['id'] = $scope.id;
         $scope.schemaStorage[$scope.id] = $scope.currentSchema; 
+        $scope.schemaStorage[$scope.id]['depth'] = $scope.depth;
+        $scope.schemaStorage[$scope.id]['nestedDocuments'] = $scope.nestedDocuments;
+        $scope.schemaStorage[$scope.id]['allKeys'] = $scope.allKeys;
         $scope.id++;
       }
-
       $scope.resetAndUpdate();
+
+      console.log($scope.schemaStorage);
     };
 
     //reset variables, hide form elements and modal, update d3
     $scope.resetAndUpdate = function () { 
 
-      //reset currentSchema, hide form elements and modal.
+      //reset currentSchema, depth, and nested documents array.  Hide form elements and modal.
       $scope.currentSchema = {keys: {}};
+      $scope.depth = { 'Main': 1};
+      $scope.nestedDocuments = ['Main'];
+      $scope.allKeys = {};
       $scope.edit = false;    
       $scope.showAddKey = false;
       $scope.addingKey = false;
