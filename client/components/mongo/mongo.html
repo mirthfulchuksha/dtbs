@@ -75,7 +75,7 @@
       <div>
         <div ng-repeat="(key,val) in allKeys"> <!--currentSchema['keys']"> -->
           <hr>
-          <label>Key: {{key}} Type: {{val}}</label>
+          <label>Key: {{key}} Type: {{val.display}}</label>
           <button "btn btn-default" ng-click="deleteKey(key, val)" class="pull-right">Delete Key</button>
           <br>
         </div>
@@ -94,7 +94,7 @@
 
         <label>Add To:</label>
           <select ng-model="nestedLocation" required>
-            <option ng-repeat="location in nestedDocuments">{{location}}</option>
+            <option ng-repeat="(key, val) in nestedDocuments">{{key}}</option>
           </select>
           <br>
           <br>
@@ -120,11 +120,11 @@
         </div>
 
         <div ng-show="keyValue === 'Mixed' && depth[nestedLocation] === 10">
-          <br>
+          <br>4
           <p>Nested documents > 10 deep not supported.</p>
         </div>
 
-        <button "btn btn-default" ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedDocuments[0]" class="pull-right">Save Key</button>
+        <button "btn btn-default" ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedLocation[0]" class="pull-right">Save Key</button>
         <br>
         <hr>
       </div>
