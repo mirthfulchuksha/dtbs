@@ -10,8 +10,6 @@
   </div>
 </nav>
 
-<!-- <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div> -->
-<!-- <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div> -->
 <div class="super-wrap">
   <div class="editor-wrapper grey" ng-controller="EditorController">
     <div class="navbar-header">
@@ -60,7 +58,7 @@
   </div>
 
   <mongoeditmodal title="Add/Edit Schema" visible="visibleEditModal">
-    <form role="form" name="schemaEdit">
+    <form role="form" id="mongoedit">
 
       <div class="create" ng-show="typeEdit === 'createMongo'">
         <label>Schema Name: </label>
@@ -69,7 +67,7 @@
 
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
-          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
+          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required> 
             <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
       </div>
@@ -93,6 +91,14 @@
       <br>
 
       <div ng-show="addingKey === true">
+
+        <label>Add To:</label>
+          <select ng-model="nestedLocation" required>
+            <option ng-repeat="location in nestedDocuments">{{location}}</option>
+          </select>
+          <br>
+          <br>
+
         <label>Key Name:</label>
           <input id="name" ng-model="keyName" placeholder="Enter key name" required/>
 
@@ -103,18 +109,27 @@
             <option>Date</option>
             <option>Buffer</option>
             <option>Boolean</option>
-            <option>Mixed Object</option>
-            <option>Mixed Array</option>
+            <option>Mixed</option>
             <option>ObjectID</option>
             <option>Array</option>
           </select>
-        <button "btn btn-default" ng-click="saveKey(keyName, keyValue)" class="pull-right">Save Key</button>
+        
+        <div ng-show="keyValue === 'Mixed'">
+        <label>Nested document?<label>
+          <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="nestedDocument"/>
+        </div>
+
+        <button "btn btn-default" ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=false; nested='Main Document'" class="pull-right">Save Key</button>
+        <br>
+        <hr>
       </div>
       <br>  
-
       </form>
-    <button type="submit" class="btn btn-default" ng-click="editDone()">Done</button>
-    <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema)">Delete Schema</button>
+
+    <button type="submit" class="btn btn-default" ng-click="editDone(); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';">Done</button>
+
+    <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''">Delete Schema</button>
+
   </mongoeditmodal>
 
 </div>

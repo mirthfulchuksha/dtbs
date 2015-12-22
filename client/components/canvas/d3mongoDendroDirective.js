@@ -106,7 +106,7 @@ angular.module('DTBS.main')
             "name": "Collection",
             "children": schemaData
           };
-          console.log(rootNode);
+          //console.log(rootNode);
           scope.render(rootNode);
         });
       });
