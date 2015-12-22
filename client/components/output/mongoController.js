@@ -74,16 +74,15 @@ angular.module('DTBS.main')
     };
 
     //Save each key/value pair to the correct location in the currentSchema object when save key button is pressed.
-    //update depth and nestedDocuments
     $scope.saveKey = function (name, value, nested, location) {
 
       var insertValue;
       var route;
       var currentLocation = location.split(' > ');
       var relatedKeys = currentLocation.slice(1);
-      console.log(relatedKeys);
       var currentDepth = currentLocation.length;
 
+      //set all required values for each key
       if (nested){
         insertValue = {type: 'Nested Document', keys: {}};
         route = location + ' > ' + name;
@@ -95,12 +94,14 @@ angular.module('DTBS.main')
         $scope.allKeys[name] = {display: insertValue.type + ' Location: ' + location, type: insertValue.type};
       }
 
+      //for all nested document parent keys, add child keys and child key locations to the allKeys[parentkey] object.  
       for (var i = 0; i < relatedKeys.length; i++) {
         $scope.allKeys[relatedKeys[i]]['childKeys'][name] = true;
         $scope.allKeys[relatedKeys[i]]['childLocations'][location] = true;
         $scope.allKeys[relatedKeys[i]]['childLocations'][route] = true;
       }
 
+      //add key/value to currentSchema object
       if (currentDepth === 1){
         $scope.currentSchema['keys'][name] = insertValue; 
       } else if (currentDepth === 2) {
@@ -136,8 +137,7 @@ angular.module('DTBS.main')
       var locateString = location[1];
       var locateArray = locateString.split(' > ');
       var locateDepth = locateArray.length;
-      console.log($scope.allKeys[key]['childKeys']);
-      
+
       //delete childKeys from allKeys
       for (var i in $scope.allKeys[key]['childKeys']) {
         delete $scope.allKeys[i];
@@ -145,81 +145,11 @@ angular.module('DTBS.main')
 
       //delete childLocations in $scope.nestedDocuments object
       for (var j in $scope.allKeys[key]['childLocations']) {
+        console.log($scope.allKeys[key]['childLocations']);
         delete $scope.nestedDocuments[j];
       }
 
-      //Delete potential locations for keys to be placed by altering $scope.nestedDocuments array
-
-      //******  there is a bug in here *************
-      // if (locateArray.length === 1 && $scope.currentSchema['keys'][key]['type'] === 'Nested Document') {
-      //   console.log('made it?');
-      //   for (var k = 1; k < $scope.nestedDocuments.length; k++) {
-      //     //need to split this up.......
-      //     if ($scope.nestedDocuments[k] === ('Main > ' + key)){
-      //       console.log($scope.nestedDocuments);
-      //       $scope.nestedDocuments.splice(k, 1);
-      //       console.log($scope.nestedDocuments);
-      //     }
-      //   }
-      // } else if (locateArray.length > 1) {
-      //   locateArrayKey = locateArray.push(key);
-      // }
-
-      // if (locateArray.length > 1){ //two to make up for adding the key to the array
-      //   var locateArrayKey = locateArray.push(key);
-      //   console.log($scope.nestedDocuments);
-
-      //   var nestedArray = $scope.nestedDocuments.split(' > ');
-      //   console.log(nestedArray);
-
-      //   for (var i = $scope.nestedDocuments.length - 1; i <= 1; i--) {
-          
-      //     for (var j = 1; i < locateArrayKey.length; j++){
-      //       if (locateArrayKey[j] !== nestedArray[j]){
-      //         break;
-      //       }
-      //       if (j === locateArrayKey.length - 1){
-      //         $scope.nestedDocuments.splice(i, 1);
-      //         console.log($scope.nestedDocuments);
-      //       }
-      //     }
-      //   }
-        // for (var i = 1; i < $scope.nestedDocuments.length; i++) {
-
-        //   var savedLocationArray = $scope.nestedDocuments[i].split(' > ');
-        //   var longestKeys = [];
-
-        //   if (savedLocationArray.length >= locateArray.length){
-
-        //     for (var j = 1; j < locateArray.length; j++){
-        //       if (savedLocationArray[j] !== locateArray[j]){
-        //         break;
-        //       }
-        //       if (j === locateArray.length - 1){
-
-        //         //if (savedLocationArray.length > locateArray.length){
-
-        //           //get all the keys in this length and store them so they can be deleted
-        //           keyList = keyList.concat(savedLocationArray.slice(locateArray.length));
-
-        //         //}
-
-        //         $scope.nestedDocuments.splice(i, 1);
-        //         i--;
-        //       }
-        //     }
-        //   }
-        // }
-        //Delete references to keys nested inside of deleted key - removes key from list of keys that can be edited in the schema.
-        // for (var i = 1; i < keyList.length; i++){
-        //   if (keyList[i] !== 'Main'){
-        //     delete $scope.allKeys[keyList[i]];
-        //   }      
-        // }
-        // keyList = []; 
-      //}
-      //******  there is a bug above ***********
-
+      //delete key in currentSchema object
       if (locateDepth === 1){
         delete $scope.currentSchema['keys'][key]; 
       } else if (locateDepth === 2) {
@@ -251,6 +181,7 @@ angular.module('DTBS.main')
 
       var id = $scope.currentSchema['id']; 
       delete $scope.schemaStorage[id];
+
       $scope.resetAndUpdate();
     };
 
@@ -282,7 +213,7 @@ angular.module('DTBS.main')
       //reset currentSchema, depth, and nested documents array.  Hide form elements and modal.
       $scope.currentSchema = {keys: {}};
       $scope.depth = { 'Main': 1};
-      $scope.nestedDocuments = ['Main'];
+      $scope.nestedDocuments = {'Main': true};
       $scope.allKeys = {};
       $scope.edit = false;    
       $scope.showAddKey = false;
