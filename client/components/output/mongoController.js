@@ -132,45 +132,79 @@ angular.module('DTBS.main')
       var location = val.split(': ');
       var locateString = location[1];
       var locateArray = locateString.split(' > ');
+      console.log(locateArray);
       var locateDepth = locateArray.length;
       var keyList = [];
 
       //Delete potential locations for keys to be placed by altering $scope.nestedDocuments array
 
       //******  there is a bug in here *************
-      if (locateArray.length > 1 || $scope.nestedDocuments.length > 1){
-        for (var i = 1; i < $scope.nestedDocuments.length; i++) {
+      if (locateArray.length === 1 && $scope.currentSchema['keys'][key]['type'] === 'Nested Document') {
+        console.log('made it?');
+        for (var k = 1; k < $scope.nestedDocuments.length; k++) {
+          //need to split this up.......
+          if ($scope.nestedDocuments[k] === ('Main > ' + key)){
+            console.log($scope.nestedDocuments);
+            $scope.nestedDocuments.splice(k, 1);
+            console.log($scope.nestedDocuments);
+          }
+        }
+      } else if (locateArray.length > 1) {
+        locateArrayKey = locateArray.push(key);
+      }
 
-          var savedLocationArray = $scope.nestedDocuments[i].split(' > ');
+      if (locateArray.length > 1){ //two to make up for adding the key to the array
+        var locateArrayKey = locateArray.push(key);
+        console.log($scope.nestedDocuments);
 
-          if (savedLocationArray.length >= locateArray.length){
+        var nestedArray = $scope.nestedDocuments.split(' > ');
+        console.log(nestedArray);
 
-            for (var j = 1; j < locateArray.length; j++){
-              if (savedLocationArray[j] !== locateArray[j]){
-                break;
-              }
-              if (j === locateArray.length - 1){
-
-                //if (savedLocationArray.length > locateArray.length){
-
-                  //get all the keys in this length and store them so they can be deleted
-                  keyList = keyList.concat(savedLocationArray.slice(locateArray.length));
-
-                //}
-
-                $scope.nestedDocuments.splice(i, 1);
-                i--;
-              }
+        for (var i = $scope.nestedDocuments.length - 1; i <= 1; i--) {
+          
+          for (var j = 1; i < locateArrayKey.length; j++){
+            if (locateArrayKey[j] !== nestedArray[j]){
+              break;
+            }
+            if (j === locateArrayKey.length - 1){
+              $scope.nestedDocuments.splice(i, 1);
+              console.log($scope.nestedDocuments);
             }
           }
         }
+        // for (var i = 1; i < $scope.nestedDocuments.length; i++) {
+
+        //   var savedLocationArray = $scope.nestedDocuments[i].split(' > ');
+        //   var longestKeys = [];
+
+        //   if (savedLocationArray.length >= locateArray.length){
+
+        //     for (var j = 1; j < locateArray.length; j++){
+        //       if (savedLocationArray[j] !== locateArray[j]){
+        //         break;
+        //       }
+        //       if (j === locateArray.length - 1){
+
+        //         //if (savedLocationArray.length > locateArray.length){
+
+        //           //get all the keys in this length and store them so they can be deleted
+        //           keyList = keyList.concat(savedLocationArray.slice(locateArray.length));
+
+        //         //}
+
+        //         $scope.nestedDocuments.splice(i, 1);
+        //         i--;
+        //       }
+        //     }
+        //   }
+        // }
         //Delete references to keys nested inside of deleted key - removes key from list of keys that can be edited in the schema.
-        for (var i = 1; i < keyList.length; i++){
-          if (keyList[i] !== 'Main'){
-            delete $scope.allKeys[keyList[i]];
-          }      
-        }
-        keyList = []; 
+        // for (var i = 1; i < keyList.length; i++){
+        //   if (keyList[i] !== 'Main'){
+        //     delete $scope.allKeys[keyList[i]];
+        //   }      
+        // }
+        // keyList = []; 
       }
       //******  there is a bug above ***********
 
