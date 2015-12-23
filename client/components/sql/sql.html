@@ -10,8 +10,6 @@
   </div>
 </nav>
 
-<!-- <div class="standardFont" ng-include="'/components/designer/designerView.html'"></div> -->
-<!-- <div class="standardFont" ng-controller="ModalCtrl" ng-include="'/shared/modal/modalView.html'"></div> -->
 <div class="super-wrap">
   <div class="editor-wrapper grey" ng-controller="EditorController">
     <div class="navbar-header">
@@ -45,14 +43,14 @@
   <div id="code_button">>></div>
 </div>
 
-<div ng-controller='FormController'>
+<div ng-controller='sqlController'>
   <div id='designCanvas'>
     <svg id="designer" d3-sql></svg>
     <svg id="svgout" style="display:none" xmlns="http://www.w3.org/2000/svg" snap-sql></svg>
   </div>
-  <div ng-controller="TableController" class="container">
+  <div class="container">
     <hr>
-    <div class="editButtonContainer">
+    <div class='container'>
       <button ng-click="toggleMyModal()" class="btn btn-default">Create Table</button>
       <button ng-click="toggleEditModal()" class="btn btn-default">Edit Table</button>
       <button ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
@@ -71,7 +69,7 @@
   </div>
   <br>
 
-    <div ng-controller="EditController">
+    <div>
 
       <editmodal title="Edit Table" visible="editModal">
         <form role="form" ng-submit="editTable(currentTable)" name="tableEdit">
@@ -110,7 +108,7 @@
 
     <keymodal title="" id="tableTitle" visible="seeKeyModal">
 
-      <div ng-controller="OutputController">
+      <div>
 
         <form name="tableForm">
           <div ng-repeat="key in keys track by $index" style="height:130px;">
