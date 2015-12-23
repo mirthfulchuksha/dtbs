@@ -1,22 +1,22 @@
 angular.module('DTBS.main')
 
-.directive('d3Sql', ['d3Service', 'canvasData', 'canvasFormat', function (d3Service, canvasData, canvasFormat) {
+.directive('d3Sql', [
+   'd3Service',
+   'canvasData',
+   'canvasFormat',
+   function (d3Service, canvasData, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
-        // Constants for the SVG
+        // Positioning constants for the layout
         var width = 1000, height = 350;
 
         // Create the SVG
-        var svg = d3.selectAll("#designer")
-        .attr("xmlns", "http://www.w3.org/2000/svg")
-        .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        var svg = d3.selectAll("#designer");
        
         scope.render = function (tableData) {
-          // Global array to track table classes for deletion
-          scope.schemas = [];
 
           // Set up the custom colour scale
           var colorLength = 75, colors = [];
@@ -28,6 +28,7 @@ angular.module('DTBS.main')
             var tableColor = Math.floor(Math.random() * colorLength + 1);
             colors.push(tableColor);
           });
+
 
           //Set up the force layout
           var force = d3.layout.force()
@@ -80,7 +81,7 @@ angular.module('DTBS.main')
               .attr("stroke", function (d) {
                 // if the node has an origin, it is a foreign key
                 if (d.origin) {
-                  // need to give it a stroke that matches the color of its link
+                  // give it a stroke that matches the color of its link
                   return color(colors[d.origin-1]);
                 } else {
                   return "white";
