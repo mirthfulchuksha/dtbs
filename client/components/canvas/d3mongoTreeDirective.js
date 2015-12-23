@@ -8,7 +8,13 @@ angular.module('DTBS.main')
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
         var width = 640, height = 350, root;
-        var color = d3.scale.category20();
+        // var color = d3.scale.category20();
+
+        // Set up the custom colour scale
+        var colorLength = 75, colors = [];
+        var color = d3.scale.linear().domain([1,colorLength])
+              .interpolate(d3.interpolateHcl)
+              .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
@@ -157,47 +163,39 @@ angular.module('DTBS.main')
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         var schemaStorage = {
-          "1": {
-            "name": "blogSchema",
+          "0": {
             "keys": {
               "Summary": {"type": "String"},
               "Metadata": {
                 "type": "Nested Document",
-                "Upvotes": {"type": "Number"},
-                "Favourites": {
-                  "type": "Nested Document",
-                  "User": {"type": "String"},
-                  "Email": {"type": "String"}
+                "keys": {
+                  "Upvotes": {"type": "Number"},
+                  "Favorites": {"type": "Nested Document",
+                    "keys": {
+                      "User": {"type": "String"},
+                      "Email": {"type": "String"}
+                    }
+                  }
                 }
               },
               "Title": {"type": "String"},
               "Body": {"type": "String"},
               "Date": {"type": "Date"}
-            }
-          },
-          "2": {
-            "name": "stockSchema",
-            "keys": {
-              "Company Code": {"type": "String"},
-              "Company Info": {
-                "type": "Nested Document",
-                "Employees": {"type": "Number"},
-                "Contact Info": {"type": "Number"}
-              },
-              "Share Prices": {"type": "Array"}
-            }
+            },
+            "name": "blogSchema"
           }
         };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('mongo:new-data', function (e, data) {
+          console.log(data);
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",

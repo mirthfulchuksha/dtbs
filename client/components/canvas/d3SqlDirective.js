@@ -23,8 +23,7 @@ angular.module('DTBS.main')
           scope.schemas = [];
 
 
-          // Set up the colour scale
-          // var color = d3.scale.category20();
+          // Set up the custom colour scale
           var colorLength = 75, colors = [];
           var color = d3.scale.linear().domain([1,colorLength])
                 .interpolate(d3.interpolateHcl)
@@ -87,7 +86,8 @@ angular.module('DTBS.main')
                 // if the node has an origin, it is a foreign key
                 if (d.origin) {
                   // need to give it a stroke that matches the color of its link
-                  return color(d.origin);
+                  return color(colors[d.origin-1]);
+                  // return color(d.origin);
                 } else {
                   return "white";
                 }
