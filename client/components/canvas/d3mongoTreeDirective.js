@@ -36,7 +36,7 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
-          for (var i = 0; i < maxHeight; i++) {
+          for (var i = 0; i <= maxHeight; i++) {
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
           }
@@ -94,8 +94,7 @@ angular.module('DTBS.main')
                 .attr("y2", function (d) { return d.target.y; });
 
             // Update the nodes…
-            node = node.data(nodes, function (d) { return d.id; })
-                       .style("fill", color);
+            node = node.data(nodes, function (d) { return d.id; });
 
             // Exit any old nodes.
             node.exit().remove();
@@ -103,8 +102,11 @@ angular.module('DTBS.main')
             node.enter().append("circle")
                 .attr("class", "node")
                 .style("fill", function (d) {
-                  console.log(d, "D");
-                  return color(colors[d.depth]);
+                  if (d.name === "Collection") {
+                    return color(8);
+                  } else {
+                    return color(colors[d.depth]);
+                  }
                   // return color(d.schemaId);
                 })
                 .attr("cx", function (d) { return d.x; })
@@ -118,7 +120,7 @@ angular.module('DTBS.main')
                 })
                 .attr("stroke", function (d) {
                   if (d.type === "Nested Document") {
-                    return "blue";
+                    return d3.rgb(color(colors[d.depth])).darker();
                   } else {
                     return "white";
                   }
@@ -284,13 +286,12 @@ angular.module('DTBS.main')
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('mongo:new-data', function (e, data) {
-          console.log(data);
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",

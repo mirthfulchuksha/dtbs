@@ -49,7 +49,6 @@ angular.module('DTBS.main')
               .enter().append("g")
               .attr("class", "dendronode")
               .attr("transform", function(d) {
-                console.log(d, "D")
                 return "translate(" + d.y + "," + d.x + ")"; });
 
           node.append("circle")
@@ -109,7 +108,6 @@ angular.module('DTBS.main')
             "name": "Collection",
             "children": schemaData
           };
-          //console.log(rootNode);
           scope.render(rootNode);
         });
       });
