@@ -112,11 +112,11 @@ input {
 }
 
 /*Dendrogram Styles ===========================*/
-.dendronode circle {
+/*.dendronode circle {
   fill: teal;
   stroke: steelblue;
   stroke-width: 1.5px;
-}
+}*/
 
 .dendronode {
   font: 16px sans-serif;

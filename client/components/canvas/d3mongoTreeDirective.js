@@ -8,14 +8,38 @@ angular.module('DTBS.main')
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
         var width = 640, height = 350, root;
-        var color = d3.scale.category20();
+
+        // Set up the custom colour scale
+        var colorLength = 75, colors = [];
+        var color = d3.scale.linear().domain([1,colorLength])
+              .interpolate(d3.interpolateHcl)
+              .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
-        scope.render = function (root, id) {
+        var maxDepth = function (root) {
+          var max = 0;
+          root.children.forEach(function (child) {
+            var counter = 0;
+            for (var level in child.levels) {
+              counter++;
+            }
+            if (counter > max) {
+              max = counter;
+            }
+          });
+          return max;
+        };
+
+        scope.render = function (root) {
+          var maxHeight = maxDepth(root);
+          for (var i = 0; i <= maxHeight; i++) {
+            var tableColor = Math.floor(Math.random() * colorLength);
+            colors.push(tableColor);
+          }
           var tick = function () {
             link.attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
@@ -31,7 +55,7 @@ angular.module('DTBS.main')
           var force = d3.layout.force()
             .size([width, height])
             .linkDistance(function (d) {
-              // if it is of type nested document, make it longer
+              // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
                 return 120; 
               } else {
@@ -41,9 +65,9 @@ angular.module('DTBS.main')
             .charge(-300)
             .on("tick", tick);
 
-          var link = svg.selectAll(".link"+id),
-              node = svg.selectAll(".node"+id),
-              labels = svg.selectAll(".labels"+id);
+          var link = svg.selectAll(".link"),
+              node = svg.selectAll(".node"),
+              labels = svg.selectAll(".labels");
 
           var update = function () {
             var nodes = flatten(root),
@@ -62,34 +86,47 @@ angular.module('DTBS.main')
             link.exit().remove();
 
             // Enter any new links.
-            link.enter().insert("line", ".node "+id)
-                .attr("class", "link "+id)
+            link.enter().insert("line", ".node")
+                .attr("class", "link")
                 .attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
             // Update the nodes…
-            node = node.data(nodes, function (d) { return d.id; })
-                       .style("fill", color);
+            node = node.data(nodes, function (d) { return d.id; });
 
             // Exit any old nodes.
             node.exit().remove();
-
             // Enter any new nodes.
             node.enter().append("circle")
-                .attr("class", "node "+id)
+                .attr("class", "node")
                 .style("fill", function (d) {
-                  return color(d.weight);
+                  if (d.name === "Collection") {
+                    return color(8);
+                  } else {
+                    return color(colors[d.depth]);
+                  }
+                  // return color(d.schemaId);
                 })
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
-                    return 16;
+                    return 45/2;
                   } else {
-                    return 9;
+                    return 25/2;
                   }
+                })
+                .attr("stroke", function (d) {
+                  if (d.type === "Nested Document") {
+                    return d3.rgb(color(colors[d.depth])).darker();
+                  } else {
+                    return "white";
+                  }
+                })
+                .attr("stroke-width", function (d) {
+                  return 4;
                 })
                 .on("click", click)
                 .on("dblclick", function () {
@@ -102,20 +139,20 @@ angular.module('DTBS.main')
             labels.exit().remove();
 
             labels.enter().append("text")
-                .attr("class", "label "+id)
+                .attr("class", "label")
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
                 .attr("dy", ".31em")
                 .text(function (d) { return d.name; })
-                .style("font-size", function (d) {
+                .style("font-weight", function (d) {
                   if (d.name === "Collection") {
-                      return 16;
+                      return "bold";
                   } else {
-                    return 10;
+                    return "normal";
                   }
                 });
-            }; 
+            };
           // Toggle children on click.
           var click = function (d) {
             if (!d3.event.defaultPrevented) {
@@ -148,39 +185,102 @@ angular.module('DTBS.main')
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         var schemaStorage = {
-          "1": {
-            "name": "blogSchema",
+          "0": {
             "keys": {
-              "Summary": {"type": "String"},
+              "Summary": {
+                "type": "String"
+              },
               "Metadata": {
                 "type": "Nested Document",
-                "Upvotes": {"type": "Number"},
-                "Favourites": {
-                  "type": "Nested Document",
-                  "User": {"type": "String"},
-                  "Email": {"type": "String"}
+                "keys": {
+                  "Upvotes": {
+                    "type": "Number"
+                  },
+                  "Favourites": {
+                    "type": "Nested Document",
+                    "keys": {
+                      "User": {
+                        "type": "String"
+                      },
+                      "Email": {
+                        "type": "String"
+                      }
+                    }
+                  }
                 }
               },
-              "Title": {"type": "String"},
-              "Body": {"type": "String"},
-              "Date": {"type": "Date"}
+              "Title": {
+                "type": "String"
+              },
+              "Body": {
+                "type": "String"
+              },
+              "Date": {
+                "type": "Date"
+              }
+            },
+            "name": "blogSchema",
+            "id": 0,
+            "depth": {
+              "Main": 1,
+              "Main > Metadata": 2,
+              "Main > Metadata > Favourites": 3
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Metadata",
+              "Main > Metadata > Favourites"
+            ],
+            "allKeys": {
+              "Summary": "String Location: Main",
+              "Metadata": "Nested Document Location: Main",
+              "Upvotes": "Number Location: Main > Metadata",
+              "Favourites": "Nested Document Location: Main > Metadata",
+              "User": "String Location: Main > Metadata > Favourites",
+              "Email": "String Location: Main > Metadata > Favourites",
+              "Title": "String Location: Main",
+              "Body": "String Location: Main",
+              "Date": "Date Location: Main"
             }
           },
-          "2": {
-            "name": "stockSchema",
+          "1": {
             "keys": {
-              "Company Code": {"type": "String"},
+              "Company Code": {
+                "type": "String"
+              },
               "Company Info": {
                 "type": "Nested Document",
-                "Employees": {"type": "Number"},
-                "Contact Info": {"type": "Number"}
+                "keys": {
+                  "Employees": {
+                    "type": "Number"
+                  },
+                  "Contact Info": {
+                    "type": "Number"
+                  }
+                }
               },
-              "Share Prices": {"type": "Array"}
+              "Share Prices": {
+                "type": "Array"
+              }
+            },
+            "name": "stockSchema",
+            "id": 1,
+            "depth": {
+              "Main": 1,
+              "Main > Company Info": 2
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Company Info"
+            ],
+            "allKeys": {
+              "Company Code": "String Location: Main",
+              "Company Info": "Nested Document Location: Main",
+              "Employees": "Number Location: Main > Company Info",
+              "Contact Info": "Number Location: Main > Company Info",
+              "Share Prices": "Array Location: Main"
             }
           }
-        };
-        var nextChar = function (c) {
-            return String.fromCharCode(c.charCodeAt(0) + 1);
         };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
@@ -193,11 +293,6 @@ angular.module('DTBS.main')
           var schemaData = treeFormat.treeFormatter(dataArr);
           // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
-          // var id = 'a';
-          // for (var i = 0; i < schemaData.length; i++) {
-          //   scope.render(schemaData[i], id);
-          //   id = nextChar(id);
-          // }
           var rootNode = {
             "name": "Collection",
             "children": schemaData

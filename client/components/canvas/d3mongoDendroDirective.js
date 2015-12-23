@@ -7,8 +7,28 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 600, height = 350, root;
+        var width = 600, height = 400, root;
         var color = d3.scale.category20();
+
+        // Set up the custom colour scale
+        var colorLength = 75, colors = [];
+        var color = d3.scale.linear().domain([1,colorLength])
+              .interpolate(d3.interpolateHcl)
+              .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+
+        var maxDepth = function (root) {
+          var max = 0;
+          root.children.forEach(function (child) {
+            var counter = 0;
+            for (var level in child.levels) {
+              counter++;
+            }
+            if (counter > max) {
+              max = counter;
+            }
+          });
+          return max;
+        };
 
         // Create the SVG
         var svg = d3.selectAll("#dendro")
@@ -16,14 +36,17 @@ angular.module('DTBS.main')
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
         scope.render = function (root) {
+          var maxHeight = maxDepth(root);
+          for (var i = 0; i <= maxHeight; i++) {
+            var tableColor = Math.floor(Math.random() * colorLength);
+            colors.push(tableColor);
+          }
+          console.log(colors, "colors")
           var cluster = d3.layout.cluster()
                           .size([height, width]);
 
           var diagonal = d3.svg.diagonal()
                            .projection(function(d) { return [d.y, d.x]; });
-
-          svg.append("g")
-          .attr("transform", "translate(100,30)");
 
           var nodes = cluster.nodes(root),
               links = cluster.links(nodes);
@@ -31,9 +54,11 @@ angular.module('DTBS.main')
           var linkg = svg.selectAll(".dendrolink")
               .data(cluster.links(nodes))
               .enter().append("g")
-              .attr("class", "dendrolink");
+              .attr("class", "dendrolink")
+              .attr("transform", "translate(100,30)");
           linkg.append("path")
               .attr("class", "dendrolink")
+              // .attr("transform", "translate(100,30)")
               .attr("d", diagonal);
                 
           linkg.append("text")
@@ -49,48 +74,134 @@ angular.module('DTBS.main')
               .data(nodes)
               .enter().append("g")
               .attr("class", "dendronode")
-              .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+              .attr("transform", function(d) {
+                return "translate(" + d.y + "," + d.x + ")"; });
 
           node.append("circle")
-              .attr("r", 5);
+              .attr("transform", "translate(100,30)")
+              .style("fill", function (d) {
+                if (d.name === "Collection") {
+                  return color(8);
+                } else {
+                  return color(colors[d.depth-1]);
+                }
+              })
+              .attr("stroke", function (d) {
+                if (d.type === "Nested Document") {
+                  return d3.rgb(color(colors[d.depth-1])).darker();
+                } else {
+                  return "white";
+                }
+              })
+              .attr("stroke-width", function (d) {
+                return 4;
+              })
+              .attr("r", 25/2);
 
           node.append("text")
-              .attr("dx", function(d) { return d.children ? -8 : 8; })
+              .attr("dx", function(d) { return d.children ? -15 : 15; })
               .attr("dy", 3)
               .attr("class", "dendrolinklabel")
+              .attr("transform", "translate(100,30)")
               .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
               .text(function(d) { return d.name; });
         };
 
         var schemaStorage = {
-          "1": {
-            "name": "blogSchema",
+          "0": {
             "keys": {
-              "Summary": {"type": "String"},
+              "Summary": {
+                "type": "String"
+              },
               "Metadata": {
                 "type": "Nested Document",
-                "Upvotes": {"type": "Number"},
-                "Favourites": {
-                  "type": "Nested Document",
-                  "User": {"type": "String"},
-                  "Email": {"type": "String"}
+                "keys": {
+                  "Upvotes": {
+                    "type": "Number"
+                  },
+                  "Favourites": {
+                    "type": "Nested Document",
+                    "keys": {
+                      "User": {
+                        "type": "String"
+                      },
+                      "Email": {
+                        "type": "String"
+                      }
+                    }
+                  }
                 }
               },
-              "Title": {"type": "String"},
-              "Body": {"type": "String"},
-              "Date": {"type": "Date"}
+              "Title": {
+                "type": "String"
+              },
+              "Body": {
+                "type": "String"
+              },
+              "Date": {
+                "type": "Date"
+              }
+            },
+            "name": "blogSchema",
+            "id": 0,
+            "depth": {
+              "Main": 1,
+              "Main > Metadata": 2,
+              "Main > Metadata > Favourites": 3
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Metadata",
+              "Main > Metadata > Favourites"
+            ],
+            "allKeys": {
+              "Summary": "String Location: Main",
+              "Metadata": "Nested Document Location: Main",
+              "Upvotes": "Number Location: Main > Metadata",
+              "Favourites": "Nested Document Location: Main > Metadata",
+              "User": "String Location: Main > Metadata > Favourites",
+              "Email": "String Location: Main > Metadata > Favourites",
+              "Title": "String Location: Main",
+              "Body": "String Location: Main",
+              "Date": "Date Location: Main"
             }
           },
-          "2": {
-            "name": "stockSchema",
+          "1": {
             "keys": {
-              "Company Code": {"type": "String"},
+              "Company Code": {
+                "type": "String"
+              },
               "Company Info": {
                 "type": "Nested Document",
-                "Employees": {"type": "Number"},
-                "Contact Info": {"type": "Number"}
+                "keys": {
+                  "Employees": {
+                    "type": "Number"
+                  },
+                  "Contact Info": {
+                    "type": "Number"
+                  }
+                }
               },
-              "Share Prices": {"type": "Array"}
+              "Share Prices": {
+                "type": "Array"
+              }
+            },
+            "name": "stockSchema",
+            "id": 1,
+            "depth": {
+              "Main": 1,
+              "Main > Company Info": 2
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Company Info"
+            ],
+            "allKeys": {
+              "Company Code": "String Location: Main",
+              "Company Info": "Nested Document Location: Main",
+              "Employees": "Number Location: Main > Company Info",
+              "Contact Info": "Number Location: Main > Company Info",
+              "Share Prices": "Array Location: Main"
             }
           }
         };
@@ -106,7 +217,6 @@ angular.module('DTBS.main')
             "name": "Collection",
             "children": schemaData
           };
-          //console.log(rootNode);
           scope.render(rootNode);
         });
       });
