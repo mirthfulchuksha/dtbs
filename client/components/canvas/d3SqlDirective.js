@@ -13,15 +13,10 @@ angular.module('DTBS.main')
         var svg = d3.selectAll("#designer")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
-
-        scope.random = function (min,max) {
-          return Math.floor(Math.random() * (max - min + 1) + min);
-        };
        
         scope.render = function (tableData) {
           // Global array to track table classes for deletion
           scope.schemas = [];
-
 
           // Set up the custom colour scale
           var colorLength = 75, colors = [];
@@ -87,7 +82,6 @@ angular.module('DTBS.main')
                 if (d.origin) {
                   // need to give it a stroke that matches the color of its link
                   return color(colors[d.origin-1]);
-                  // return color(d.origin);
                 } else {
                   return "white";
                 }

@@ -8,7 +8,6 @@ angular.module('DTBS.main')
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
         var width = 640, height = 350, root;
-        // var color = d3.scale.category20();
 
         // Set up the custom colour scale
         var colorLength = 75, colors = [];
@@ -21,7 +20,26 @@ angular.module('DTBS.main')
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 
+        var maxDepth = function (root) {
+          var max = 0;
+          root.children.forEach(function (child) {
+            var counter = 0;
+            for (var level in child.levels) {
+              counter++;
+            }
+            if (counter > max) {
+              max = counter;
+            }
+          });
+          return max;
+        };
+
         scope.render = function (root) {
+          var maxHeight = maxDepth(root);
+          for (var i = 0; i < maxHeight; i++) {
+            var tableColor = Math.floor(Math.random() * colorLength);
+            colors.push(tableColor);
+          }
           var tick = function () {
             link.attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
@@ -85,7 +103,9 @@ angular.module('DTBS.main')
             node.enter().append("circle")
                 .attr("class", "node")
                 .style("fill", function (d) {
-                  return color(d.weight);
+                  console.log(d, "D");
+                  return color(colors[d.depth]);
+                  // return color(d.schemaId);
                 })
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
@@ -98,7 +118,7 @@ angular.module('DTBS.main')
                 })
                 .attr("stroke", function (d) {
                   if (d.type === "Nested Document") {
-                    return color(d.index);
+                    return "blue";
                   } else {
                     return "white";
                   }
@@ -165,24 +185,99 @@ angular.module('DTBS.main')
         var schemaStorage = {
           "0": {
             "keys": {
-              "Summary": {"type": "String"},
+              "Summary": {
+                "type": "String"
+              },
               "Metadata": {
                 "type": "Nested Document",
                 "keys": {
-                  "Upvotes": {"type": "Number"},
-                  "Favorites": {"type": "Nested Document",
+                  "Upvotes": {
+                    "type": "Number"
+                  },
+                  "Favourites": {
+                    "type": "Nested Document",
                     "keys": {
-                      "User": {"type": "String"},
-                      "Email": {"type": "String"}
+                      "User": {
+                        "type": "String"
+                      },
+                      "Email": {
+                        "type": "String"
+                      }
                     }
                   }
                 }
               },
-              "Title": {"type": "String"},
-              "Body": {"type": "String"},
-              "Date": {"type": "Date"}
+              "Title": {
+                "type": "String"
+              },
+              "Body": {
+                "type": "String"
+              },
+              "Date": {
+                "type": "Date"
+              }
             },
-            "name": "blogSchema"
+            "name": "blogSchema",
+            "id": 0,
+            "depth": {
+              "Main": 1,
+              "Main > Metadata": 2,
+              "Main > Metadata > Favourites": 3
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Metadata",
+              "Main > Metadata > Favourites"
+            ],
+            "allKeys": {
+              "Summary": "String Location: Main",
+              "Metadata": "Nested Document Location: Main",
+              "Upvotes": "Number Location: Main > Metadata",
+              "Favourites": "Nested Document Location: Main > Metadata",
+              "User": "String Location: Main > Metadata > Favourites",
+              "Email": "String Location: Main > Metadata > Favourites",
+              "Title": "String Location: Main",
+              "Body": "String Location: Main",
+              "Date": "Date Location: Main"
+            }
+          },
+          "1": {
+            "keys": {
+              "Company Code": {
+                "type": "String"
+              },
+              "Company Info": {
+                "type": "Nested Document",
+                "keys": {
+                  "Employees": {
+                    "type": "Number"
+                  },
+                  "Contact Info": {
+                    "type": "Number"
+                  }
+                }
+              },
+              "Share Prices": {
+                "type": "Array"
+              }
+            },
+            "name": "stockSchema",
+            "id": 1,
+            "depth": {
+              "Main": 1,
+              "Main > Company Info": 2
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Company Info"
+            ],
+            "allKeys": {
+              "Company Code": "String Location: Main",
+              "Company Info": "Nested Document Location: Main",
+              "Employees": "Number Location: Main > Company Info",
+              "Contact Info": "Number Location: Main > Company Info",
+              "Share Prices": "Array Location: Main"
+            }
           }
         };
         var click = function (d) {
