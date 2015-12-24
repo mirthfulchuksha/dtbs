@@ -63,7 +63,7 @@ angular.module('DTBS.main')
                 
           linkg.append("text")
               .attr("class", "dendrolinklabel")
-              .style("stroke", "#D3D3D3")
+              .style("stroke", "black")
               .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
               .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
               .attr("text-anchor", "middle")
