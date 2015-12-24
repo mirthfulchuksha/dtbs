@@ -85,7 +85,7 @@
 
       <div class="addField" ng-show="currentTable.name || showAddField === true">
         <hr>
-        <button class="btn btn-success" ng-click="addField(currentTable.name">
+        <button class="btn btn-success" ng-click="addField(currentTable.name)">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Field
         </button>
       </div>
@@ -114,7 +114,7 @@
           </select>
 
         <label ng-if="keys[$index].type">Not Null?</label>
-          <input type="checkbox" ng-if="keys[$index}.type" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="keys[$index].default"/>
+          <input type="checkbox" ng-if="keys[$index].type" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="keys[$index].default"/>
 
         <button "btn btn-default" ng-click="saveField(keys[$index].id, keys[$index].basicType, keys[$index].size, keys[$index].attributes, keys[$index].default); keys[$index].id=''; keys[$index].basicType='0'; keys[$index].size=''" class="pull-right">Save Field</button>
         <br>
@@ -135,6 +135,7 @@
         </div>
       </div>
 
+<!-- May want to have a checkbox asking if it is the primary key, if check this then save as primary key  and do not show box again UNLESS deleted.???? -->
       <div ng-show="primaryKeyPresent !== true">
         <hr>
         <label>Choose the table's primary key (required) </label>
