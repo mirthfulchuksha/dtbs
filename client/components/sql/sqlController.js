@@ -18,12 +18,12 @@ angular.module('DTBS.main')
     //incrementing id for table creation
     $scope.id = 0;
     $scope.db = {}; //??
-    $scope.selectedTable = 0;
+    $scope.selectedTable = 0; //??
     $scope.primaryKeyPresent;
     $scope.showAddField = false;
 
     $scope.edit = false;
-    $scope.view = true;
+    $scope.view = true; //related to visualization display
     $scope.typeEdit = 'none'; 
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
@@ -167,11 +167,40 @@ angular.module('DTBS.main')
       }
     };
 
-    $scope.deleteField = function (key, val) { //may need to make a storage object for display?
+    $scope.deletePrimaryKey = function () {
 
-      //not sure how this is going to work yet, how to reach into array
+      //this will handle 
+      //  1) deleting foreign keys in other tables (using FKList obj)
+      //  2) setting the pK object to {}
+      //  3) reactivating the choose pK button, deactivating adding other
+      //     fields, regular or fK.  required.
+
+      //change values for what is visible so primary key selection shows
+      //and add field/add foreign key does not.
+
+      //  at end of editing, will clear out attrs array which will delete
+      //  the pK and replace with the new one.
 
     };
+
+    $scope.deleteField = function (columnID) {
+
+      //go into the regFields object and delete this item.
+
+      //at end of editing, will clear out attrs array and refill so this field
+      //will be deleted from the list that is displayed.
+
+    };
+
+    $scope.deleteFK = function (key) {
+      //first, look at the key.origin which gives you the # id of the pK table
+      //go to the pK table, reach into PK table object on the FK List
+      //look up the currentTable.name in this list object and delete it.
+      //then delete the FK from the fK fields object.
+
+      //at the end of editing, will clear out the attrs array and refill it which will delete the
+      //fK from the list that is displayed.
+    }
 
     $scope.addField = function (tableName) {
       //this sets the name on the current object and makes the showField button visible
@@ -182,24 +211,51 @@ angular.module('DTBS.main')
 
     };
 
+    $scope.savePrimaryKey = function (whatever is needed here) {
+
+      //this will save the info to the primary key object on the table
+      //PK will have attributes array, basic type, id(name), size, type
+      //an FK format object that will be used for any foreign keys, and
+      //an empty FKlist that gives key value pairs for all tables that
+      //reference this PK.
+
+      //also, needs to set primaryKeyPresent to TRUE
+
+    };
+
     $scope.saveField = function (one, two, three, four, five){
 
       //save regular fields here
+      //will save to the regFields object with all required info.
+
+      //will be saved to the attrs array at time editDone() is called.
 
     };
 
     $scope.addForeignKey = function() {
 
       //will use this the same as save field except save different info
+      //and will refer to the PK table for the object to save.
+      //aso need to save the key value pair onto the FK list that is on the
+      //primaryKey table.
     };
 
     $scope.editDone = function (currentTable, oldTable) {
 
+      //MUST clear out attrs array and populate with primaryKey, regKeys, 
+      //and foreign keys 
+
+      //also, need to clear all values that set the form and empty out all 
+      //$scope variables so that new table can be added or another table can be 
+      //edited.
 
     };
 
     $scope.deleteTable = function (currentTable) {
 
+      //get the id of the table, reach intot he storage object and delete it
+      //reset all variables so that new table can be added or another table can
+      //be edited.
 
     };
 
