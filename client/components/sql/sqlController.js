@@ -43,6 +43,12 @@ angular.module('DTBS.main')
         if ($scope.tableStorage[key]["name"] === tableName){
           $scope.currentTable = $scope.tableStorage[key];
           //?? more fields necessary????
+
+          //GOING TO TAKE EVERYTHING OUT OF ATTR AND PUSH INTO 2 OBJ, ONE
+          //FOR ALL FIELDS EXCEPT PRIMARY KEY, ONE FOR JUST PRIMARY KEY.
+          //THIS SHOULD ALLOW VERY CLEAR DESIGNATION OF PRIMARY KEY IN FIELDS
+          //AVAILABLE FOR DELETION AND SHOULD ALSO MAKE PRIMARY KEY FIELD POP UP
+
           $scope.edit = true; //this field tells the editDone function that it's an edit, not new
           $scope.showAddField = true;//this field shows the button to add field         
         }
@@ -56,7 +62,31 @@ angular.module('DTBS.main')
     };
 
     $scope.addField = function (tableName) {
+      //this sets the name on the current object and makes the showField button visible
+      if (!$scope.currentTable['name']) {
+        $scope.currentTable['name'] = name;
+      }
+      $scope.showAddField = true;
 
+    };
+
+    $scope.saveField = function (one, two, three, four, five){
+
+      //save regular fields here
+
+    };
+
+    $scope.addForeignKey = function() {
+
+      //will use this the same as save field except save different info
+    };
+
+    $scope.editDone = function (currentTable, oldTable) {
+
+
+    };
+
+    $scope.deleteTable = function (currentTable) {
 
 
     };
