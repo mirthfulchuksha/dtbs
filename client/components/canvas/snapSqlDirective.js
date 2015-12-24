@@ -140,6 +140,7 @@ angular.module('DTBS.main')
         }
 
         var tableWidth = function (table) {
+          // id  INT = 33.5 ... one char = 5px
           var max = 0;
           // get max length of all the fields
           table.attrs.forEach(function (field) {
@@ -149,8 +150,8 @@ angular.module('DTBS.main')
             }
           });
           // return a relative length for all the rectangles to fit
-          // return max * 7.5;
-          return Math.log(max) * 50;
+          return max;
+          // return Math.log(max) * 50;
         };
 
         scope.$on('canvas:new-data', function (e, data) {
@@ -167,16 +168,19 @@ angular.module('DTBS.main')
           };
           var dragGroups = [];
           // var baseWidth = 30;
+          
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
             var table = dataArr[i];
-            var width = tableWidth(dataArr[i]);
+            var width = tableWidth(dataArr[i]) * 8;
             var startX = randomIntFromInterval(40, 600);
             var startY = randomIntFromInterval(40, 300);
 
-            var startYText = startY+15, startXText = startX+20;
-            var tableShape = s.rect(startX, startY, width, 20);
+            var startYText = startY+15, startXText = startX+10;
             var tableText = s.text(startXText, startYText, table.name);
+            // var width = tableText.getComputedTextLength();                
+            var tableShape = s.rect(startX, startY, width, 20);
+            
             shapes.push(tableShape);
             texts.push(tableText);
             dragGroup.push(tableShape, tableText);
