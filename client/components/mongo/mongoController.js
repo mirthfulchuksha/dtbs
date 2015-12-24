@@ -125,8 +125,6 @@ angular.module('DTBS.main')
       }
    
       $scope.addingKey = false;
-      console.log($scope.currentSchema);
-      console.log($scope.allKeys);
     };
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
@@ -187,13 +185,15 @@ angular.module('DTBS.main')
 
     //If currentSchema has an id set, replace it on the storage object. If the currentSchema does not have an id, set id and add to the storage object.
     $scope.editDone = function () {
-      //something here for when name is 
-      if ($scope.edit === true){  
+
+      if ($scope.currentSchema['name'] === ''){
+        $scope.resetAndUpdate();
+        $scope.toggleEditModal('none');
+      } else if ($scope.edit === true){  
         $scope.schemaStorage[$scope.currentSchema['id']] = $scope.currentSchema;
         $scope.schemaStorage[$scope.currentSchema['id']]['depth'] = $scope.depth;
         $scope.schemaStorage[$scope.currentSchema['id']]['nestedDocuments'] = $scope.nestedDocuments;
         $scope.schemaStorage[$scope.currentSchema['id']]['allKeys'] = $scope.allKeys;
-
       } else if ($scope.currentSchema['id'] === undefined && $scope.currentSchema.name !== undefined) {
         $scope.currentSchema['id'] = $scope.id;
         $scope.schemaStorage[$scope.id] = $scope.currentSchema; 
@@ -204,7 +204,6 @@ angular.module('DTBS.main')
       }
       $scope.resetAndUpdate();
 
-      console.log($scope.schemaStorage);
     };
 
     //reset variables, hide form elements and modal, update d3
