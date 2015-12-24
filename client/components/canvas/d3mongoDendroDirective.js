@@ -7,8 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 600, height = 400, root;
-        var color = d3.scale.category20();
+        var width = 1000, height = 450, root;
 
         // Set up the custom colour scale
         var colorLength = 75, colors = [];

@@ -140,7 +140,7 @@ angular.module('DTBS.main')
         }
 
         var tableWidth = function (table) {
-          var max = 0;
+          var max = (table.name).length;
           // get max length of all the fields
           table.attrs.forEach(function (field) {
             var fieldWidth = (field.id+" "+field.type+" "+field.size+" ").length;
@@ -148,9 +148,7 @@ angular.module('DTBS.main')
               max = fieldWidth;
             }
           });
-          // return a relative length for all the rectangles to fit
           return max;
-          // return Math.log(max) * 50;
         };
 
         scope.$on('canvas:new-data', function (e, data) {

@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 640, height = 350, root;
+        var width = 1000, height = 450, root;
 
         // Set up the custom colour scale
         var colorLength = 75, colors = [];
@@ -57,9 +57,9 @@ angular.module('DTBS.main')
             .linkDistance(function (d) {
               // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
-                return 120; 
+                return 70; 
               } else {
-                return 30;
+                return 45;
               }
             })
             .charge(-300)
@@ -67,7 +67,7 @@ angular.module('DTBS.main')
 
           var link = svg.selectAll(".link"),
               node = svg.selectAll(".node"),
-              labels = svg.selectAll(".labels");
+              labels = svg.selectAll(".label");
 
           var update = function () {
             var nodes = flatten(root),
@@ -88,6 +88,7 @@ angular.module('DTBS.main')
             // Enter any new links.
             link.enter().insert("line", ".node")
                 .attr("class", "link")
+                .style("stroke", "grey")
                 .attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
                 .attr("x2", function (d) { return d.target.x; })
@@ -103,23 +104,24 @@ angular.module('DTBS.main')
                 .attr("class", "node")
                 .style("fill", function (d) {
                   if (d.name === "Collection") {
-                    return color(8);
+                    return color(1);
                   } else {
                     return color(colors[d.depth]);
                   }
-                  // return color(d.schemaId);
                 })
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
-                    return 45/2;
+                    return 5;
                   } else {
                     return 25/2;
                   }
                 })
                 .attr("stroke", function (d) {
-                  if (d.type === "Nested Document") {
+                  if (d.name === "Collection") {
+                    return color(8);
+                  } else if (d.type === "Nested Document") {
                     return d3.rgb(color(colors[d.depth])).darker();
                   } else {
                     return "white";
@@ -140,6 +142,7 @@ angular.module('DTBS.main')
 
             labels.enter().append("text")
                 .attr("class", "label")
+                .style('font-size', "12px")
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
@@ -290,8 +293,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
