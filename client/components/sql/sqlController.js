@@ -13,8 +13,9 @@ angular.module('DTBS.main')
     $scope.tableStorage = {};
 
     //Object for storing table that is being created or edited.
-    $scope.currentTable = {}; 
-    $scope.currentField = {};
+    $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+
+    //$scope.currentField = {};
     //incrementing id for table creation
     $scope.id = 0;
     $scope.db = {}; //??
@@ -202,8 +203,8 @@ angular.module('DTBS.main')
       //fK from the list that is displayed.
     }
 
+    //when Add Field button is clicked, sets currentTable.name and shows inputs to add field
     $scope.addField = function (tableName) {
-      //this sets the name on the current object and makes the showField button visible
       if (!$scope.currentTable['name']) {
         $scope.currentTable['name'] = name;
       }
@@ -211,8 +212,8 @@ angular.module('DTBS.main')
 
     };
 
+    //when save primary key button is pressed, sets all required information for currentTable's primaryKey object
     $scope.savePrimaryKey = function (id, basicType, type, size, attributes, def, tableName) {
-      console.log(id, basicType, type, size, attributes, def, tableName);
 
       $scope.currentTable.primaryKey = {
 
@@ -220,8 +221,6 @@ angular.module('DTBS.main')
         basicType: basicType,
         type: type,
         size: size,
-        attributes: attributes,
-        default: def,
         fkFormat: {
           basicType: basicType,
           id: tableName + '_' + id,
@@ -231,23 +230,43 @@ angular.module('DTBS.main')
         },
         fkList: {}
       }
+
+      if (attributes !== undefined){
+        $scope.currentTable.primaryKey.attributes = attributes;
+      }
+
+      if (def !== undefined){
+        $scope.currentTable.primaryKey.default = def;
+      }
       
       $scope.primaryKeyPresent = true;//also, needs to set primaryKeyPresent to TRUE
+
       $scope.addingField = false;
-      console.log($scope.currentTable.primaryKey);
       console.log($scope.currentTable);
     };
 
     $scope.saveField = function (id, basicType, type, size, attributes, def){
 
-      //save regular fields here
-      //will save to the regFields object with all required info.
-      // saveField(currentField.fieldID, currentField.basicType, currentField.type, 
-      //   currentField.size, currentField.attributes, currentField.default)
-      //will be saved to the attrs array at time editDone() is called.
+      $scope.currentTable.regFields[id] = {
+
+        basicType: basicType,
+        id: id,
+        type: type,
+        size: size,
+
+      };
+
+      if (attributes !== undefined){
+        $scope.currentTable.regFields[id].attributes = attributes;
+      }
+
+      if (def !== undefined){
+        $scope.currentTable.regFields[id].default = def;
+      }
 
       $scope.addingField = false;
 
+      console.log($scope.currentTable);
     };
 
     $scope.addForeignKey = function() {
