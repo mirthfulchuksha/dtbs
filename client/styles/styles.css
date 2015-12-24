@@ -106,15 +106,8 @@ input {
 .dendronode {
   font: 16px sans-serif;
 }
-
-.dendrolink {
-  fill: none;
-  stroke: #D3D3D3;
-  /*stroke-width: 1.5px;*/
-}
 .dendrolinklabel {
   stroke: none;
-  fill: black;
   font: 10px sans-serif;
 }
 

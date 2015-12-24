@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 1000, height = 450, root;
+        var width = 700, height = 450, root;
 
         // Set up the custom colour scale
         var colorLength = 75, colors = [];
@@ -53,15 +53,17 @@ angular.module('DTBS.main')
           var linkg = svg.selectAll(".dendrolink")
               .data(cluster.links(nodes))
               .enter().append("g")
-              .attr("class", "dendrolink")
+              .style("fill", "none")
+              .style("stroke", "#D3D3D3")
+              .style("stroke-width", 1.5)
               .attr("transform", "translate(100,30)");
           linkg.append("path")
               .attr("class", "dendrolink")
-              // .attr("transform", "translate(100,30)")
               .attr("d", diagonal);
                 
           linkg.append("text")
               .attr("class", "dendrolinklabel")
+              .style("stroke", "#D3D3D3")
               .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
               .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
               .attr("text-anchor", "middle")
@@ -209,8 +211,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
+          // var schemaData = treeFormat.treeFormatter(dataArr);
+          var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",

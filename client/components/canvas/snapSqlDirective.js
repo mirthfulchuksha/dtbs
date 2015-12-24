@@ -113,20 +113,22 @@ angular.module('DTBS.main')
                 tempT = texts[i].attr({fill: "black", stroke: "none", "font-size": 12, cursor: "move"});
               }
               // Color the fields by data type
+              var fieldColor;
               switch(fieldTypes[i]) {
                 case "Numeric":
-                    tempS = shapes[i].attr({fill: "#ff8169", stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});
+                    fieldColor = "#ff8169";
                     break;
                 case "Bit":
-                    tempS = shapes[i].attr({fill: "#ff55c3", stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});
+                    fieldColor = "#ff55c3";
                     break;
                 case "DateTime":
-                    tempS = shapes[i].attr({fill: "#b06df7", stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});
+                    fieldColor = "#b06df7";
                     break;
                 case "String":
-                    tempS = shapes[i].attr({fill: "#7076ff", stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});
+                    fieldColor = "#7076ff";
                     break;
               }
+              tempS = shapes[i].attr({fill: fieldColor, stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});
             }
           }
           fkConnections.forEach(function (fkConnection) {
