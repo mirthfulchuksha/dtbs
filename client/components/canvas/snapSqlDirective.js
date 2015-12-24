@@ -103,7 +103,7 @@ angular.module('DTBS.main')
             // Setup header field - light grey with black text
             if (tableReferences[i] === "header") {
               tempS = shapes[i].attr({fill: "#D3D3D3", stroke: color, "fill-opacity": 1, "stroke-width": 1, cursor: "move"});
-              tempT = texts[i].attr({fill: "black", stroke: "none", "font-size": 12, cursor: "move"});
+              tempT = texts[i].attr({fill: "black", stroke: "none", "font-size": 14, cursor: "move"});
             } else {
               // Primary Key field has bold text
               if (tableReferences[i] === "primary") {
@@ -140,7 +140,6 @@ angular.module('DTBS.main')
         }
 
         var tableWidth = function (table) {
-          // id  INT = 33.5 ... one char = 5px
           var max = 0;
           // get max length of all the fields
           table.attrs.forEach(function (field) {
@@ -167,7 +166,6 @@ angular.module('DTBS.main')
             return Math.floor(Math.random()*(max-min+1)+min);
           };
           var dragGroups = [];
-          // var baseWidth = 30;
           
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
@@ -178,7 +176,6 @@ angular.module('DTBS.main')
 
             var startYText = startY+15, startXText = startX+10;
             var tableText = s.text(startXText, startYText, table.name);
-            // var width = tableText.getComputedTextLength();                
             var tableShape = s.rect(startX, startY, width, 20);
             
             shapes.push(tableShape);
@@ -200,9 +197,9 @@ angular.module('DTBS.main')
               startYText += 20;
               var fieldShape = s.rect(startX, startY, width, 20);
               if (field.size.length > 0) {
-                var fieldText = s.text(startXText, startYText, field.id+"  "+field.type+"("+field.size+")")
+                var fieldText = s.text(startXText, startYText, field.id+"   "+field.type+"("+field.size+")")
               } else {
-                var fieldText = s.text(startXText, startYText, field.id+"  "+field.type);
+                var fieldText = s.text(startXText, startYText, field.id+"   "+field.type);
               }
               shapes.push(fieldShape);
               texts.push(fieldText);

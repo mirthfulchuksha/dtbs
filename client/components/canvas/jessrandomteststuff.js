@@ -306,7 +306,24 @@ var datajson1 = [{
 
 
 
-
+{
+  "type": "text",
+  "attr": {
+    "x": "338",
+    "y": "299",
+    "fill": "#000000",
+    "stroke": "none",
+    "style": "font-size: 12px; cursor: move;"
+  },
+  "childNodes": [
+    {
+      "type": "#text",
+      "attr": {
+        "text": "test"
+      }
+    }
+  ]
+}
 
 
 
