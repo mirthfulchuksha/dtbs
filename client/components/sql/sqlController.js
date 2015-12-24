@@ -9,41 +9,72 @@ angular.module('DTBS.main')
   
     //from Form Controller
 
-
-
-    //object for table storage
+    //Object to store current collection of tables.
     $scope.tableStorage = {};
-    //incrementing id for table creation in child scopes
+
+    //Object for storing table that is being created or edited.
+    $scope.currentTable = {}; //currentTable?
+
+    //incrementing id for table creation
     $scope.id = 0;
-    $scope.db = {};
+    $scope.db = {}; //??
     $scope.selectedTable = 0;
     $scope.primaryKeyPresent;
+    $scope.showAddField = false;
+
+    $scope.edit = false;
     $scope.view = true;
+    $scope.typeEdit = 'none'; 
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
 
+    //Show the modal for adding/editing tables
+    $scope.visibleEditModal = false;
+    $scope.toggleEditModal = function (value) {
+      if (value) {
+        $scope.typeEdit = value;
+      }
+      $scope.visibleEditModal = !$scope.visibleEditModal; 
+    };
+
+    $scope.setTable = function (tableName) {
+      //this function loads a previously saved table for editing
+      for (var key in $scope.tableStorage) {
+        if ($scope.tableStorage[key]["name"] === tableName){
+          $scope.currentTable = $scope.tableStorage[key];
+          //?? more fields necessary????
+          $scope.edit = true; //this field tells the editDone function that it's an edit, not new
+          $scope.showAddField = true;//this field shows the button to add field         
+        }
+      }
+    };
+
+    $scope.deleteField = function (key? val?) { //may need to make a storage object for display?
+
+      //not sure how this is going to work yet, how to reach into array
+
+    };
+
+    $scope.addField = function (tableName) {
+
+
+
+    };
     //from Table Controller
 
-    $scope.table = {};
+    //not going to save like this any more, issue??
     //Table save function that clears form and pushes up to the parent
-    $scope.save = function (name) {
-      $scope.id++;
-      $scope.table.id = $scope.id;
-      $scope.table.attrs = [];
-      $scope.addTable($scope.table);
-      $scope.table = {};
+    // $scope.save = function (name) {
+    //   $scope.id++;
+    //   $scope.table.id = $scope.id;
+    //   $scope.table.attrs = [];
+    //   $scope.addTable($scope.table);
+    //   $scope.table = {};
       //close window and open key modal
-      $scope.toggleMyModal();
-      $scope.toggleKeyModal();
-      $scope.modalTitle(name);
-    };
-
-    $scope.seeModal = false;
-    $scope.toggleMyModal = function () {
-      $scope.seeModal = !$scope.seeModal;
-    };
-
-    //end tableController
+      // $scope.toggleMyModal();
+      // $scope.toggleKeyModal();
+      // $scope.modalTitle(name);
+    // };
 
     $scope.addTable = function (table) {
       //window.localStorage.removeItem('tempTable');
@@ -82,14 +113,14 @@ angular.module('DTBS.main')
 
     $scope.keyEdit = [];
 
-    $scope.tablename;
+
 
     $scope.showPKSelection = false;
 
-    $scope.editKeysModal = false;
-    $scope.toggleEditKeysModal = function () {
-      $scope.editKeysModal = !$scope.editKeysModal;
-    };
+    // $scope.editKeysModal = false;
+    // $scope.toggleEditKeysModal = function () {
+    //   $scope.editKeysModal = !$scope.editKeysModal;
+    // };
 
     $scope.editTable = function(table){
       $scope.tablename = table;
@@ -101,9 +132,9 @@ angular.module('DTBS.main')
         }  
       }
 
-      $scope.editModal = false;
+      // $scope.editModal = false;
 
-      $scope.toggleEditKeysModal();
+      // $scope.toggleEditKeysModal();
     };
 
     $scope.editDone = function (newPrimaryKey) {
@@ -345,10 +376,13 @@ angular.module('DTBS.main')
       $scope.foreignKeys =[];
 
       //close window
-      $scope.toggleKeyModal();
+      // $scope.toggleKeyModal();
     };
 
     //end outputController
+    var changeTableID = function (num) {
+      $scope.id = num;
+    }
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
@@ -356,9 +390,6 @@ angular.module('DTBS.main')
       canvasData.push(updatedData);
     };
 
-    var changeTableID = function (num) {
-      $scope.id = num;
-    }
     
     $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
@@ -425,16 +456,12 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id].attrs.splice(index,1);
     };
 
-    $scope.seeKeyModal = false;
-    $scope.toggleKeyModal = function () {
-      $scope.seeKeyModal = !$scope.seeKeyModal;
-      console.log($scope.seeKeyModal);
-    };
+    // $scope.seeKeyModal = false;
+    // $scope.toggleKeyModal = function () {
+    //   $scope.seeKeyModal = !$scope.seeKeyModal;
+    //   console.log($scope.seeKeyModal);
+    // };
 
-    $scope.editModal = false;
-    $scope.toggleEditModal = function () {
-      $scope.editModal = !$scope.editModal;
-    };
 
     $scope.modalTitle = function (name) {
       $("#tableTitle .modal-title").html("Add/Edit Fields for '" + name + "'");
