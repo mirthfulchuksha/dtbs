@@ -64,7 +64,7 @@
 
       <div class="create" ng-show="typeEdit === 'createSQL'">
         <label>Table Name: </label>
-          <input id="newName" type="text" placeholder="Type name..." ng-model="currentTable.name" required/>
+          <input id="newName" type="text" placeholder="Type name..." ng-model="currentTable.name" />
       </div>
 
       <div class="edit" ng-show="typeEdit === 'editSQL'">
@@ -75,8 +75,9 @@
       </div>
 
       <div>
-        <div ng-model="primaryKey">
-          <label>Primary Key: {{primaryKey.name}} Type: {{primaryKey.type}}</label>
+        <div ng-if="primaryKeyPresent === true">
+        <hr>
+          <label>Primary Key ID: {{currentTable['primaryKey']['id']}} Type: {{currentTable['primaryKey']['type']}}</label>
           <button "btn btn-default" ng-click="deletePrimaryKey" class="pull-right">Delete Primary Key</button>
          <br>
         </div>
@@ -100,59 +101,60 @@
         </div>
       </div>
 
-      <div ng-show="primaryKeyPresent !== true">
+      <div ng-show="primaryKeyPresent !== true && currentTable.name" ng-model="currentStorage.primaryKey">
         <hr>
         <label>Create a Primary Key (required) </label>
-        <select ng-model="primaryKey" style="width:100px" required>
-          <option ng-repeat="possibleKey in tableStorage[selectedTable].attrs.concat(keys) track by $index">{{possibleKey.id}}</option>
-        </select>
       </div>
-      <br>
 
-      <div class="addField" ng-show="currentTable.name || showAddField === true">
+      <div class="addField" ng-show="primaryKeyPresent === true">
         <hr>
         <button class="btn btn-success" ng-click="addField(currentTable.name)">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Field
         </button>
       </div>
-      <hr>
       <br>
 
-      <div ng-show="addingField === true">
+      <div ng-show="addingField === true || (primaryKeyPresent !== true && currentTable.name)">
 
         <label>Column ID: </label>
-          <input ng-model="keys[$index].id" type="text" placeholder="Enter Column ID..." required/>
+          <input ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
 
-        <label> Basic Type</label>
-          <select ng-model="keys[$index].basicType" required>
+        <label>Basic Type:</label>
+          <select ng-model="currentField.basicType" required>
             <option>Numeric</option>
             <option>String</option>
             <option>DateTime</option>
             <option>Bit</option>
           </select>
+        
+        <label ng-if="currentField.basicType">Type:</label>
+          <select ng-model="currentField.type" required>
+            <option ng-repeat="option in options[currentField.basicType]">{{option.name}}</option>
+          </select>
+          <br>
 
-        <label ng-if="keys[$index].basicType" required>Size</label>
-          <input ng-if="keys[$index].basicType" ng-model="keys[$index].size" placeholder="Enter size...">
+        <label ng-if="currentField.type">Size</label>
+          <input ng-if="currentField.type" ng-model="currentField.size" placeholder="Enter size..." required>
 
-        <label ng-if="attributes[keys[$index].type]">Attributes</label>
-          <select class="dropdown" ng-if="attributes[keys[$index].type]" ng-model="keys[$index].attributes" multiple>
-            <option ng-repeat="option in attributes[keys[$index].type]">{{option.attr}}</option>
+        <label ng-if="attributes[currentField.type]">Attributes</label>
+          <select class="dropdown" ng-if="attributes[currentField.type]" class="dropdown" ng-model="currentField.attributes" multiple>
+            <option ng-repeat="option in attributes[currentField.type]">{{option.attr}}</option>
           </select>
 
-        <label ng-if="keys[$index].type">Not Null?</label>
-          <input type="checkbox" ng-if="keys[$index].type" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="keys[$index].default"/>
+        <label ng-if="currentField.type">Not Null?</label>
+          <input ng-if="currentField.type" type="checkbox" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="currentField.default"/>
 
-        <button "btn btn-default" ng-if="primaryKeyPresent !== true" ng-click="savePrimaryKey(keys[$index].id, keys[$index].basicType, keys[$index].size, keys[$index].attributes, keys[$index].default); keys[$index].id=''; keys[$index].basicType='0'; keys[$index].size=''" class="pull-right">Save Primary Key</button>
-        
+      <br>
+      <button "btn btn-default" ng-if="primaryKeyPresent !== true" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes='0'; currentField.default=undefined" class="pull-right">Save Primary Key</button>
+      
 
-        <button "btn btn-default" ng-if="primaryKeyPresent === true" ng-click="saveField(keys[$index].id, keys[$index].basicType, keys[$index].size, keys[$index].attributes, keys[$index].default); keys[$index].id=''; keys[$index].basicType='0'; keys[$index].size=''" class="pull-right">Save Field</button>
-        <br>
-        <hr>
+      <button "btn btn-default" ng-if="primaryKeyPresent === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes='0'; currentField.default=undefined" class="pull-right">Save Field</button>
+      <br>
+      <hr>
       </div>
       <br>
 
       <div class="addForeign" ng-if="primaryKeyPresent !== undefined">
-        <hr>
         <button class="btn btn-success" ng-click="addForeignKey()">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key 
         </button>
@@ -166,9 +168,9 @@
 
 <!-- May want to have a checkbox asking if it is the primary key, if check this then save as primary key  and do not show box again UNLESS deleted.???? -->
 
-      <button type="submit" class="btn btn-default" ng-click="editDone(currentTable.name, oldTable); oldTable='0'; keys[$index].id=''; keys[$index].basicType='0'; keys[$index].size='';">Done</button>
+      <button type="submit" class="btn btn-default" ng-click="editDone(currentTable.name, oldTable); oldTable='0'; id=''; basicType='0'; size='';">Done</button>
 
-      <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteTable(currentTable); oldTable='0'; keys[$index].id=''; keys[$index].basicType='0'; keys[$index].size='';">Delete Table</button>
+      <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteTable(currentTable); oldTable='0'; id=''; basicType='0'; size='';">Delete Table</button>
 
     </form>
     </div>

@@ -13,14 +13,14 @@ angular.module('DTBS.main')
     $scope.tableStorage = {};
 
     //Object for storing table that is being created or edited.
-    $scope.currentTable = {}; //currentTable?
-
+    $scope.currentTable = {}; 
+    $scope.currentField = {};
     //incrementing id for table creation
     $scope.id = 0;
     $scope.db = {}; //??
     $scope.selectedTable = 0; //??
     $scope.primaryKeyPresent;
-    $scope.showAddField = false;
+    $scope.addingField = false;
 
     $scope.edit = false;
     $scope.view = true; //related to visualization display
@@ -207,28 +207,46 @@ angular.module('DTBS.main')
       if (!$scope.currentTable['name']) {
         $scope.currentTable['name'] = name;
       }
-      $scope.showAddField = true;
+      $scope.addingField = true;
 
     };
 
-    $scope.savePrimaryKey = function (whatever is needed here) {
+    $scope.savePrimaryKey = function (id, basicType, type, size, attributes, def, tableName) {
+      console.log(id, basicType, type, size, attributes, def, tableName);
 
-      //this will save the info to the primary key object on the table
-      //PK will have attributes array, basic type, id(name), size, type
-      //an FK format object that will be used for any foreign keys, and
-      //an empty FKlist that gives key value pairs for all tables that
-      //reference this PK.
+      $scope.currentTable.primaryKey = {
 
-      //also, needs to set primaryKeyPresent to TRUE
-
+        id: id,
+        basicType: basicType,
+        type: type,
+        size: size,
+        attributes: attributes,
+        default: def,
+        fkFormat: {
+          basicType: basicType,
+          id: tableName + '_' + id,
+          origin: $scope.id,
+          type: type,
+          tableName: tableName
+        },
+        fkList: {}
+      }
+      
+      $scope.primaryKeyPresent = true;//also, needs to set primaryKeyPresent to TRUE
+      $scope.addingField = false;
+      console.log($scope.currentTable.primaryKey);
+      console.log($scope.currentTable);
     };
 
-    $scope.saveField = function (one, two, three, four, five){
+    $scope.saveField = function (id, basicType, type, size, attributes, def){
 
       //save regular fields here
       //will save to the regFields object with all required info.
-
+      // saveField(currentField.fieldID, currentField.basicType, currentField.type, 
+      //   currentField.size, currentField.attributes, currentField.default)
       //will be saved to the attrs array at time editDone() is called.
+
+      $scope.addingField = false;
 
     };
 
@@ -241,6 +259,11 @@ angular.module('DTBS.main')
     };
 
     $scope.editDone = function (currentTable, oldTable) {
+      console.log(currentTable);
+      if (currentTable === '' || currentTable === undefined){
+        $scope.toggleEditModal('none');
+      }
+
 
       //MUST clear out attrs array and populate with primaryKey, regKeys, 
       //and foreign keys 
@@ -248,6 +271,10 @@ angular.module('DTBS.main')
       //also, need to clear all values that set the form and empty out all 
       //$scope variables so that new table can be added or another table can be 
       //edited.
+
+      //make sure to clear out the $scope.currentTable.primaryKey and $scope.currentTable.regFields
+      //and $scope.currentTable.foreignKeys
+      //if not editing, must increment id
 
     };
 
