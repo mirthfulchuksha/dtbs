@@ -87,7 +87,7 @@
         <div ng-repeat="(key, val) in currentTable.regFields">
           <hr>
           <label>Field: {{key}} Type: {{val.type}}</label>
-          <button "btn btn-default" ng-click="deleteField(key)" class="pull-right">Delete Field</button>
+          <button ng-click="deleteField(key)" class="pull-right">Delete Field</button>
           <br>
         </div>
       </div>
@@ -96,7 +96,7 @@
         <div ng-repeat="(key, val) in currentTable.foreignKeys">
           <hr>
           <label>Foreign Key linked to {{val['id']}} table</label>
-          <button class="btn btn-default" ng-click="deleteFK(key)" class="pull-right">Delete Foreign Key</button>
+          <button ng-click="deleteFK(key)" class="pull-right">Delete Foreign Key</button>
           <br>
         </div>
       </div>
