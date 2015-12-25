@@ -156,17 +156,20 @@ angular.module('DTBS.main')
       console.log(tableName);
       //this function loads a previously saved table for editing
       for (var key in $scope.tableStorage) {
-        if ($scope.tableStorage[key]["name"] === tableName){
+        console.log($scope.tableStorage[key]['name']);
+        if ($scope.tableStorage[key]['name'] === tableName){
+          console.log("yeps");
           $scope.currentTable = $scope.tableStorage[key];
           //?? more fields necessary????
           //if not originally created via add modal, need to make the regFields and ForeignKey objects
           //so editing is possible
           $scope.primaryKeyPresent = true;
           $scope.edit = true; //this field tells the editDone function that it's an edit, not new
-          $scope.showAddField = true;//this field shows the button to add field         
+                
         }
         if ($scope.tableStorage[key]["name"] !== tableName) {
-          //grab the primary key object and put a copy into the potential FK object for use
+          $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
+          console.log($scope.potentialFKs, 'heres the FKs');
         }
       }
 
@@ -174,38 +177,27 @@ angular.module('DTBS.main')
 
     $scope.deletePrimaryKey = function () {
 
-      //this will handle 
-      //  1) deleting foreign keys in other tables (using FKList obj)
-      //  2) setting the pK object to {}
-      //  3) reactivating the choose pK button, deactivating adding other
-      //     fields, regular or fK.  required.
-
-      //change values for what is visible so primary key selection shows
-      //and add field/add foreign key does not.
-
-      //  at end of editing, will clear out attrs array which will delete
-      //  the pK and replace with the new one.
+      //need to delete foreign keys in other tables prior to steps below
+      //may want to hide any additional editing functions until PK selected
+      $scope.currentTable['primaryKey'] = {};
+      $scope.primaryKeyPresent = false;
 
     };
 
-    $scope.deleteField = function (columnID) {
+    //Delete a field
+    $scope.deleteField = function (key) {
 
-      //go into the regFields object and delete this item.
-
-      //at end of editing, will clear out attrs array and refill so this field
-      //will be deleted from the list that is displayed.
+      delete $scope.currentTable['regFields'][key];
 
     };
 
+    //Delete a foreign key
     $scope.deleteFK = function (key) {
-      //first, look at the key.origin which gives you the # id of the pK table
-      //go to the pK table, reach into PK table object on the FK List
-      //look up the currentTable.name in this list object and delete it.
-      //then delete the FK from the fK fields object.
 
-      //at the end of editing, will clear out the attrs array and refill it which will delete the
-      //fK from the list that is displayed.
-    }
+      //need to do something here to replace it in the $scope.potentialFKs object ****************
+      delete $scope.currentTable['foreignKeys'][key];
+
+    };
 
     //when Add Field button is clicked, sets currentTable.name and shows inputs to add field
     $scope.addField = function (tableName) {
@@ -288,25 +280,22 @@ angular.module('DTBS.main')
     };
 
     $scope.saveForeignKey = function (keyName) {
+
       //working, foreign key can be saved with value that is in the PK, also add FK to the PK
       $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[keyName]['fkFormat'];
-      console.log($scope.currentTable['foreignKeys']);
       $scope.seeForeignKeys = false;
-      
-      //maybe we don't need to keep track of the fks, maybe can just delete them by looking
-      //at each table in tableStorage's FKs and then iterating backwards over the array, splice out
-      //then break
+      delete $scope.potentialFKs[keyName];
 
     };
 
     $scope.editDone = function (currentTable, oldTable) {
 
       if ($scope.currentTable['name'] === '' || $scope.currentTable['name'] === undefined){
-        console.log($scope.currentTable['name']);
-        console.log('first if');
+
         $scope.toggleEditModal('none');
+
       } else if ($scope.edit === true) {
-        console.log('editing.....');
+
         $scope.toggleEditModal('none');
         $scope.edit = false;
         $scope.setAttrsArray();
@@ -314,10 +303,11 @@ angular.module('DTBS.main')
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
-      } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
-        console.log('where we want');
-        $scope.currentTable['id'] = $scope.id;
+        $scope.primaryKeyPresent = false;
 
+      } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
+     
+        $scope.currentTable['id'] = $scope.id;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.id] = $scope.currentTable;
         $scope.id++;
@@ -330,12 +320,12 @@ angular.module('DTBS.main')
       }
 
       $scope.interactCanvas();
-      console.log($scope.tableStorage);
 
     };
 
     $scope.setAttrsArray = function () {
       console.log('setting attrs array');
+      $scope.currentTable['attrs'] = [];
       $scope.currentTable['attrs'][0] = $scope.currentTable.primaryKey;
 
       for (var key in $scope.currentTable.regFields){
@@ -347,9 +337,7 @@ angular.module('DTBS.main')
     };
 
     $scope.deleteTable = function (currentTable) {
-      //if table is deleted, need to look at primaryKey and at any fKs, delete them.
-      //then, delete table in the storage object
-      //reset all variables.
+
       $scope.toggleEditModal('none');
 
       //if table has not been saved to tableStorage, just reset $scope.currentTable
@@ -359,12 +347,32 @@ angular.module('DTBS.main')
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
       } else {
-        console.log(currentTable);
-        //remove any foreign keys related to this object
-        //delete object on tableStorage
-        //clear local object
+
+        //needs work ****************************************
+        for (var key in $scope.tableStorage){
+          console.log($scope.tableStorage);
+          if ($scope.tableStorage[key]['foreignKeys'][currentTable]){
+            console.log('found it');
+            for (var i = $scope.tableStorage[key]['attrs'].length - 1; i < 0; i--) {
+              if ($scope.tableStorage[key]['attrs'][i] === $scope.currentTable['primaryKey']['fkFormat']){
+                $scope.tableStorage[key]['attrs'].slice(i, 1);
+                console.log('sliced out fk');
+              }
+            }
+            delete $scope.tableStorage.key['foreignKeys'][currentTable];
+            console.log('deleted fk from fk obj')
+          }
+        }
+        delete $scope.tableStorage[$scope.currentTable['id']];
+
+        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+        $scope.primaryKeyPresent = false;
+        $scope.potentialFKs = {};
+        $scope.seeForeignKeys = false;
+
       }
-      console.log($scope.currentTable);
+      $scope.interactCanvas();
+
     };
 
     $scope.interactCanvas = function () {

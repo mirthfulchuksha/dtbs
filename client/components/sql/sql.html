@@ -70,7 +70,7 @@
       <div class="edit" ng-show="typeEdit === 'editSQL'">
         <label>Choose Table to Edit:</label>
           <select ng-model="oldTable" ng-change="setTable(oldTable)" required>
-            <option ng-repeat="table in tableStorage"> {{table.name}}</option>
+            <option ng-repeat="table in tableStorage">{{table.name}}</option>
           </select>
       </div>
 
@@ -78,7 +78,7 @@
         <div ng-if="primaryKeyPresent === true">
         <hr>
           <label>Primary Key ID: {{currentTable['primaryKey']['id']}} Type: {{currentTable['primaryKey']['type']}}</label>
-          <button "btn btn-default" ng-click="deletePrimaryKey" class="pull-right">Delete Primary Key</button>
+          <button "btn btn-default" ng-click="deletePrimaryKey()" class="pull-right">Delete Primary Key</button>
          <br>
         </div>
       </div>
