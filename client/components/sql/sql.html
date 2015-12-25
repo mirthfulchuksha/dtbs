@@ -95,7 +95,7 @@
       <div>
         <div ng-repeat="(key, val) in currentTable.foreignKeys">
           <hr>
-          <label>Foreign Key linked to {{key}} table</label>
+          <label>Foreign Key linked to {{val['id']}} table</label>
           <button class="btn btn-default" ng-click="deleteFK(key)" class="pull-right">Delete Foreign Key</button>
           <br>
         </div>
@@ -153,21 +153,23 @@
       </div>
       <br>
 
-      <div class="addForeign" ng-if="primaryKeyPresent !== undefined">
+      <div class="addForeign" ng-if="primaryKeyPresent !== false">
         <hr>
         <button class="btn btn-success" ng-click="addForeignKey()">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key 
         </button>
         <br>
 
-        <div ng-repeat="fkey in foreignKeys track by $index">
-          <label>Select which table to connect:</label>
-          <select ng-model="foreignKeys[$index].origin" style="width: 100px">
-            <option ng-repeat"table in tableStorage" ng-if="table.id !== selectedTable">{{table.name}}</option>
+        <div> <!--ng-repeat="fkey in foreignKeys track by $index"> -->
+          <label ng-if="seeForeignKeys === true">Select which table to connect:</label>
+          <select ng-if="seeForeignKeys === true" ng-model="currentField.FK" style="width: 100px">
+            <option ng-repeat="key in potentialFKs">{{key.tableName}}</option>
           </select>
         </div>
         <br>
+        <button "btn btn-default" ng-if="seeForeignKeys === true" ng-click="saveForeignKey(currentField.FK); currentField.FK=undefined" class="pull-right">Save Foreign Key</button>
       </div>
+      <br>
 
 <!-- May want to have a checkbox asking if it is the primary key, if check this then save as primary key  and do not show box again UNLESS deleted.???? -->
 

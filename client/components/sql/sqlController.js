@@ -22,9 +22,9 @@ angular.module('DTBS.main')
     $scope.id = 0;
     $scope.db = {}; //??
     $scope.selectedTable = 0; //??
-    $scope.primaryKeyPresent;
+    $scope.primaryKeyPresent = false;
     $scope.addingField = false;
-
+    $scope.seeForeignKeys = false;
     $scope.edit = false;
     $scope.view = true; //related to visualization display
     $scope.typeEdit = 'none'; 
@@ -153,17 +153,15 @@ angular.module('DTBS.main')
     };
 
     $scope.setTable = function (tableName) {
+      console.log(tableName);
       //this function loads a previously saved table for editing
       for (var key in $scope.tableStorage) {
         if ($scope.tableStorage[key]["name"] === tableName){
           $scope.currentTable = $scope.tableStorage[key];
           //?? more fields necessary????
-
-          //GOING TO TAKE EVERYTHING OUT OF ATTR AND PUSH INTO 2 OBJ, ONE
-          //FOR ALL FIELDS EXCEPT PRIMARY KEY, ONE FOR JUST PRIMARY KEY.
-          //THIS SHOULD ALLOW VERY CLEAR DESIGNATION OF PRIMARY KEY IN FIELDS
-          //AVAILABLE FOR DELETION AND SHOULD ALSO MAKE PRIMARY KEY FIELD POP UP
-
+          //if not originally created via add modal, need to make the regFields and ForeignKey objects
+          //so editing is possible
+          $scope.primaryKeyPresent = true;
           $scope.edit = true; //this field tells the editDone function that it's an edit, not new
           $scope.showAddField = true;//this field shows the button to add field         
         }
@@ -227,6 +225,7 @@ angular.module('DTBS.main')
         basicType: basicType,
         type: type,
         size: size,
+        tableName: tableName,
         fkFormat: {
           basicType: basicType,
           id: tableName + '_' + id,
@@ -251,6 +250,13 @@ angular.module('DTBS.main')
       console.log($scope.currentTable);
 
       //SET UP POTENTIAL FOREIGN KEYS HERE????  ***************************
+      for (var key in $scope.tableStorage){
+        console.log($scope.tableStorage[key]['name']);
+        if ($scope.tableStorage[key]['name'] !== tableName) {
+          $scope.potentialFKs[key] = $scope.tableStorage[key]['primaryKey'];
+        }
+      }
+      console.log($scope.potentialFKs);
     };
 
     $scope.saveField = function (id, basicType, type, size, attributes, def){
@@ -277,13 +283,17 @@ angular.module('DTBS.main')
       console.log($scope.currentTable);
     };
 
-    $scope.addForeignKey = function() {
+    $scope.addForeignKey = function () {
 
-      //FOREIGN KEY STUFF WILL BE SET UP PRIOR SO IT WILL BE AVAILABLE
-      //will use this the same as save field except save different info
-      //and will refer to the PK table for the object to save.
-      //aso need to save the key value pair onto the FK list that is on the
-      //primaryKey table.
+      $scope.seeForeignKeys = true;
+
+    };
+
+    $scope.saveForeignKey = function (keyName) {
+      //working, foreign key can be saved with value that is in the PK, also add FK to the PK
+      console.log(keyName, 'why not????');
+       $scope.seeForeignKeys = false;
+      //need to push into foreignKeys obj
     };
 
     $scope.editDone = function (currentTable, oldTable) {
@@ -296,6 +306,10 @@ angular.module('DTBS.main')
         console.log('editing.....');
         $scope.toggleEditModal('none');
         $scope.edit = false;
+        $scope.setAttrsArray();
+        $scope.tableStorage[$scope.currentTable['id']] = $scope.currentTable;
+        $scope.potentialFKs = {};
+        $scope.seeForeignKeys = false;
       } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
         console.log('where we want');
         $scope.currentTable['id'] = $scope.id;
@@ -304,14 +318,13 @@ angular.module('DTBS.main')
         $scope.tableStorage[$scope.id] = $scope.currentTable;
         $scope.id++;
 
-        //resets
-
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
         $scope.toggleEditModal('none'); 
+        $scope.primaryKeyPresent = false;
+        $scope.potentialFKs = {};
+        $scope.seeForeignKeys = false;
       }
 
-      $scope.potentialFKs = {};
-      $scope.primaryKeyPresent = false;
       $scope.interactCanvas();
       console.log($scope.tableStorage);
 
