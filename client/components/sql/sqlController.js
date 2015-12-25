@@ -15,7 +15,9 @@ angular.module('DTBS.main')
     //Object for storing table that is being created or edited.
     $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
 
-    //$scope.currentField = {};
+    //list of potential foreign keys that populates when a primary key is chosen or when 
+    //a table is chosen for editing
+    $scope.potentialFKs = {};
     //incrementing id for table creation
     $scope.id = 0;
     $scope.db = {}; //??
@@ -165,7 +167,11 @@ angular.module('DTBS.main')
           $scope.edit = true; //this field tells the editDone function that it's an edit, not new
           $scope.showAddField = true;//this field shows the button to add field         
         }
+        if ($scope.tableStorage[key]["name"] !== tableName) {
+          //grab the primary key object and put a copy into the potential FK object for use
+        }
       }
+
     };
 
     $scope.deletePrimaryKey = function () {
@@ -214,7 +220,7 @@ angular.module('DTBS.main')
 
     //when save primary key button is pressed, sets all required information for currentTable's primaryKey object
     $scope.savePrimaryKey = function (id, basicType, type, size, attributes, def, tableName) {
-
+      $scope.currentTable['name'] = tableName;
       $scope.currentTable.primaryKey = {
 
         id: id,
@@ -243,6 +249,8 @@ angular.module('DTBS.main')
 
       $scope.addingField = false;
       console.log($scope.currentTable);
+
+      //SET UP POTENTIAL FOREIGN KEYS HERE????  ***************************
     };
 
     $scope.saveField = function (id, basicType, type, size, attributes, def){
@@ -271,6 +279,7 @@ angular.module('DTBS.main')
 
     $scope.addForeignKey = function() {
 
+      //FOREIGN KEY STUFF WILL BE SET UP PRIOR SO IT WILL BE AVAILABLE
       //will use this the same as save field except save different info
       //and will refer to the PK table for the object to save.
       //aso need to save the key value pair onto the FK list that is on the
@@ -278,256 +287,60 @@ angular.module('DTBS.main')
     };
 
     $scope.editDone = function (currentTable, oldTable) {
-      console.log(currentTable);
-      if (currentTable === '' || currentTable === undefined){
+
+      if ($scope.currentTable['name'] === '' || $scope.currentTable['name'] === undefined){
+        console.log($scope.currentTable['name']);
+        console.log('first if');
         $scope.toggleEditModal('none');
+      } else if ($scope.edit === true) {
+        console.log('editing.....');
+        $scope.toggleEditModal('none');
+        $scope.edit = false;
+      } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
+        console.log('where we want');
+        $scope.currentTable['id'] = $scope.id;
+
+        $scope.setAttrsArray();
+        $scope.tableStorage[$scope.id] = $scope.currentTable;
+        $scope.id++;
+
+        //resets
+
+        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+        $scope.toggleEditModal('none'); 
       }
 
+      $scope.potentialFKs = {};
+      $scope.primaryKeyPresent = false;
+      $scope.interactCanvas();
+      console.log($scope.tableStorage);
 
-      //MUST clear out attrs array and populate with primaryKey, regKeys, 
-      //and foreign keys 
+    };
 
-      //also, need to clear all values that set the form and empty out all 
-      //$scope variables so that new table can be added or another table can be 
-      //edited.
+    $scope.setAttrsArray = function () {
+      console.log('setting attrs array');
+      $scope.currentTable['attrs'][0] = $scope.currentTable.primaryKey;
 
-      //make sure to clear out the $scope.currentTable.primaryKey and $scope.currentTable.regFields
-      //and $scope.currentTable.foreignKeys
-      //if not editing, must increment id
-
+      for (var key in $scope.currentTable.regFields){
+        $scope.currentTable['attrs'].push($scope.currentTable.regFields[key]);
+      }
+      for (var key in $scope.currentTable.foreignKeys){
+        $scope.currentTable['attrs'].push($scope.currentTable.foreignKeys[key]);
+      }
     };
 
     $scope.deleteTable = function (currentTable) {
-
-      //get the id of the table, reach intot he storage object and delete it
-      //reset all variables so that new table can be added or another table can
-      //be edited.
+      //if table is deleted, need to look at primaryKey and at any fKs, delete them.
+      //then, delete table in the storage object
+      //reset all variables.
 
     };
-
-//  ********************  everything above this line is part of the refactor ***********
-
-
-    //from Table Controller
-
-    //not going to save like this any more, issue??
-    //Table save function that clears form and pushes up to the parent
-    // $scope.save = function (name) {
-    //   $scope.id++;
-    //   $scope.table.id = $scope.id;
-    //   $scope.table.attrs = [];
-    //   $scope.addTable($scope.table);
-    //   $scope.table = {};
-      //close window and open key modal
-      // $scope.toggleMyModal();
-      // $scope.toggleKeyModal();
-      // $scope.modalTitle(name);
-    // };
-
-    // $scope.addTable = function (table) {
-    //   //window.localStorage.removeItem('tempTable');
-    //   $scope.tableStorage[table.id] = table;
-    //   //set selected table to allow for correcting editing window
-    //   $scope.selectedTable = table.id;
-    // };
-
-    // $scope.deleteTable = function (table) {
-    //   delete $scope.tableStorage[table.id];
-    //   $scope.interactCanvas();
-    //   $scope.toggleKeyModal();
-    // };
-
-    // //parent scope function to add keys to tables
-    // $scope.addTableAttr = function (keys, table, pkeyIndex) {
-    //   keys.forEach(function (key){
-    //     $scope.tableStorage[table.id].attrs.push(key);
-    //    // var updatedData = angular.copy($scope.tableStorage);
-    //    // d3Data.push(updatedData);
-    //   });
-    //   var pkey = $scope.tableStorage[table.id].attrs.splice(pkeyIndex, 1);
-    //   $scope.tableStorage[table.id].attrs.unshift(pkey[0]);
-
-    //   //updated rendering
-    //   $scope.interactCanvas();
-    //   $scope.selectedTable = 0;
-    // };
-
-    // $scope.addPrimaryKey = function (newPK, table){
-    //   $scope.tableStorage[table.id].primaryKey = newPK;
-    //   $scope.primaryKeyPresent = true;
-    // };
-  
-    // //from editController
-
-    // $scope.keyEdit = [];
-
-
-
-    // $scope.showPKSelection = false;
-
-    // // $scope.editKeysModal = false;
-    // // $scope.toggleEditKeysModal = function () {
-    // //   $scope.editKeysModal = !$scope.editKeysModal;
-    // // };
-
-    // $scope.editTable = function(table){
-    //   $scope.tablename = table;
-    //   for (var key in $scope.tableStorage){
-    //     if ($scope.tableStorage[key]["name"] === table) {
-    //       for (var key2 in $scope.tableStorage[key]["attrs"]){
-    //         $scope.keyEdit.push($scope.tableStorage[key]["attrs"][key2]);
-    //       }
-    //     }  
-    //   }
-
-    //   // $scope.editModal = false;
-
-    //   // $scope.toggleEditKeysModal();
-    // };
-
-    // $scope.editDone = function (newPrimaryKey) {
-    
-    //   console.log(newPrimaryKey);
-    //   //if a new Primary Key has been selected, set primaryKey for table to the new PK object and move the object to the 0 position in attrs array
-    //   if ($scope.showPKSelection === true) {
-    //     for (var key in $scope.tableStorage){
-    //       for (var i = 0; i < $scope.tableStorage[key]["attrs"].length; i++) {
-    //         if ($scope.tableStorage[key]["attrs"][i].id === newPrimaryKey) {
-    //           var pkObject = $scope.tableStorage[key]["attrs"].id;
-    //           $scope.tableStorage[key]["attrs"].slice(i, 1);
-    //           $scope.tableStorage[key]["attrs"].unshift(pkObject);
-    //           $scope.tableStorage[key]["primaryKey"] = pkObject;            
-    //         }
-    //       }
-    //     }
-    //     $scope.keyEdit = [];
-    //     $scope.showPKSelection = false;
-    //     $scope.interactCanvas();
-    //   }
-      
-    //   $scope.toggleEditKeysModal();
-
-    // };
-
-    // $scope.deleteField = function (fieldId) {
-    //   var foreign = $scope.tablename + "_" + fieldId;
-    //   console.log($scope.tableStorage);
-    //   //delete requested field and foreign keys linking to the field, if any
-    //   for (var key in $scope.tableStorage){
-    //     for (var i = 0; i < $scope.tableStorage[key]["attrs"].length; i++){  
-
-    //       if ($scope.tableStorage[key]["attrs"][i].id === fieldId || $scope.tableStorage[key]["attrs"][i].id === foreign){
-    //         $scope.tableStorage[key]["attrs"].splice(i, 1);
-    //       }
-    //       // if field you are deleting is the primary key, show the field to choose a primary key
-    //       if ($scope.tableStorage[key]["primaryKey"]["id"] === fieldId){
-    //         $scope.tableStorage[key]["primaryKey"] = {};
-    //         $scope.showPKSelection = true;
-    //       }
-    //     }
-    //   }
-
-    //   //to remove items from editKeyModal as they are removed:
-    //   for (var i = 0; i < $scope.keyEdit.length; i++){
-    //     if ($scope.keyEdit[i].id === fieldId){
-    //       $scope.keyEdit.splice(i, 1);
-    //     }
-
-    //   }
-      
-    //   //re-render visualization after each field deletion
-    //   $scope.interactCanvas();
-
-    // };
-
-    // $scope.newPrimaryKey = function () {
-
-    // };
-
-    // $scope.editDeleteTable = function (tableName) {
-    //   for (var key in $scope.tableStorage){
-    //     if ($scope.tableStorage[key].name === tableName){
-    //       console.log($scope.tableStorage[key]);
-    //       delete $scope.tableStorage[key];
-    //     }
-    //   }
-    //   $scope.interactCanvas();
-
-    // };
-
-    // //end editController
-
-    // //from outputController
-
-    // $scope.keys = [];
-    // $scope.foreignKeys = [];
-
-
-    // $scope.addField = function () {
-    //   $scope.keys.push({});
-    // };
-
-    // $scope.deleteKeys = function (table) {
-    //   $scope.keys = [];
-    //   $scope.foreignKeys = [];
-    //   $scope.deleteTable(table);
-    // };
-
-    // $scope.addForeignKey = function () {
-    //   $scope.foreignKeys.push({});
-    // };
-
-    // $scope.cancelAdd = function (indexToDelete){
-    //   $scope.keys.splice(indexToDelete, 1);
-    // };
-
-    // $scope.addTableAttrChildScope = function (keyArr, foreignKeyArr, table, primaryKey) {
-    //   foreignKeyArr.forEach(function (fkey) {
-    //     _.each($scope.tableStorage, function (tbl, index) {
-    //       //iterate through every table to retrieve the id of the foreign keys origin
-    //       console.log(tbl);
-    //       if(fkey.origin === tbl.name){
-    //         fkey.origin = tbl.id;
-    //       }
-    //     });
-    //     //create attributes on the foreign key obj so it can be treated like other keys
-    //     fkey.id = $scope.tableStorage[fkey.origin].name + "_" + $scope.tableStorage[fkey.origin].primaryKey.id;
-    //     fkey.type = $scope.tableStorage[fkey.origin].primaryKey.type;
-    //     fkey.basicType = $scope.tableStorage[fkey.origin].primaryKey.basicType;
-    //   });
-
-    //   //This loop will find the correct index for the primary key and set it on the parent scope table
-    //   //this is run every time any update is made to the table to make sure relationships and variable names are consistent
-    //   var pkeyIndex = 0;
-    //   $scope.tableStorage[$scope.selectedTable].attrs.concat(keyArr).forEach( function (newKey, index){
-    //     if(newKey.id === primaryKey){
-    //       pkeyIndex = index;
-    //       $scope.addPrimaryKey(newKey, table);
-    //     }
-    //   });
-    //   //combine new keys and new foreign keys to be added to parent scope
-    //   //this has to be run after the above b/c it resets the selected table
-    //   $scope.addTableAttr(keyArr.concat(foreignKeyArr), table, pkeyIndex);
-
-    //   //reset fields in the form
-    //   $scope.keys = [];
-    //   $scope.foreignKeys =[];
-
-    //   //close window
-    //   // $scope.toggleKeyModal();
-    // };
-
-    // //end outputController
-    // var changeTableID = function (num) {
-    //   $scope.id = num;
-    // }
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
       var updatedData = angular.copy($scope.tableStorage);
       canvasData.push(updatedData);
     };
-
     
     $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
