@@ -43,6 +43,7 @@ angular.module('DTBS.main')
       //updated rendering
       $scope.interactCanvas();
       $scope.selectedTable = 0;
+      console.log($scope.tableStorage, 'here is my message');
     };
 
     $scope.addPrimaryKey = function (newPK, table){
