@@ -56,20 +56,20 @@ angular.module('DTBS.main')
               .style("fill", "none")
               .style("stroke", "#D3D3D3")
               .style("stroke-width", 1.5)
-              .attr("transform", "translate(100,30)");
+              .attr("transform", "translate(100,15)");
           linkg.append("path")
               .attr("class", "dendrolink")
               .attr("d", diagonal);
                 
           linkg.append("text")
-              .attr("class", "dendrolinklabel")
-              .style("stroke", "black")
-              .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
-              .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
-              .attr("text-anchor", "middle")
-              .text(function(d) {
-                return d.target.type;
-              });
+          .attr("class", "dendrolinklabel")
+          .style("text-anchor", "middle")
+          .attr("fill", "black")
+          .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
+          .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
+          .text(function(d) {
+            return d.target.type;
+          });
 
           var node = svg.selectAll(".dendronode")
               .data(nodes)
@@ -79,7 +79,7 @@ angular.module('DTBS.main')
                 return "translate(" + d.y + "," + d.x + ")"; });
 
           node.append("circle")
-              .attr("transform", "translate(100,30)")
+              .attr("transform", "translate(100,15)")
               .style("fill", function (d) {
                 if (d.name === "Collection") {
                   return color(8);
