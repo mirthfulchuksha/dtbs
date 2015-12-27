@@ -56,7 +56,7 @@ angular.module('DTBS.main')
               .style("fill", "none")
               .style("stroke", "#D3D3D3")
               .style("stroke-width", 1.5)
-              .attr("transform", "translate(100,15)");
+              .attr("transform", "translate(100,5)");
           linkg.append("path")
               .attr("class", "dendrolink")
               .attr("d", diagonal);
@@ -65,6 +65,8 @@ angular.module('DTBS.main')
           .attr("class", "dendrolinklabel")
           .style("text-anchor", "middle")
           .attr("fill", "black")
+          .style("stroke", "black")
+          .style("stroke-width", "0.1")
           .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
           .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
           .text(function(d) {
@@ -79,7 +81,7 @@ angular.module('DTBS.main')
                 return "translate(" + d.y + "," + d.x + ")"; });
 
           node.append("circle")
-              .attr("transform", "translate(100,15)")
+              .attr("transform", "translate(100,5)")
               .style("fill", function (d) {
                 if (d.name === "Collection") {
                   return color(8);
@@ -103,7 +105,7 @@ angular.module('DTBS.main')
               .attr("dx", function(d) { return d.children ? -15 : 15; })
               .attr("dy", 3)
               .attr("class", "dendrolinklabel")
-              .attr("transform", "translate(100,30)")
+              .attr("transform", "translate(100,5)")
               .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
               .text(function(d) { return d.name; });
         };
