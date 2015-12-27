@@ -114,8 +114,10 @@ angular.module('DTBS.main')
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
                     return 5;
+                  } else if (d.type === "Nested Document") {
+                    return 8.5;
                   } else {
-                    return 25/2;
+                    return 12.5;
                   }
                 })
                 .attr("stroke", function (d) {
