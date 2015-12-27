@@ -79,8 +79,6 @@ angular.module('DTBS.main')
 
         scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes) {
           var color, i, ii, tempS, tempT;
-          console.log(tableReferences, "refs");
-          console.log(fieldTypes, "types");
           var dragger = function () {
             this.data('origTransform', this.transform().local )
             this.animate({"fill-opacity": .5}, 500);
@@ -154,6 +152,7 @@ angular.module('DTBS.main')
         };
 
         scope.$on('canvas:new-data', function (e, data) {
+
           $("#svgout").empty();
           var dataArr = [];
           for (var key in data) {
@@ -196,7 +195,7 @@ angular.module('DTBS.main')
               startY += 20;
               startYText += 20;
               var fieldShape = s.rect(startX, startY, width, 20);
-              if (field.size.length > 0) {
+              if (field.size && field.size.length > 0) {
                 var fieldText = s.text(startXText, startYText, field.id+"   "+field.type+"("+field.size+")")
               } else {
                 var fieldText = s.text(startXText, startYText, field.id+"   "+field.type);

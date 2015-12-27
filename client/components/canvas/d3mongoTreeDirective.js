@@ -73,6 +73,9 @@ angular.module('DTBS.main')
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
 
+          root.fixed = true;
+            root.x = width / 2;
+            root.y = height / 2;
 
             // Restart the force layout.
             force.nodes(nodes)
@@ -295,8 +298,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",

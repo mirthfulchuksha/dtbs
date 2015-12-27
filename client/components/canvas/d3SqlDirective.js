@@ -69,9 +69,6 @@ angular.module('DTBS.main')
               .enter().append("g")
               .attr("class", "node")
               .attr("class", function (d) { return d.group; })
-              .on("click", function () {
-                click(this);
-              })
               .on("dblclick", dblclick)
               .call(force.drag);
 
@@ -128,8 +125,8 @@ angular.module('DTBS.main')
         };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
-          for (var key in data) {
-            dataArr.push(data[key]);
+          for (var key in test) {
+            dataArr.push(test[key]);
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
@@ -138,5 +135,167 @@ angular.module('DTBS.main')
     }};
 }]); 
 
-
+var test = 
+//   "0": {
+    
+//     "attrs": [
+//       {
+//         "id": "id",
+//         "basicType": "Numeric",
+//         "size": "",
+//         "type": "INT",
+//         "attributes": []
+//       },
+//       {
+//         "basicType": "String",
+//         "id": "name",
+//         "type": "CHAR",
+//         "size": "",
+//         "attributes": []
+//       }
+//     ],
+//     "name": "Users",
+//     "id": 0
+//   },
+//   "1": {
+//     "attrs": [
+//       {
+//         "id": "id",
+//         "basicType": "Numeric",
+//         "type": "INT",
+//         "size": "",
+//         "attributes": []
+//       },
+//       {
+//         "basicType": "Numeric",
+//         "id": "Users_id",
+//         "origin": 0,
+//         "size": "",
+//         "type": "INT",
+//         "attributes": []
+//       }
+//     ],
+//     "name": "Messages",
+//     "id": 1
+//   }
+// };
+// works:
+{
+  "1": {
+    "attrs": [
+      {
+        "id": "id",
+        "type": "INT",
+        "basicType": "Numeric",
+        "size": "",
+        "attributes": [
+          "NOT NULL"
+        ]
+      },
+      {
+        "id": "name",
+        "type": "VARCHAR",
+        "basicType": "String",
+        "size": "45",
+        "attributes": []
+      },
+      {
+        "id": "email",
+        "type": "VARCHAR",
+        "basicType": "String",
+        "size": "45",
+        "attributes": []
+      }
+      ],
+    "name": "users",
+    "id": 1,
+    "primaryKey": {
+      "id": "id",
+      "type": "INT",
+      "basicType": "Numeric",
+      "size": "",
+      "attributes": [
+        "NOT NULL"
+      ]
+    }
+  },
+  "2": {
+    "attrs": [
+      {
+        "id": "id",
+        "type": "INT",
+        "basicType": "Numeric",
+        "size": "",
+        "attributes": [
+          "NOT NULL"
+        ]
+      },
+      {
+        "id": "users_id",
+        "type": "INT",
+        "basicType": "Numeric",
+        "size": "",
+        "attributes": [],
+        "origin": 1
+      }
+    ],
+    "name": "chats",
+    "id": 2,
+    "primaryKey": {
+      "id": "id",
+      "type": "INT",
+      "basicType": "Numeric",
+      "size": "",
+      "attributes": [
+        "NOT NULL"
+      ]
+    }
+  },
+  "3": {
+    "attrs": [
+      {
+        "id": "id",
+        "type": "INT",
+        "basicType": "Numeric",
+        "size": "",
+        "attributes": [
+          "NOT NULL"
+        ]
+      },
+      {
+        "id": "field1",
+        "type": "VARCHAR",
+        "basicType": "String",
+        "size": "",
+        "attributes": []
+      },
+      {
+        "id": "field2",
+        "type": "CHAR",
+        "basicType": "String",
+        "size": "45",
+        "attributes": []
+      },
+      {
+        "id": "chats_id",
+        "type": "INT",
+        "basicType": "Numeric",
+        "size": "",
+        "attributes": [],
+        "origin": 2
+      }
+    ],
+    "name": "test",
+    "id": 3,
+    "primaryKey": {
+      "id": "id",
+      "type": "INT",
+      "basicType": "Numeric",
+      "size": "",
+      "attributes": [
+        "NOT NULL"
+      ]
+    }
+  }
+}
 
