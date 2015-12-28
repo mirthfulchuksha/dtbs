@@ -44,6 +44,21 @@ angular.module('DTBS.main')
       });
     };
 
+    var fetchMongo = function () {
+      var dataObj = {data: []};
+      for (var table in dbStorage) {
+        dataObj.data.push(dbStorage[table]);
+      }
+
+      return $http({
+        method: 'POST',
+        url: '/mongoose',
+        data: dataObj
+      }).then(function (res) {
+        console.log(res);
+      });
+    };
+
     var saveCode = function () {
       var editor = ace.edit("editor");
       var codeBase = {};
