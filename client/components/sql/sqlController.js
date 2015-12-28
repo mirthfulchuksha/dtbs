@@ -30,6 +30,25 @@ angular.module('DTBS.main')
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
 
+    $scope.savedSchemas = [];
+    var findSavedSchemas = function () {
+      CodeParser.fetchSchemas(function (schemas) {
+        $scope.savedSchemas = schemas;
+      });
+    };
+
+    $scope.loadNewSchema = function (index) {
+      CodeParser.fetchOneSchema($scope.savedSchemas[index].name, function (schema) {
+        //update DB
+        $scope.db.name = schema.name;
+        $scope.db.lang = schema.language;
+
+        //update table data and change d3
+        $scope.tableStorage = schema.data;
+        $scope.interactCanvas();
+      });
+    };
+
     $scope.options = {
       Numeric: [
         {name: "TINYINT"},
@@ -448,6 +467,9 @@ angular.module('DTBS.main')
       } else {
         $scope.tableStorage = {};
       }
+
+      //pull out existing schemas
+      findSavedSchemas();
     };
 
     $scope.removeKeyFromTable = function (index, table) {
