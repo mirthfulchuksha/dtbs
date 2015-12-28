@@ -20,8 +20,7 @@ angular.module('DTBS.main')
     $scope.potentialFKs = {};
     //incrementing id for table creation
     $scope.id = 1;
-    $scope.db = {}; //??
-    $scope.selectedTable = 0; //??
+    $scope.db = {};
     $scope.primaryKeyPresent = false;
     $scope.addingField = false;
     $scope.seeForeignKeys = false;
@@ -488,16 +487,6 @@ angular.module('DTBS.main')
        timeout = $timeout(saveUpdates, secondsToWaitBeforeSave * 1000);
      }
     };
-
-    //listener for selection event in d3 service to choose tables
-    // $scope.$on('d3:table-class', function (e, data) {
-    //   //regex to extract the table number in case of additional classes
-    //   var parsedNum = data.match(/\d+/)[0];
-    //   $scope.selectedTable = parsedNum;
-    //   console.log("selecting ", parsedNum);
-    //   var obj = $scope.tableStorage[$scope.selectedTable];
-    //   $scope.modalTitle(obj.name);
-    // });
 
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
