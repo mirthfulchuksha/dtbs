@@ -117,14 +117,6 @@ app.post('/build', function (req, res, next) {
   util.buildTables(req, res, next);
 });
 
-app.post('savePositions', function (req, res, next) {
-  util.savePositions(req, res, next);
-});
-
-app.get('savePositions', function (req, res, next) {
-  util.fetchPositions(req, res, next);
-});
-
 app.post('/bookshelf', function (req, res, next) {
   util.parseORMBookshelf(req, res, next);
 });

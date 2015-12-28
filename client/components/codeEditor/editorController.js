@@ -1,12 +1,17 @@
 angular.module('DTBS.main')
-  .controller('EditorController', [ '$scope', 'CodeParser', 'AccessSchemaService', function ($scope, CodeParser, AccessSchemaService) {
+  .controller('EditorController', [ '$scope', 'CodeParser', 'AccessSchemaService', 'canvasSave', function ($scope, CodeParser, AccessSchemaService, canvasSave) {
+    var graph;
     $scope.db = {};
     $scope.downloadCode = function () {
       CodeParser.saveCode();
     };
-
+    $scope.$on('canvas:save-data', function (e, data) {
+      graph = data;
+    });
     $scope.saveSchema = function () {
-      CodeParser.saveSchema();
+      canvasSave.alertSave();
+      console.log(graph, "graph");
+      CodeParser.saveSchema(graph);
     };
 
     $scope.updateFactory = function (language) {

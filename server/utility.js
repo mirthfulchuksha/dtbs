@@ -278,15 +278,6 @@ module.exports = {
     }
 
     res.send({data: finishedTableStorage}, 200);
-  },
-
-  savePositions: function (req, res, next) {
-    // save that shit in the dtbs
-    
-  },
-
-  fetchPositions: function (req, res, next) {
-    // fetch that shit from the dtbs
   }
 };
 

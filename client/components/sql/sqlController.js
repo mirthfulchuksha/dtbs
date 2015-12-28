@@ -425,7 +425,7 @@ angular.module('DTBS.main')
     };
 
     $scope.saveSVG = function () {
-      canvasSave.alertSave();
+
       if ($scope.view) {
         svg_xml = document.getElementById('designer');
       } else {
