@@ -11,6 +11,24 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     $scope.showModal = !$scope.showModal;
   };
 
+  $scope.savedSchemas = [{name:"db1"}, {name:"db2"}];
+  var showSavedSchemas = function () {
+    CodeParser.fetchSchemas(function (res) {
+      $scope.savedSchemas = res;
+    });
+  };
+
+  //this loads user schema and needs to be run on init
+  showSavedSchemas();
+
+  $scope.loadSchema = function () {
+    CodeParser.fetchOneSchema($scope.dbpicker, function (schema) {
+      //put retrieved schema into local storage to be pulled out by recoverinfo()
+      window.localStorage.setItem('tempTable', JSON.stringify(schema.data));
+      $location.path('/sql');
+    });
+  };
+
   $scope.saveSVG = function () {
     var svg_xml = document.getElementById('designer');
     var serializer = new XMLSerializer();
@@ -57,6 +75,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
         $scope.notValid = false;
         $scope.loggedIn = true;
         $location.path('/setup');
+        //trying to fetch
       }, function (res) {
         if (res === 'noUser') {
           $scope.noUser = true;

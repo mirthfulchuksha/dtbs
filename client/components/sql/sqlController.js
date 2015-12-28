@@ -418,6 +418,10 @@ angular.module('DTBS.main')
       canvas.remove();
     };
 
+    var changeTableID = function (num) {
+      $scope.id = num;
+    }
+
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */

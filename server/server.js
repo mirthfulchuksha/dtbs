@@ -87,9 +87,13 @@ app.post('/signup', function (req, res) {
   helper.signup(req, res);
 });
 
-app.get('/setup', function(req, res) {
+app.get('/setup', function (req, res) {
   console.log("HERE")
   helper.fetchSchemas(req, res);
+});
+
+app.get('/loadSchema', function (req, res) {
+  helper.fetchOneSchema(req, res);
 });
 
 /*

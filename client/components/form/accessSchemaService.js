@@ -8,8 +8,8 @@ angular.module('DTBS.main')
     }
 
     var setTempSchema = function (schema) {
+      //stores in the case of github login
       tempSchema = schema;
-      console.log("schema saved in factory");
     };
 
     var getTempSchema = function () {
