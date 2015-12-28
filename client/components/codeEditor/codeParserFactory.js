@@ -101,7 +101,6 @@ angular.module('DTBS.main')
           url: '/setup?username=' + dbUser,
           method: 'GET',
         }).success(function (res) {
-          console.log("RESPPP", res);
           //callback to display saved schemas in modal controller
           cb(res);
         }).error(function (res) {
@@ -127,7 +126,6 @@ angular.module('DTBS.main')
 
     var update = function (db, storage, user) {
       dbUser = user ? user.userName : dbUser;
-      console.log("user: ", dbUser);
       if (db) {
         dbName = db.name ? db.name : dbName;
         dbLang = db.lang ? db.lang : dbLang;
