@@ -25,12 +25,10 @@ angular.module('DTBS', [
     controller: 'MongoController'
   })
   .when('/sql', {
-    templateUrl: './components/sql/sql.html'
+    templateUrl: './components/sql/sql.html',
+    controller: 'sqlController'
   })
   .when('/table', {
     templateUrl: './components/form/formView.html'
-  })
-  .when('/test', {
-    templateUrl: './components/test/test2.html'
   });
 });
