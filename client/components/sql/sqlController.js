@@ -529,6 +529,10 @@ angular.module('DTBS.main')
      }
     };
 
+    $scope.$on('canvas:save-data', function (e, data) {
+      var graph = data;
+    });
+
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;

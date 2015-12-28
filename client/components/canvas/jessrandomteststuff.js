@@ -101,18 +101,18 @@ var snapFormatter = function (table) {
   CREATE TABLE users (
     id INT PRIMARY KEY NOT NULL,
     name VARCHAR(45),
-    email VARCHAR(45)
+    email BIT(45)
   );
 
   CREATE TABLE chats (
     id INT PRIMARY KEY NOT NULL,
-    users_id INT,
+    users_id DATE,
     FOREIGN KEY (users_id) REFERENCES users(id)
   );
 
   CREATE TABLE test (
     id INT PRIMARY KEY NOT NULL,
-    field1 VARCHAR,
+    field1 BIT,
     field2 CHAR(45),
     chats_id INT,
     FOREIGN KEY (chats_id) REFERENCES chats(id)
