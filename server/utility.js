@@ -252,16 +252,27 @@ module.exports = {
     //fix for foreign keys pointing to the wrong table
     for(var tableId in finishedTableStorage) {
       var keys = finishedTableStorage[tableId].attrs;
+      //init for reference objects
+      finishedTableStorage[tableId].foreignKeys = {};
+      finishedTableStorage[tableId].regFields = {};
+
+      var fkObj = finishedTableStorage[tableId].foreignKeys; 
       for(var key = 0; key < keys.length; key++) {
         //only execute this mess if the key is a foreign key
         if(keys[key].origin) {
           var originTableName = keys[key].origin;
+          //ading to fk obj for the table
+          keys[key]["tableName"] = originTableName;
+          fkObj[originTableName] = keys[key];
+          //find origin
           for(var foreignKeyTable in finishedTableStorage) {
             if(finishedTableStorage[foreignKeyTable].name === originTableName) {
               //change origin to be a table id number instead of a name
               keys[key].origin = parseInt(foreignKeyTable);
             }
           }
+        } else if(keys[key] !== finishedTableStorage[tableId].primaryKey) {
+          finishedTableStorage[tableId].regFields[keys[key].id] = keys[key];
         }
       }
     }
@@ -329,6 +340,16 @@ var inputParser = function (inputTable, tableId) {
       attr.attributes.push("AUTO_INCREMENT");
     }
     if (isPrimary) {
+      //create the format object for FKs
+      attr.fkFormat = {
+        id: table.name + '_' + attr.id,
+        origin: table.id,
+        basicType: attr.basicType,
+        type: attr.type,
+        tableName: table.name
+      }
+      //place on object
+      attr.tableName = table.name;
       table.primaryKey = attr;
     }
     for (var j = 0; j < fks.length; j++) {
