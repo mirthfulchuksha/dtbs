@@ -306,10 +306,124 @@ var datajson1 = [{
 
 
 
+{
+  "type": "text",
+  "attr": {
+    "x": "338",
+    "y": "299",
+    "fill": "#000000",
+    "stroke": "none",
+    "style": "font-size: 12px; cursor: move;"
+  },
+  "childNodes": [
+    {
+      "type": "#text",
+      "attr": {
+        "text": "test"
+      }
+    }
+  ]
+}
 
 
-
-
+var schemaStorage = {
+          "0": {
+            "keys": {
+              "Summary": {
+                "type": "String"
+              },
+              "Metadata": {
+                "type": "Nested Document",
+                "keys": {
+                  "Upvotes": {
+                    "type": "Number"
+                  },
+                  "Favourites": {
+                    "type": "Nested Document",
+                    "keys": {
+                      "User": {
+                        "type": "String"
+                      },
+                      "Email": {
+                        "type": "String"
+                      }
+                    }
+                  }
+                }
+              },
+              "Title": {
+                "type": "String"
+              },
+              "Body": {
+                "type": "String"
+              },
+              "Date": {
+                "type": "Date"
+              }
+            },
+            "name": "blogSchema",
+            "id": 0,
+            "depth": {
+              "Main": 1,
+              "Main > Metadata": 2,
+              "Main > Metadata > Favourites": 3
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Metadata",
+              "Main > Metadata > Favourites"
+            ],
+            "allKeys": {
+              "Summary": "String Location: Main",
+              "Metadata": "Nested Document Location: Main",
+              "Upvotes": "Number Location: Main > Metadata",
+              "Favourites": "Nested Document Location: Main > Metadata",
+              "User": "String Location: Main > Metadata > Favourites",
+              "Email": "String Location: Main > Metadata > Favourites",
+              "Title": "String Location: Main",
+              "Body": "String Location: Main",
+              "Date": "Date Location: Main"
+            }
+          },
+          "1": {
+            "keys": {
+              "Company Code": {
+                "type": "String"
+              },
+              "Company Info": {
+                "type": "Nested Document",
+                "keys": {
+                  "Employees": {
+                    "type": "Number"
+                  },
+                  "Contact Info": {
+                    "type": "Number"
+                  }
+                }
+              },
+              "Share Prices": {
+                "type": "Array"
+              }
+            },
+            "name": "stockSchema",
+            "id": 1,
+            "depth": {
+              "Main": 1,
+              "Main > Company Info": 2
+            },
+            "nestedDocuments": [
+              "Main",
+              "Main > Company Info"
+            ],
+            "allKeys": {
+              "Company Code": "String Location: Main",
+              "Company Info": "Nested Document Location: Main",
+              "Employees": "Number Location: Main > Company Info",
+              "Contact Info": "Number Location: Main > Company Info",
+              "Share Prices": "Array Location: Main"
+            }
+          }
+        };
 
 
 

@@ -19,7 +19,7 @@ angular.module('DTBS.main')
     //a table is chosen for editing
     $scope.potentialFKs = {};
     //incrementing id for table creation
-    $scope.id = 0;
+    $scope.id = 1;
     $scope.db = {}; //??
     $scope.selectedTable = 0; //??
     $scope.primaryKeyPresent = false;

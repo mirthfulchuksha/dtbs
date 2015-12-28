@@ -77,7 +77,7 @@ angular.module('DTBS.main')
           }
         });
 
-        scope.render = function (s, shapes, texts, dragGroups, fkConnections) {
+        scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes) {
           var color, i, ii, tempS, tempT;
           var dragger = function () {
             this.data('origTransform', this.transform().local )
@@ -98,8 +98,36 @@ angular.module('DTBS.main')
           var connections = [];
           for (var i = 0, ii = shapes.length; i < ii; i++) {
             color = "grey";
-            tempS = shapes[i].attr({fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move"});
-            tempT = texts[i].attr({fill: color, stroke: "none", "font-size": 12, cursor: "move"});
+            // Setup header field - light grey with black text
+            if (tableReferences[i] === "header") {
+              tempS = shapes[i].attr({fill: "#D3D3D3", stroke: color, "fill-opacity": 1, "stroke-width": 1, cursor: "move"});
+              tempT = texts[i].attr({fill: "black", stroke: "none", "font-size": 14, cursor: "move"});
+            } else {
+              // Primary Key field has bold text
+              if (tableReferences[i] === "primary") {
+                tempT = texts[i].attr({fill: "black", stroke: "none", "font-size": 12, "font-weight": "bold", cursor: "move"});
+              // Regular field has normal weight
+              } else {
+                tempT = texts[i].attr({fill: "black", stroke: "none", "font-size": 12, cursor: "move"});
+              }
+              // Color the fields by data type
+              var fieldColor;
+              switch(fieldTypes[i]) {
+                case "Numeric":
+                    fieldColor = "#ff8169";
+                    break;
+                case "Bit":
+                    fieldColor = "#ff55c3";
+                    break;
+                case "DateTime":
+                    fieldColor = "#b06df7";
+                    break;
+                case "String":
+                    fieldColor = "#7076ff";
+                    break;
+              }
+              tempS = shapes[i].attr({fill: fieldColor, stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});
+            }
           }
           fkConnections.forEach(function (fkConnection) {
             connections.push(s.connection.apply(s, fkConnection));
@@ -109,41 +137,68 @@ angular.module('DTBS.main')
             var group = s.group.apply(s, dragGroup);
             group.drag(move, dragger, up);
           });
+        }
+
+        var tableWidth = function (table) {
+          var max = (table.name).length;
+          // get max length of all the fields
+          table.attrs.forEach(function (field) {
+            var fieldWidth = (field.id+" "+field.type+" "+field.size+" ").length;
+            if (fieldWidth > max) {
+              max = fieldWidth;
+            }
+          });
+          return max;
         };
+
         scope.$on('canvas:new-data', function (e, data) {
+
           $("#svgout").empty();
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var shapes = [], texts = [];
+          var shapes = [], texts = [], tableReferences = [], fieldTypes = [];
           var s = Snap("#svgout");
           
           var randomIntFromInterval = function (min,max) {
             return Math.floor(Math.random()*(max-min+1)+min);
           };
           var dragGroups = [];
-          var tableWidth = 140;
+          
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
             var table = dataArr[i];
+            var width = tableWidth(dataArr[i]) * 8;
             var startX = randomIntFromInterval(40, 600);
             var startY = randomIntFromInterval(40, 300);
 
-            var startYText = startY+15, startXText = startX+20;
-            var tableShape = s.rect(startX, startY, tableWidth, 20);
+            var startYText = startY+15, startXText = startX+10;
             var tableText = s.text(startXText, startYText, table.name);
+            var tableShape = s.rect(startX, startY, width, 20);
+            
             shapes.push(tableShape);
             texts.push(tableText);
             dragGroup.push(tableShape, tableText);
+            // need to know: if its a pk, if its the header field, what type it is
+            tableReferences.push("header");
+            fieldTypes.push("header");
+            var isPk = true;
             table.attrs.forEach(function (field) {
+              if (isPk) {
+                tableReferences.push("primary");
+                isPk = false;
+              } else {
+                tableReferences.push("field");
+              }
+              fieldTypes.push(field.basicType);
               startY += 20;
               startYText += 20;
-              var fieldShape = s.rect(startX, startY, tableWidth, 20);
-              if (field.size.length > 0) {
-                var fieldText = s.text(startXText, startYText, field.id+"  "+field.type+"("+field.size+")")
+              var fieldShape = s.rect(startX, startY, width, 20);
+              if (field.size && field.size.length > 0) {
+                var fieldText = s.text(startXText, startYText, field.id+"   "+field.type+"("+field.size+")")
               } else {
-                var fieldText = s.text(startXText, startYText, field.id+"  "+field.type);
+                var fieldText = s.text(startXText, startYText, field.id+"   "+field.type);
               }
               shapes.push(fieldShape);
               texts.push(fieldText);
@@ -160,7 +215,7 @@ angular.module('DTBS.main')
             var fkConnection = [shapes[link.source], shapes[link.target]];
             fkConnections.push(fkConnection);
           });
-          scope.render(s, shapes, texts, dragGroups, fkConnections);
+          scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
         });
         
       });

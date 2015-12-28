@@ -7,8 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 600, height = 400, root;
-        var color = d3.scale.category20();
+        var width = 700, height = 450, root;
 
         // Set up the custom colour scale
         var colorLength = 75, colors = [];
@@ -54,21 +53,25 @@ angular.module('DTBS.main')
           var linkg = svg.selectAll(".dendrolink")
               .data(cluster.links(nodes))
               .enter().append("g")
-              .attr("class", "dendrolink")
-              .attr("transform", "translate(100,30)");
+              .style("fill", "none")
+              .style("stroke", "#D3D3D3")
+              .style("stroke-width", 1.5)
+              .attr("transform", "translate(100,5)");
           linkg.append("path")
               .attr("class", "dendrolink")
-              // .attr("transform", "translate(100,30)")
               .attr("d", diagonal);
                 
           linkg.append("text")
-              .attr("class", "dendrolinklabel")
-              .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
-              .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
-              .attr("text-anchor", "middle")
-              .text(function(d) {
-                return d.target.type;
-              });
+          .attr("class", "dendrolinklabel")
+          .style("text-anchor", "middle")
+          .attr("fill", "black")
+          .style("stroke", "black")
+          .style("stroke-width", "0.1")
+          .attr("x", function(d) { return (d.source.y + d.target.y) / 2; })
+          .attr("y", function(d) { return (d.source.x + d.target.x) / 2; })
+          .text(function(d) {
+            return d.target.type;
+          });
 
           var node = svg.selectAll(".dendronode")
               .data(nodes)
@@ -78,7 +81,7 @@ angular.module('DTBS.main')
                 return "translate(" + d.y + "," + d.x + ")"; });
 
           node.append("circle")
-              .attr("transform", "translate(100,30)")
+              .attr("transform", "translate(100,5)")
               .style("fill", function (d) {
                 if (d.name === "Collection") {
                   return color(8);
@@ -102,108 +105,9 @@ angular.module('DTBS.main')
               .attr("dx", function(d) { return d.children ? -15 : 15; })
               .attr("dy", 3)
               .attr("class", "dendrolinklabel")
-              .attr("transform", "translate(100,30)")
+              .attr("transform", "translate(100,5)")
               .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
               .text(function(d) { return d.name; });
-        };
-
-        var schemaStorage = {
-          "0": {
-            "keys": {
-              "Summary": {
-                "type": "String"
-              },
-              "Metadata": {
-                "type": "Nested Document",
-                "keys": {
-                  "Upvotes": {
-                    "type": "Number"
-                  },
-                  "Favourites": {
-                    "type": "Nested Document",
-                    "keys": {
-                      "User": {
-                        "type": "String"
-                      },
-                      "Email": {
-                        "type": "String"
-                      }
-                    }
-                  }
-                }
-              },
-              "Title": {
-                "type": "String"
-              },
-              "Body": {
-                "type": "String"
-              },
-              "Date": {
-                "type": "Date"
-              }
-            },
-            "name": "blogSchema",
-            "id": 0,
-            "depth": {
-              "Main": 1,
-              "Main > Metadata": 2,
-              "Main > Metadata > Favourites": 3
-            },
-            "nestedDocuments": [
-              "Main",
-              "Main > Metadata",
-              "Main > Metadata > Favourites"
-            ],
-            "allKeys": {
-              "Summary": "String Location: Main",
-              "Metadata": "Nested Document Location: Main",
-              "Upvotes": "Number Location: Main > Metadata",
-              "Favourites": "Nested Document Location: Main > Metadata",
-              "User": "String Location: Main > Metadata > Favourites",
-              "Email": "String Location: Main > Metadata > Favourites",
-              "Title": "String Location: Main",
-              "Body": "String Location: Main",
-              "Date": "Date Location: Main"
-            }
-          },
-          "1": {
-            "keys": {
-              "Company Code": {
-                "type": "String"
-              },
-              "Company Info": {
-                "type": "Nested Document",
-                "keys": {
-                  "Employees": {
-                    "type": "Number"
-                  },
-                  "Contact Info": {
-                    "type": "Number"
-                  }
-                }
-              },
-              "Share Prices": {
-                "type": "Array"
-              }
-            },
-            "name": "stockSchema",
-            "id": 1,
-            "depth": {
-              "Main": 1,
-              "Main > Company Info": 2
-            },
-            "nestedDocuments": [
-              "Main",
-              "Main > Company Info"
-            ],
-            "allKeys": {
-              "Company Code": "String Location: Main",
-              "Company Info": "Nested Document Location: Main",
-              "Employees": "Number Location: Main > Company Info",
-              "Contact Info": "Number Location: Main > Company Info",
-              "Share Prices": "Array Location: Main"
-            }
-          }
         };
         scope.$on('mongo:new-data', function (e, data) {
           var dataArr = [];
