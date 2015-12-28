@@ -16,44 +16,56 @@ angular.module('DTBS.main')
 
         // Create the SVG
         var svg = d3.selectAll("#designer");
-        var force;
+        var force, node, link, alpha;
        
-        scope.render = function (tableData) {
+        scope.render = function (tableData, loaded) {
 
           // Set up the custom colour scale
           var colorLength = 75, colors = [];
           var color = d3.scale.linear().domain([1,colorLength])
                 .interpolate(d3.interpolateHcl)
                 .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+  
+          // tableData.forEach(function (table) {
+          //   var tableColor = Math.floor(Math.random() * colorLength + 1);
+          //   colors.push(tableColor);
+          // });
 
-          tableData.forEach(function (table) {
+          for (var z = 0; z < 20; z++) {
             var tableColor = Math.floor(Math.random() * colorLength + 1);
             colors.push(tableColor);
-          });
-
+          }
 
           //Set up the force layout
           force = d3.layout.force()
             .charge(-500)
             //.linkDistance(80)
-            .linkDistance(function(d) { return  d.value; }) 
+            .linkDistance(function(d) { 
+              if (!loaded) {
+                return d.value;
+              } else {
+                return;
+              }
+            }) 
             .size([width, height]);
 
-          var container = canvasFormat.dataBuilder(tableData, true);
-          var graph = canvasFormat.fkLinks(container, tableData);
+          var graph;
+          if (loaded) {
+            graph = tableData;
+          } else {
+            var container = canvasFormat.dataBuilder(tableData, true);
+            graph = canvasFormat.fkLinks(container, tableData);
+          }
           
           var svg = d3.select("#designer");
+
           //Creates the graph data structure out of the json data
           force.nodes(graph.nodes)
               .links(graph.links)
               .start();
 
-          force.charge(function(node) {
-            return -300;
-          });
-
           //Create all the line svgs but without locations yet
-          var link = svg.selectAll(".link")
+          link = svg.selectAll(".link")
               .data(graph.links)
               .enter().append("line")
               .style("stroke", "grey")
@@ -66,7 +78,7 @@ angular.module('DTBS.main')
               })
               .attr("class", "link");
 
-          var node = svg.selectAll(".node")
+          node = svg.selectAll(".node")
               .data(graph.nodes)
               .enter().append("g")
               .attr("class", "node")
@@ -107,9 +119,9 @@ angular.module('DTBS.main')
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
-            svg.selectAll("circle")
-                .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
-                .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
+              svg.selectAll("circle")
+                  .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
+                  .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
 
             svg.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
@@ -133,15 +145,254 @@ angular.module('DTBS.main')
           svg.selectAll("*").remove();
           scope.render(dataArr);
         });
+        var savedGraph = { nodes: [], links: [] };
         scope.$on('canvas:alert-data', function (e, data) {
           // pass through the json to the front end
           var graph = {};
+
+          savedGraph.nodes = node.data();
+            savedGraph.links = link.data(); 
+            console.log(savedGraph, "saved graph")
+            svg.selectAll("*").remove();
+
+            scope.render(temp1, true);
+            // svg.selectAll("*").remove();
+
           graph.storedNodes = JSON.stringify(force.nodes());
           graph.storedLinks = JSON.stringify(force.links());
           var saveGraph = angular.copy(graph);
-          canvasSave.push(saveGraph);
+          // canvasSave.push(saveGraph);
         });
       });
     }};
 }]);
-
+var temp1 =
+{
+  "nodes": [
+    {
+      "name": "users",
+      "type": "title",
+      "pk": {
+        "id": "id",
+        "type": "INT",
+        "basicType": "Numeric",
+        "size": "",
+        "attributes": [
+          "NOT NULL"
+        ],
+        "fkFormat": {
+          "id": "users_id",
+          "origin": 1,
+          "basicType": "Numeric",
+          "type": "INT",
+          "tableName": "users"
+        },
+        "tableName": "users"
+      },
+      "group": 1,
+      "size": 45,
+      "id": 1,
+      "index": 0,
+      "weight": 3,
+      "x": 618.078816132288,
+      "y": 205.43291268236456,
+      "px": 618.078816132288,
+      "py": 205.43291268236456,
+      "fixed": 1
+    },
+    {
+      "name": "id",
+      "type": "field",
+      "isPk": true,
+      "group": 1,
+      "size": 25,
+      "id": 1,
+      "index": 1,
+      "weight": 1,
+      "x": 674.9501621290509,
+      "y": 165.40122823012447,
+      "px": 674.9501621290509,
+      "py": 165.40122823012447,
+      "fixed": 1
+    },
+    {
+      "name": "name",
+      "type": "field",
+      "isPk": false,
+      "group": 1,
+      "size": 25,
+      "id": 1,
+      "index": 2,
+      "weight": 1,
+      "x": 434.3089256131086,
+      "y": 337.4673879756488,
+      "px": 434.3089256131086,
+      "py": 337.4673879756488,
+      "fixed": 1
+    },
+    {
+      "name": "email",
+      "type": "field",
+      "isPk": false,
+      "group": 1,
+      "size": 25,
+      "id": 1,
+      "index": 3,
+      "weight": 1,
+      "x": 477.089817938607,
+      "y": 123.73187917580358,
+      "px": 477.089817938607,
+      "py": 123.73187917580358,
+      "fixed": 1
+    }
+  ],
+  "links": [
+    {
+      "source": {
+        "name": "users",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "type": "INT",
+          "basicType": "Numeric",
+          "size": "",
+          "attributes": [
+            "NOT NULL"
+          ],
+          "fkFormat": {
+            "id": "users_id",
+            "origin": 1,
+            "basicType": "Numeric",
+            "type": "INT",
+            "tableName": "users"
+          },
+          "tableName": "users"
+        },
+        "group": 1,
+        "size": 45,
+        "id": 1,
+        "index": 0,
+        "weight": 3,
+        "x": 618.078816132288,
+        "y": 205.43291268236456,
+        "px": 618.078816132288,
+        "py": 205.43291268236456,
+        "fixed": 1
+      },
+      "target": {
+        "name": "id",
+        "type": "field",
+        "isPk": true,
+        "group": 1,
+        "size": 25,
+        "id": 1,
+        "index": 1,
+        "weight": 1,
+        "x": 674.9501621290509,
+        "y": 165.40122823012447,
+        "px": 674.9501621290509,
+        "py": 165.40122823012447,
+        "fixed": 1
+      },
+      "value": 50
+    },
+    {
+      "source": {
+        "name": "users",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "type": "INT",
+          "basicType": "Numeric",
+          "size": "",
+          "attributes": [
+            "NOT NULL"
+          ],
+          "fkFormat": {
+            "id": "users_id",
+            "origin": 1,
+            "basicType": "Numeric",
+            "type": "INT",
+            "tableName": "users"
+          },
+          "tableName": "users"
+        },
+        "group": 1,
+        "size": 45,
+        "id": 1,
+        "index": 0,
+        "weight": 3,
+        "x": 618.078816132288,
+        "y": 205.43291268236456,
+        "px": 618.078816132288,
+        "py": 205.43291268236456,
+        "fixed": 1
+      },
+      "target": {
+        "name": "name",
+        "type": "field",
+        "isPk": false,
+        "group": 1,
+        "size": 25,
+        "id": 1,
+        "index": 2,
+        "weight": 1,
+        "x": 434.3089256131086,
+        "y": 337.4673879756488,
+        "px": 434.3089256131086,
+        "py": 337.4673879756488,
+        "fixed": 1
+      },
+      "value": 50
+    },
+    {
+      "source": {
+        "name": "users",
+        "type": "title",
+        "pk": {
+          "id": "id",
+          "type": "INT",
+          "basicType": "Numeric",
+          "size": "",
+          "attributes": [
+            "NOT NULL"
+          ],
+          "fkFormat": {
+            "id": "users_id",
+            "origin": 1,
+            "basicType": "Numeric",
+            "type": "INT",
+            "tableName": "users"
+          },
+          "tableName": "users"
+        },
+        "group": 1,
+        "size": 45,
+        "id": 1,
+        "index": 0,
+        "weight": 3,
+        "x": 618.078816132288,
+        "y": 205.43291268236456,
+        "px": 618.078816132288,
+        "py": 205.43291268236456,
+        "fixed": 1
+      },
+      "target": {
+        "name": "email",
+        "type": "field",
+        "isPk": false,
+        "group": 1,
+        "size": 25,
+        "id": 1,
+        "index": 3,
+        "weight": 1,
+        "x": 477.089817938607,
+        "y": 123.73187917580358,
+        "px": 477.089817938607,
+        "py": 123.73187917580358,
+        "fixed": 1
+      },
+      "value": 50
+    }
+  ]
+}
