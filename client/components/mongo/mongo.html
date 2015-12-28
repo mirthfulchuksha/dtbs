@@ -1,41 +1,41 @@
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">dtbs</a>
-    </div>
-    <form class="navbar-form navbar-left" role="search">
-      <a href="/logout" class="btn">Logout</a>
-    </form>
+<nav class="navbar">
+  <div class="navbar-header">
+    <a class="brand" href="">dtbs</a>
+    <a href="/logout" class="btn">Logout</a>
   </div>
 </nav>
 
 <div class="super-wrap">
-  <div class="editor-wrapper grey" ng-controller="EditorController">
-    <div class="navbar-header">
-      <a class="navbar-brand editor-head grey" href="#">code:</a>
-    </div>
-    <form class="navbar-form navbar-left grey dropdown" role="search">
-      <a class="btn btn-default" role="button" id="download"
-        target="_self" href="" download="" ng-click="downloadCode()">
-        <span class="glyphicon glyphicon-save"></span>
-      </a>
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Output
-        <span class="caret"></span>
-      </button>
-      <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
-        <span class="glyphicon glyphicon-floppy-disk"></span>
-      </a>
-      <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-        <span class="glyphicon glyphicon-wrench"></span>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a href="" ng-click="updateFactory('Mongoose')">Mongoose </a></li>
-        <li><a href="" ng-click="updateFactory('ActiveRecord')">Active Record </a></li>
-        <li><a href="" ng-click="updateFactory('Mongo')">Mongo </a></li>
+  <div class="editor-wrapper" ng-controller="EditorController">
+    <div class="code-opts">
+      <ul id="output" class="dropdown menu" data-dropdown-menu>
+        <li class="menu">
+          <a href="" style="width:7em; margin-right:1em; font-weight:600">Output</a>
+          <ul>
+            <li><a href="" ng-click="updateFactory('Mongoose')">Mongoose </a></li>
+            <li><a href="" ng-click="updateFactory('ActiveRecord')">Active Record </a></li>
+            <li><a href="" ng-click="updateFactory('Mongo')">Mongo </a></li>
+          </ul>
+        </li>
+        <li>
+          <a class="btn btn-default" role="button" id="download"
+            target="_self" href="" download="" ng-click="downloadCode()">
+            <i class="fi-download" style="font-size:16px"></i>
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+            <i class="fi-save" style="font-size:16px"></i>
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
+            <i class="fi-refresh" style="font-size:16px"></i>
+          </a>
+        </li>
       </ul>
-    </form>
+    </div>
+
     <div id="editor">
       <textarea ng-model="editorText">/* Your Output will appear here! */</textarea>
     </div>
@@ -49,96 +49,106 @@
     <svg id="tree" d3-mongo-tree></svg>
     <svg id="dendro" style="display:none" d3-mongo-dendro></svg>
   </div>
-  <hr>
+
   <div class="editButtonContainer">
-    <button ng-click="toggleEditModal('createMongo')" class="btn btn-default">Create Schema</button>
-    <button ng-click="toggleEditModal('editMongo')" class="btn btn-default">Edit Schema</button>
-    <button id='mytoggler' ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
-    <button id="savepicture" ng-click="saveSVG()" class="btn btn-default">Save Image</button>
+    <a ng-click="toggleEditModal('createMongo')" data-open="mongoEditModal"
+      class="button expanded mongoBtn">
+      <i class="fi-page" style="font-size:16px"></i></a>
+    <a ng-click="toggleEditModal('editMongo')" data-open="mongoEditModal"
+      class="button expanded mongoBtn">
+      <i class="fi-pencil" style="font-size:16px"></i></a>
+    <a id='mytoggler' ng-click="toggleCanvasView()"
+      class="button expanded mongoBtn">
+      <i class="fi-contrast" style="font-size:16px"></i></a>
+    <a id="savepicture" ng-click="saveSVG(view)"
+      class="button expanded mongoBtn">
+      <i class="fi-photo" style="font-size:16px"></i></a>
   </div>
 
-  <mongoeditmodal title="Add/Edit Schema" visible="visibleEditModal">
-    <form role="form" id="mongoedit">
-
-      <div class="create" ng-show="typeEdit === 'createMongo'">
-        <label>Schema Name: </label>
-          <input id="newName" type="text" placeholder="Type name..." ng-model="currentSchema.name" required/>
+  <div class="reveal" id="mongoEditModal" data-reveal>
+    <h4>Add/Edit Schema</h4>
+    <form role="form" name="schemaEdit">
+      <div class="row">
+        <div class="create" ng-show="typeEdit === 'createMongo'">
+          <label>Schema Name: </label>
+            <input type="text" style="width:31em" placeholder="Type name..."
+              ng-model="currentSchema.name" required/>
+        </div>
       </div>
-
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
-          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required> 
+          <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
             <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
       </div>
-
-      <div>
-        <div ng-repeat="(key,val) in allKeys"> <!--currentSchema['keys']"> -->
-          <hr>
-          <label>Key: {{key}} Type: {{val.display}}</label>
-          <button "btn btn-default" ng-click="deleteKey(key, val)" class="pull-right">Delete Key</button>
-          <br>
-        </div>
-      </div>
-      
-      <div class="addKey" ng-show="currentSchema.name || showAddKey === true">
+      <div ng-repeat="(key,val) in allKeys"> <!--currentSchema['keys']"> -->
         <hr>
-        <button class="btn btn-success" ng-click="addKey(currentSchema.name)">
-          <span class="glyphicon glyphicon-plus-sign"></span> Add Key
-        </button>
+        <label>Key: {{key}} Type: {{val.display}}</label>
+        <button "button expanded mongoBtn" ng-click="deleteKey(key, val)" class="pull-right">Delete Key</button>
+        <br>
       </div>
       <hr>
-      <br>
-
-      <div ng-show="addingKey === true">
+      <div ng-show="addingKey === true" class="row" style="display:inline">
 
         <label>Add To:</label>
-          <select ng-model="nestedLocation" required>
+          <select ng-model="nestedLocation" style="width:31em" required>
             <option ng-repeat="(key, val) in nestedDocuments">{{key}}</option>
           </select>
-          <br>
-          <br>
 
-        <label>Key Name:</label>
-          <input id="name" ng-model="keyName" placeholder="Enter key name" required/>
-
-        <label>Data Type:</label>
-          <select id="type" ng-model="keyValue" required>
-            <option>String</option>
-            <option>Number</option>
-            <option>Date</option>
-            <option>Buffer</option>
-            <option>Boolean</option>
-            <option>Mixed</option>
-            <option>ObjectID</option>
-            <option>Array</option>
-          </select>
-        
-        <div ng-show="keyValue === 'Mixed' && (depth[nestedLocation] == undefined || depth[nestedLocation] < 10)">
-        <label>Nested document?<label>
-          <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="nestedDocument"/>
+        <div class="medium-5" style="float:left">
+          <label>Key Name: </label>
+            <input type="text" ng-model="keyName" placeholder="Enter key name" required/>
         </div>
-
-        <div ng-show="keyValue === 'Mixed' && depth[nestedLocation] === 10">
-          <br>
-          <p>Nested documents > 10 deep not supported.</p>
+        <div class="medium-6 columns" style="float:left; height:5em">
+          <label>Data Type:</label>
+            <select ng-model="keyValue" required>
+              <option>String</option>
+              <option>Number</option>
+              <option>Date</option>
+              <option>Buffer</option>
+              <option>Boolean</option>
+              <option>Mixed Object</option>
+              <option>Mixed Array</option>
+              <option>ObjectID</option>
+              <option>Array</option>
+            </select>
         </div>
-
-        <button "btn btn-default" ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedDocuments['Main']" class="pull-right">Save Key</button>
-        <br>
-        <hr>
+        <div class="addKey medium-1 columns" style="">
+          <span ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedDocuments['Main']"
+            class="fi-check addKey"></span>
+        </div>
       </div>
-      <br>  
-      </form>
+      <br>
 
-    <button type="submit" class="btn btn-default" ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';">Done</button>
+      <div ng-show="keyValue === 'Mixed' && (depth[nestedLocation] == undefined || depth[nestedLocation] < 10)">
+      <label>Nested document?<label>
+        <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="nestedDocument"/>
+      </div>
 
-    <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''">Delete Schema</button>
+      <div ng-show="keyValue === 'Mixed' && depth[nestedLocation] === 10">
+        <br>
+        <p>Nested documents > 10 deep not supported.</p>
+      </div>
 
-  </mongoeditmodal>
+    </form>
 
+    <div style="">
+      <span class="addKey">
+        <button class="button" ng-click="addKey(currentSchema.name)" ng-show="currentSchema.name || showAddKey === true">
+          <span class="fi-plus"></span> Add Key</button>
+      </span>
+
+      <button type="submit" data-close aria-label="Close reveal" class="button expanded mongoBtn"
+        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right">Done</button>
+
+      <button type="submit" class="button expanded mongoBtn" class="pull-right"
+        ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''" style="float:right; margin-right:.5em">Delete Schema</button>
+    </div>
+  </div>
 </div>
+
 <script>
+
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode("ace/mode/sql");
@@ -146,4 +156,26 @@
     tabSize: 2,
     useSoftTabs: true
   });
+  $(document).foundation();
+  var elem = new Foundation.DropdownMenu($('#output'));
+  // var toolTip = new Foundation.Tooltip($('.has-tip'));
+
+  $(document).ready(function() {
+    $('#code_button').on('click', function () {
+      var state = parseInt($('.super-wrap').css('right'), 10) > -1;
+      $('.super-wrap').animate({'right':(state ? -400: 0)}, 'slow');
+      $('#code_button').text((state ? '<<': '>>'));
+    });
+    // $(".has-tip").tooltip({
+    //   content: function(event, ui) { return $(this).attr('data-id'); },
+    //   position: { my: "left", at: "right" },
+    //   tooltipClass: "toolTip"
+    // });
+  });
+
+  $('.addKey').on('click', function () {
+    var modal = $("#mongoEditModal");
+    modal.animate({ scrollTop: modal.prop("scrollHeight") - modal.height() }, 0);
+  });
+
 </script>

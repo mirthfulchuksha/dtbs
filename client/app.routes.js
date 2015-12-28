@@ -31,6 +31,6 @@ angular.module('DTBS', [
     templateUrl: './components/form/formView.html'
   })
   .when('/test', {
-    templateUrl: './components/test/test.html'
+    templateUrl: './components/test/test2.html'
   });
 });
