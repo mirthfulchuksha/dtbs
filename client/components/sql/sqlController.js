@@ -324,7 +324,6 @@ angular.module('DTBS.main')
     };
 
     $scope.setAttrsArray = function () {
-      console.log('setting attrs array');
       $scope.currentTable['attrs'] = [];
       $scope.currentTable['attrs'][0] = $scope.currentTable.primaryKey;
 
@@ -356,7 +355,6 @@ angular.module('DTBS.main')
             for (var i = $scope.tableStorage[key]['attrs'].length - 1; i < 0; i--) {
               if ($scope.tableStorage[key]['attrs'][i] === $scope.currentTable['primaryKey']['fkFormat']){
                 $scope.tableStorage[key]['attrs'].slice(i, 1);
-                console.log('sliced out fk');
               }
             }
             delete $scope.tableStorage.key['foreignKeys'][currentTable];
@@ -493,7 +491,7 @@ angular.module('DTBS.main')
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;
-      $scope.id = Object.keys($scope.tableStorage).length;
+      $scope.id = Object.keys($scope.tableStorage).length + 1;
       $scope.interactCanvas();
     });
     //event listener for updating or server side calls on save
