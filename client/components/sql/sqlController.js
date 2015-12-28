@@ -334,7 +334,7 @@ angular.module('DTBS.main')
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
       }
-
+      console.log($scope.tableStorage);
       $scope.interactCanvas();
 
     };
