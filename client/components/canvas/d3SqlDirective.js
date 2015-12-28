@@ -3,8 +3,9 @@ angular.module('DTBS.main')
 .directive('d3Sql', [
    'd3Service',
    'canvasData',
+   'canvasSave',
    'canvasFormat',
-   function (d3Service, canvasData, canvasFormat) {
+   function (d3Service, canvasData, canvasSave, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -15,6 +16,7 @@ angular.module('DTBS.main')
 
         // Create the SVG
         var svg = d3.selectAll("#designer");
+        var force;
        
         scope.render = function (tableData) {
 
@@ -31,7 +33,7 @@ angular.module('DTBS.main')
 
 
           //Set up the force layout
-          var force = d3.layout.force()
+          force = d3.layout.force()
             .charge(-500)
             //.linkDistance(80)
             .linkDistance(function(d) { return  d.value; }) 
@@ -130,6 +132,14 @@ angular.module('DTBS.main')
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
+        });
+        scope.$on('canvas:alert-data', function (e, data) {
+          // pass through the json to the front end
+          var graph = {};
+          graph.storedNodes = JSON.stringify(force.nodes());
+          graph.storedLinks = JSON.stringify(force.links());
+          var saveGraph = angular.copy(graph);
+          canvasSave.push(saveGraph);
         });
       });
     }};

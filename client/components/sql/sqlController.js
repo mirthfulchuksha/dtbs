@@ -4,9 +4,14 @@ angular.module('DTBS.main')
   '$timeout',
   'CodeParser',
   'canvasData',
+  'canvasSave',
   'AccessSchemaService',
+<<<<<<< HEAD
   '$location',
   function ($scope, $timeout, CodeParser, canvasData, AccessSchemaService, $location) {
+=======
+  function ($scope, $timeout, CodeParser, canvasData, canvasSave, AccessSchemaService) {
+>>>>>>> Starts on saving positions with new service for broadcasting save event
   
     //from Form Controller
 
@@ -420,6 +425,7 @@ angular.module('DTBS.main')
     };
 
     $scope.saveSVG = function () {
+      canvasSave.alertSave();
       if ($scope.view) {
         svg_xml = document.getElementById('designer');
       } else {
