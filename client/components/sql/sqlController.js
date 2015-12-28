@@ -159,7 +159,6 @@ angular.module('DTBS.main')
       for (var key in $scope.tableStorage) {
         console.log($scope.tableStorage[key]['name']);
         if ($scope.tableStorage[key]['name'] === tableName){
-          console.log("yeps");
           $scope.currentTable = $scope.tableStorage[key];
           //?? more fields necessary????
           //if not originally created via add modal, need to make the regFields and ForeignKey objects
@@ -170,7 +169,6 @@ angular.module('DTBS.main')
         }
         if ($scope.tableStorage[key]["name"] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
-          console.log($scope.potentialFKs, 'heres the FKs');
         }
       }
 
@@ -429,12 +427,21 @@ angular.module('DTBS.main')
       var recovered = window.localStorage.getItem('tempTable');
       if(recovered) {
         var parsedRecovered = JSON.parse(recovered);
-        $scope.tableStorage = parsedRecovered;
+
+        if(parsedRecovered.data) {
+          //if the recovered data is the record of an entire schema and not just the table storage
+          $scope.db.name = parsedRecovered.name;
+          $scope.db.lang = parsedRecovered.language;
+          $scope.tableStorage = parsedRecovered.data;
+        } else {
+          $scope.tableStorage = parsedRecovered;
+        }
+
         $scope.id = Object.keys($scope.tableStorage).length;
 
         window.localStorage.removeItem('tempTable');  
 
-        var amount = Object.keys(parsedRecovered).length;
+        var amount = Object.keys(parsedRecovered.data).length;
         //rebuild visuals        
         $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
         $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);

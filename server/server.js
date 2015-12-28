@@ -24,8 +24,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 //this will go on Heroku eventually
-var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || 'nope';
+var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || 'nope';
 
 //stuff that passport needs
 passport.serializeUser(function(user, done) {
