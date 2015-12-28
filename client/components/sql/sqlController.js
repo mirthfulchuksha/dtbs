@@ -153,6 +153,7 @@ angular.module('DTBS.main')
     };
 
     $scope.setTable = function (tableName) {
+      tableName = tableName.replace('<script>', '').replace('</script>', '');
       console.log(tableName);
       //this function loads a previously saved table for editing
       for (var key in $scope.tableStorage) {
@@ -250,11 +251,10 @@ angular.module('DTBS.main')
     };
 
     $scope.saveField = function (id, basicType, type, size, attributes, def){
-
       $scope.currentTable.regFields[id] = {
 
         basicType: basicType,
-        id: id,
+        id: id.replace('<script>', '').replace('</script>', ''),
         type: type,
         size: size,
 
