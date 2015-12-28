@@ -192,104 +192,6 @@ angular.module('DTBS.main')
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
-        var schemaStorage = {
-          "0": {
-            "keys": {
-              "Summary": {
-                "type": "String"
-              },
-              "Metadata": {
-                "type": "Nested Document",
-                "keys": {
-                  "Upvotes": {
-                    "type": "Number"
-                  },
-                  "Favourites": {
-                    "type": "Nested Document",
-                    "keys": {
-                      "User": {
-                        "type": "String"
-                      },
-                      "Email": {
-                        "type": "String"
-                      }
-                    }
-                  }
-                }
-              },
-              "Title": {
-                "type": "String"
-              },
-              "Body": {
-                "type": "String"
-              },
-              "Date": {
-                "type": "Date"
-              }
-            },
-            "name": "blogSchema",
-            "id": 0,
-            "depth": {
-              "Main": 1,
-              "Main > Metadata": 2,
-              "Main > Metadata > Favourites": 3
-            },
-            "nestedDocuments": [
-              "Main",
-              "Main > Metadata",
-              "Main > Metadata > Favourites"
-            ],
-            "allKeys": {
-              "Summary": "String Location: Main",
-              "Metadata": "Nested Document Location: Main",
-              "Upvotes": "Number Location: Main > Metadata",
-              "Favourites": "Nested Document Location: Main > Metadata",
-              "User": "String Location: Main > Metadata > Favourites",
-              "Email": "String Location: Main > Metadata > Favourites",
-              "Title": "String Location: Main",
-              "Body": "String Location: Main",
-              "Date": "Date Location: Main"
-            }
-          },
-          "1": {
-            "keys": {
-              "Company Code": {
-                "type": "String"
-              },
-              "Company Info": {
-                "type": "Nested Document",
-                "keys": {
-                  "Employees": {
-                    "type": "Number"
-                  },
-                  "Contact Info": {
-                    "type": "Number"
-                  }
-                }
-              },
-              "Share Prices": {
-                "type": "Array"
-              }
-            },
-            "name": "stockSchema",
-            "id": 1,
-            "depth": {
-              "Main": 1,
-              "Main > Company Info": 2
-            },
-            "nestedDocuments": [
-              "Main",
-              "Main > Company Info"
-            ],
-            "allKeys": {
-              "Company Code": "String Location: Main",
-              "Company Info": "Nested Document Location: Main",
-              "Employees": "Number Location: Main > Company Info",
-              "Contact Info": "Number Location: Main > Company Info",
-              "Share Prices": "Array Location: Main"
-            }
-          }
-        };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
@@ -298,8 +200,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          // var schemaData = treeFormat.treeFormatter(dataArr);
-          var schemaData = treeFormat.treeFormatter(schemaStorage);
+          var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
