@@ -1,82 +1,34 @@
-<div title="Login/Signup" visible="showSetupModal">
-<!-- <div id="setupModal" class="modal" > -->
-  <div class="modal-content">
-    <div class="col-md-10 col-md-offset-1" ng-if="loggedIn">
-      <ul class="tabs" style="background-color:transparent; height:10px">
-        <li id="login" class="tab col-md-6"><a href="">New</a></li>
-        <li id="signup" class="tab col-md-6"><a href="" ng-click="fetchDBs()">Saved</a></li>
-      </ul>
-    </div>
-    <br>
-  </div>
-  <div class="row">
-    <br>
-    <form class="col-md-10 col-md-offset-1 loginForm" ng-submit="setup()">
-      <div class="col-md-6 col-md-offset-1">
-        <div class="input-field col-md-10 col-md-offset-1">
-          <input id="dbName" type="text" ng-model="db.name" class="validate">
-          <label for="dbName">Database Name</label>
-        </div>
-      </div>
-      <div class="col-md-10 col-md-offset-1" style="text-align:center">
-        <a class='dropdown-button btn' style="width:400px" href='' data-activates='dropdown1'>Your Databases <span>&#x25BE;</span></a>
-        <ul id='dropdown1' class='dropdown-content'>
-          <li ng-repeat="schema in schemaList" style="width:220px" ng-model="db.name" value="{{schema.name}}"><a href="">{{schema.name}} </a></li>
-        </ul>
-      </div>
-      <br>
-<!--       <div class="col s6" style="text-align:center">
-        <a class='dropdown-button btn' style="width:220px" href='' data-activates='dropdown1'>Database Type <span>&#x25BE;</span></a>
-        <ul id='dropdown1' class='dropdown-content'>
-          <li style="width:220px" ng-model='db.lang' value="SQL"><a href="">SQL </a></li>
-          <li style="width:220px" ng-model='db.lang' value="Mongo"><a href="">Mongo </a></li>
-        </ul>
-      </div> -->
-      <div class="form-group">
-        <label for="type">Database Type</label>
-        <div class="dropdown">
+<div class="row">
+  <div class="medium-6 medium-centered large-4 large-centered columns">
+    <form>
+      <div class="row column log-in-form login">
+        <h4 class="text-center">Setup Database</h4>
+        <label>Title
+          <input id="dbName" type="text" ng-model="db.name" placeholder="My DB" required>
+        </label>
+        <label>Language
           <select ng-model='db.lang' class="form-control" required>
             <option value="SQL">SQL</option>
             <option value="Mongo">Mongo</option>
           </select>
-        </div>
+        </label>
+        <br>
+        <p><a type="submit" ng-click="setup()" class="button expanded">Create</a></p>
+        <p><a ng-if="loggedIn" ng-click="showList = !showList; fetchDBs()" class="button expanded">
+          Load Saved DB</a></p>
+          <select ng-if="showList" ng-model='db.name' class="form-control" required>
+            <option ng-repeat="db in user.dbList">{{db.name}}</option>
+          </select>
+        <span ng-show="dbExist">You already have a database with this name!</span>
       </div>
-      <button id="create" type="submit" class="waves-effect waves-green btn-flat">Create</button>
     </form>
-  </div>
-  <br><br><br>
-  <div class="modal-footer">
-    <span ng-show="userExist">You already have a database with this name!</span>
-    <!-- <button id="create" type="submit" class="waves-effect waves-green btn-flat">Create</button> -->
   </div>
 </div>
 
-<script>
-  // $(document).ready(function() {
-    // $('.modal-trigger').leanModal();
-    // $('#new').on('click', function () {
-    //   $('#dbName').show();
-    //   $('#dbList').hide();
-    //   $('#create').text('Create');
-    // });
-    // $('#saved').on('click', function () {
-    //   $('#dbName').hide();
-    //   $('#dbList').show();
-    //   $('#create').text('Load');
-    // });
-    // $('.dropdown-button').dropdown({
-    //     inDuration: 300,
-    //     outDuration: 225,
-    //     constrain_width: false, // Does not change width of dropdown to that of the activator
-    //     hover: true, // Activate on hover
-    //     gutter: 0, // Spacing from edge
-    //     belowOrigin: true, // Displays dropdown below the button
-    //     alignment: 'left' // Displays dropdown with edge aligned to the left of button
-    //   }
-    // );
-    // $(".dropdown-content li a").click(function () {
-    //   $(".dropdown-button").text($(this).text());
-    //   $(".dropdown-button").append('<span>&#x25BE;</span>');
-    // });
-  // });
-</script>
+<footer class="footer" style="bottom: 0; position: absolute; height:3em; padding-top:1em">
+  <div class="row">
+    <div class="small-12 columns">
+      <p class="copyright">Copyright Mirthful Chuksha © 2015</p>
+    </div>
+  </div>
+</footer>

@@ -5,14 +5,15 @@ angular.module('DTBS', [
   ])
 .config(function ($routeProvider, $httpProvider) {
   $routeProvider
-    // .when('/', {
-    //   templateUrl: './components/form/formView.html'
-    // });
   .when('/', {
     templateUrl: './components/getStarted/splash/splash.html'
   })
   .when('/login', {
     templateUrl: './components/getStarted/login/login.html',
+    controller: 'ModalCtrl'
+  })
+  .when('/signup', {
+    templateUrl: './components/getStarted/signup/signup.html',
     controller: 'ModalCtrl'
   })
   .when('/setup', {
@@ -24,7 +25,8 @@ angular.module('DTBS', [
     controller: 'MongoController'
   })
   .when('/sql', {
-    templateUrl: './components/sql/sql.html'
+    templateUrl: './components/sql/sql.html',
+    controller: 'sqlController'
   })
   .when('/table', {
     templateUrl: './components/form/formView.html'

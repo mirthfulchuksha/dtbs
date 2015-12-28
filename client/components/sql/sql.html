@@ -1,41 +1,40 @@
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">dtbs</a>
-    </div>
-    <form class="navbar-form navbar-left" role="search">
-      <a href="/logout" class="btn">Logout</a>
-    </form>
+<nav class="navbar">
+  <div class="navbar-header">
+    <a class="brand" href="">dtbs</a>
+    <a href="/logout" class="btn">Logout</a>
   </div>
 </nav>
 
 <div class="super-wrap">
-  <div class="editor-wrapper grey" ng-controller="EditorController">
-    <div class="navbar-header">
-      <a class="navbar-brand editor-head grey" href="#">code:</a>
-    </div>
-    <form class="navbar-form navbar-left grey dropdown" role="search">
-      <a class="btn btn-default" role="button" id="download"
-        target="_self" href="" download="" ng-click="downloadCode()">
-        <span class="glyphicon glyphicon-save"></span>
-      </a>
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Output
-        <span class="caret"></span>
-      </button>
-      <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
-        <span class="glyphicon glyphicon-floppy-disk"></span>
-      </a>
-      <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-        <span class="glyphicon glyphicon-wrench"></span>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
-        <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
-        <li><a href="" ng-click="updateFactory('SQL')">SQL </a></li>
+  <div class="editor-wrapper" ng-controller="EditorController">
+    <div class="code-opts">
+      <ul id="output" class="dropdown menu" data-dropdown-menu>
+        <li class="menu">
+          <a href="" style="width:7em; margin-right:1em; font-weight:600">Output</a>
+          <ul>
+            <li><a href="" ng-click="updateFactory('Sequelize')">Sequelize </a></li>
+            <li><a href="" ng-click="updateFactory('Bookshelf')">Bookshelf </a></li>
+            <li><a href="" ng-click="updateFactory('SQL')">SQL </a></li>
+          </ul>
+        </li>
+        <li>
+          <a class="" role="button" id="download"
+            target="_self" href="" download="" ng-click="downloadCode()">
+            <i class="fi-download" style="font-size:16px"></i>
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+            <i class="fi-save" style="font-size:16px"></i>
+          </a>
+        </li>
+        <li>
+          <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
+            <i class="fi-refresh" style="font-size:16px"></i>
+          </a>
+        </li>
       </ul>
-    </form>
+    </div>
     <div id="editor">
       <textarea ng-model="editorText">/* Your Output will appear here! */</textarea>
     </div>
@@ -44,29 +43,36 @@
 </div>
 
 <div ng-controller='sqlController'>
-
   <div id='designCanvas'>
     <svg id="designer" d3-sql></svg>
     <svg id="svgout" style="display:none" xmlns="http://www.w3.org/2000/svg" snap-sql></svg>
   </div>
-  <hr>
-  <div class="editButtonContainer">
 
-    <button ng-click="toggleEditModal('createSQL')" class="btn btn-default">Create Table</button>
-    <button ng-click="toggleEditModal('editSQL')" class="btn btn-default">Edit Table</button>
-    <button ng-click="toggleCanvasView()" class="btn btn-default">Toggle View</button>
-    <button id="savepicture" ng-click="saveSVG(view)" class="btn btn-default">Save Image</button>
+  <div class="editButtonContainer">
+    <a ng-click="toggleEditModal('createSQL')" data-open="sqlEditModal"
+      class="button expanded mongoBtn">
+      <i class="fi-page" style="font-size:16px"></i></a>
+    <a ng-click="toggleEditModal('editSQL')" data-open="sqlEditModal"
+      class="button expanded mongoBtn">
+      <i class="fi-pencil" style="font-size:16px"></i></a>
+    <a id='mytoggler' ng-click="toggleCanvasView()"
+      class="button expanded mongoBtn">
+      <i class="fi-contrast" style="font-size:16px"></i></a>
+    <a id="savepicture" ng-click="saveSVG(view)"
+      class="button expanded mongoBtn">
+      <i class="fi-photo" style="font-size:16px"></i></a>
   </div>
 
-  <sqleditmodal title="Add/Edit Table" visible="visibleEditModal">
-
-    <form role="form" id="sqledit">
-
-      <div class="create" ng-show="typeEdit === 'createSQL'">
-        <label>Table Name: </label>
-          <input id="newName" type="text" placeholder="Type name..." ng-model="currentTable.name" />
+  <div class="reveal" id="sqlEditModal" data-reveal>
+    <h4>Add/Edit Table</h4>
+    <form role="form" name="sqlEdit">
+      <div class="row">
+        <div class="create" ng-show="typeEdit === 'createSQL'">
+          <label>Table Name: </label>
+            <input class="sqlInput" type="text" style="width:31em" placeholder="Type name..."
+              ng-model="currentTable.name" required/>
+        </div>
       </div>
-
       <div class="edit" ng-show="typeEdit === 'editSQL'">
         <label>Choose Table to Edit:</label>
           <select ng-model="oldTable" ng-change="setTable(oldTable)" required>
@@ -74,15 +80,12 @@
           </select>
       </div>
 
-      <div>
-        <div ng-if="primaryKeyPresent === true">
+      <div ng-if="primaryKeyPresent === true" class="row" style="display:inline">
         <hr>
-          <label>Primary Key ID: {{currentTable['primaryKey']['id']}} Type: {{currentTable['primaryKey']['type']}}</label>
-          <button "btn btn-default" ng-click="deletePrimaryKey()" class="pull-right">Delete Primary Key</button>
-         <br>
-        </div>
+        <label>Primary Key ID: {{currentTable['primaryKey']['id']}} Type: {{currentTable['primaryKey']['type']}}</label>
+        <button "button expanded mongoBtn" ng-click="deletePrimaryKey()" class="pull-right">Delete Primary Key</button>
+        <br>
       </div>
-
       <div>
         <div ng-repeat="(key, val) in currentTable.regFields">
           <hr>
@@ -106,19 +109,15 @@
         <label>Create a Primary Key (required) </label>
       </div>
 
-      <div class="addField" ng-show="primaryKeyPresent === true">
-        <hr>
-        <button class="btn btn-success" ng-click="addField(currentTable.name)">
-          <span class="glyphicon glyphicon-plus-sign"></span> Add Field
-        </button>
-      </div>
+      <span class="addField">
+        <button class="button" ng-click="addField(currentTable.name)" ng-show="primaryKeyPresent === true">
+          <span class="fi-plus"></span> Add Field</button>
+      </span>
       <br>
 
       <div ng-show="addingField === true || (primaryKeyPresent !== true && currentTable.name)">
-
         <label>Column ID: </label>
-          <input ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
-
+          <input class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
         <label>Basic Type:</label>
           <select ng-model="currentField.basicType" required>
             <option>Numeric</option>
@@ -126,37 +125,29 @@
             <option>DateTime</option>
             <option>Bit</option>
           </select>
-        
         <label ng-if="currentField.basicType">Type:</label>
           <select ng-model="currentField.type" required>
             <option ng-repeat="option in options[currentField.basicType]">{{option.name}}</option>
           </select>
           <br>
-
         <label ng-if="currentField.type">Size</label>
-          <input ng-if="currentField.type" ng-model="currentField.size" placeholder="Enter size..." required/>
-
+          <input class="sqlInput" ng-if="currentField.type" ng-model="currentField.size" placeholder="Enter size..." required/>
         <label ng-if="attributes[currentField.type]">Attributes</label>
           <select class="dropdown" ng-if="attributes[currentField.type]" class="dropdown" ng-model="currentField.attributes" multiple>
             <option ng-repeat="option in attributes[currentField.type]">{{option.attr}}</option>
           </select>
-
         <label ng-if="currentField.type">Not Null?</label>
-          <input ng-if="currentField.type" type="checkbox" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="currentField.default"/>
-
+          <input class="sqlInput" ng-if="currentField.type" type="checkbox" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="currentField.default"/>
       <br>
-      <button "btn btn-default" ng-if="primaryKeyPresent !== true" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" class="pull-right">Save Primary Key</button>
-      
+        <button "btn btn-default" ng-if="primaryKeyPresent !== true" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" class="pull-right">Save Primary Key</button>
 
-      <button "btn btn-default" ng-if="primaryKeyPresent === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" class="pull-right">Save Field</button>
-
+        <button "btn btn-default" ng-if="primaryKeyPresent === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" class="pull-right">Save Field</button>
       </div>
       <br>
-
       <div class="addForeign" ng-if="primaryKeyPresent !== false">
         <hr>
         <button class="btn btn-success" ng-click="addForeignKey()">
-          <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key 
+          <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key
         </button>
         <br>
 
@@ -172,15 +163,18 @@
       <br>
 
 <!-- May want to have a checkbox asking if it is the primary key, if check this then save as primary key  and do not show box again UNLESS deleted.???? -->
-
-      <button type="submit" class="btn btn-default" ng-click="editDone(currentTable.name, oldTable); oldTable='0'; id=''; basicType='0'; size='';">Done</button>
-
-      <button type="submit" class="btn btn-default" class="pull-right" ng-click="deleteTable(currentTable); oldTable='0'; id=''; basicType='0'; size='';">Delete Table</button>
-
     </form>
+
+    <div style="">
+      <button type="submit" data-close aria-label="Close reveal" class="button expanded mongoBtn"
+        ng-click="editDone(currentTable.name, oldTable); oldTable='0'; id=''; basicType='0'; size='';" style="float:right">Done</button>
+
+      <button type="submit" class="button expanded mongoBtn pull-right"
+        ng-click="deleteTable(currentTable); oldTable='0'; id=''; basicType='0'; size='';">Delete Table</button>
     </div>
-  </sqleditmodal>
-  </div> 
+  </div>
+</div>
+
 <script>
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/monokai");
@@ -189,22 +183,25 @@
     tabSize: 2,
     useSoftTabs: true
   });
+  $(document).foundation();
+  var elem = new Foundation.DropdownMenu($('#output'));
+  // var toolTip = new Foundation.Tooltip($('.has-tip'));
+
   $(document).ready(function() {
-    // $('select').material_select();
-    // $('.modal').change(function() {
-    //   $('select').material_select();
+    $('#code_button').on('click', function () {
+      var state = parseInt($('.super-wrap').css('right'), 10) > -1;
+      $('.super-wrap').animate({'right':(state ? -400: 0)}, 'slow');
+      $('#code_button').text((state ? '<<': '>>'));
+    });
+    // $(".has-tip").tooltip({
+    //   content: function(event, ui) { return $(this).attr('data-id'); },
+    //   position: { my: "left", at: "right" },
+    //   tooltipClass: "toolTip"
     // });
-    // $('.modal-trigger').leanModal();
-    // $('#created').on('click', function () {
-    //   $('#createModal').closeModal();
-    // });
-    // $('#edited').on('click', function () {
-    //   $('#editModal').closeModal();
-    // });
-    // $('#code_button').on('click', function () {
-    //   var state = parseInt($('.super-wrap').css('right'), 10) > -1;
-    //   $('.super-wrap').animate({'right':(state ? -350: 0)}, 'slow');
-    //   $('#code_button').text((state ? '<<': '>>'));
-    // });
+  });
+
+  $('.sqlInput').on('change', function () {
+    var modal = $("#sqlEditModal");
+    modal.animate({ scrollTop: modal.prop("scrollHeight") - modal.height() }, 0);
   });
 </script>
