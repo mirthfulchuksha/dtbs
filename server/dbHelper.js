@@ -120,6 +120,12 @@ module.exports = {
     });
   },
 
+  fetchOneSchema: function (req, res) {
+    Schema.findOne({user: req.query.username, name: req.query.schema}, function (err, schema) {
+      res.send(200, schema);
+    });
+  },
+
   genSesh: function (req, res, user) {
     console.log("sesh", req.session);
     if (req.session) {

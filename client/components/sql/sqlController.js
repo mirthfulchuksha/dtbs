@@ -20,8 +20,7 @@ angular.module('DTBS.main')
     $scope.potentialFKs = {};
     //incrementing id for table creation
     $scope.id = 1;
-    $scope.db = {}; //??
-    $scope.selectedTable = 0; //??
+    $scope.db = {};
     $scope.primaryKeyPresent = false;
     $scope.addingField = false;
     $scope.seeForeignKeys = false;
@@ -30,6 +29,25 @@ angular.module('DTBS.main')
     $scope.typeEdit = 'none'; 
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
+
+    $scope.savedSchemas = [];
+    var findSavedSchemas = function () {
+      CodeParser.fetchSchemas(function (schemas) {
+        $scope.savedSchemas = schemas;
+      });
+    };
+
+    $scope.loadNewSchema = function (index) {
+      CodeParser.fetchOneSchema($scope.savedSchemas[index].name, function (schema) {
+        //update DB
+        $scope.db.name = schema.name;
+        $scope.db.lang = schema.language;
+
+        //update table data and change d3
+        $scope.tableStorage = schema.data;
+        $scope.interactCanvas();
+      });
+    };
 
     $scope.options = {
       Numeric: [
@@ -159,7 +177,6 @@ angular.module('DTBS.main')
       for (var key in $scope.tableStorage) {
         console.log($scope.tableStorage[key]['name']);
         if ($scope.tableStorage[key]['name'] === tableName){
-          console.log("yeps");
           $scope.currentTable = $scope.tableStorage[key];
           //?? more fields necessary????
           //if not originally created via add modal, need to make the regFields and ForeignKey objects
@@ -170,7 +187,6 @@ angular.module('DTBS.main')
         }
         if ($scope.tableStorage[key]["name"] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
-          console.log($scope.potentialFKs, 'heres the FKs');
         }
       }
 
@@ -418,6 +434,10 @@ angular.module('DTBS.main')
       canvas.remove();
     };
 
+    var changeTableID = function (num) {
+      $scope.id = num;
+    }
+
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */
@@ -425,12 +445,21 @@ angular.module('DTBS.main')
       var recovered = window.localStorage.getItem('tempTable');
       if(recovered) {
         var parsedRecovered = JSON.parse(recovered);
-        $scope.tableStorage = parsedRecovered;
+
+        if(parsedRecovered.data) {
+          //if the recovered data is the record of an entire schema and not just the table storage
+          $scope.db.name = parsedRecovered.name;
+          $scope.db.lang = parsedRecovered.language;
+          $scope.tableStorage = parsedRecovered.data;
+        } else {
+          $scope.tableStorage = parsedRecovered;
+        }
+
         $scope.id = Object.keys($scope.tableStorage).length;
 
         window.localStorage.removeItem('tempTable');  
 
-        var amount = Object.keys(parsedRecovered).length;
+        var amount = Object.keys(parsedRecovered.data).length;
         //rebuild visuals        
         $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
         $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
@@ -438,6 +467,9 @@ angular.module('DTBS.main')
       } else {
         $scope.tableStorage = {};
       }
+
+      //pull out existing schemas
+      findSavedSchemas();
     };
 
     $scope.removeKeyFromTable = function (index, table) {
@@ -477,16 +509,6 @@ angular.module('DTBS.main')
        timeout = $timeout(saveUpdates, secondsToWaitBeforeSave * 1000);
      }
     };
-
-    //listener for selection event in d3 service to choose tables
-    // $scope.$on('d3:table-class', function (e, data) {
-    //   //regex to extract the table number in case of additional classes
-    //   var parsedNum = data.match(/\d+/)[0];
-    //   $scope.selectedTable = parsedNum;
-    //   console.log("selecting ", parsedNum);
-    //   var obj = $scope.tableStorage[$scope.selectedTable];
-    //   $scope.modalTitle(obj.name);
-    // });
 
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal

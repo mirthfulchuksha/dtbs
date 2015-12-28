@@ -94,23 +94,38 @@ angular.module('DTBS.main')
       });
     };
 
-    var fetchSchemas = function () {
+    var fetchSchemas = function (cb) {
+      var user;
+      if(dbUser) {
+        $http({
+          url: '/setup?username=' + dbUser,
+          method: 'GET',
+        }).success(function (res) {
+          //callback to display saved schemas in modal controller
+          cb(res);
+        }).error(function (res) {
+          console.log("Cannot fetch schemas");
+        });
+      } else {
+        //return empty set if dbuser is undefined (wrong controller start up)
+        cb([]);
+      }
+    };
+
+    var fetchOneSchema = function (schemaName, cb) {
       $http({
-        url: '/setup?username=' + dbUser,
-        method: 'GET',
+        url: '/loadSchema?username=' + dbUser + '&schema=' + schemaName,
+        method: 'GET'
       }).success(function (res) {
-        console.log("RESPPP", res);
-        $scope.schemaList = res;
+        //callback with single loaded schema
+        cb(res);
       }).error(function (res) {
-        console.log("Cannot fetch schemas");
-      });
-      console.log("schemalistttt", $scope.schemaList);
-      return $scope.schemaList;
+        console.error("No schema found");
+      })
     };
 
     var update = function (db, storage, user) {
       dbUser = user ? user.userName : dbUser;
-      console.log("user: ", dbUser);
       if (db) {
         dbName = db.name ? db.name : dbName;
         dbLang = db.lang ? db.lang : dbLang;
@@ -128,6 +143,8 @@ angular.module('DTBS.main')
       saveCode: saveCode,
       saveSchema: saveSchema,
       fetchSchemas: fetchSchemas,
-      update: update
+      update: update,
+      fetchMongo: fetchMongo,
+      fetchOneSchema: fetchOneSchema
     };
   }]);

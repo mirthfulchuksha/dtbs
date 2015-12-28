@@ -24,8 +24,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 //this will go on Heroku eventually
-var GITHUB_CLIENT_ID = "20da19d66186654c34fd";
-var GITHUB_CLIENT_SECRET = "4aee9ee560acaed05c76b003f14c814d2c4649a8";
+var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || 'nope';
+var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || 'nope';
 
 //stuff that passport needs
 passport.serializeUser(function(user, done) {
@@ -40,7 +40,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3000/auth/callback",
+    callbackURL: "http://dtbs.herokuapp.com/auth/callback",
     passReqToCallback: true
   },
   function (req, accessToken, refreshToken, profile, done) {
@@ -87,9 +87,13 @@ app.post('/signup', function (req, res) {
   helper.signup(req, res);
 });
 
-app.get('/setup', function(req, res) {
+app.get('/setup', function (req, res) {
   console.log("HERE")
   helper.fetchSchemas(req, res);
+});
+
+app.get('/loadSchema', function (req, res) {
+  helper.fetchOneSchema(req, res);
 });
 
 /*
