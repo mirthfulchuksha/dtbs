@@ -38,6 +38,12 @@ angular.module('DTBS.main')
       }).then(function (res) {
         //places data on editor
         var editor = ace.edit("editor");
+
+        if(dbLang === 'SQL') {
+          editor.getSession().setMode("ace/mode/sql");
+        } else {
+          editor.getSession().setMode("ace/mode/javascript");
+        }
         //sets the value to the parsed code and places the cursor at the end
         editor.setValue(res.data, 1);
         // return res.data;
@@ -50,12 +56,18 @@ angular.module('DTBS.main')
         dataObj.data.push(dbStorage[table]);
       }
 
+      console.log('pre parse mongo', dataObj);
+
       return $http({
         method: 'POST',
         url: '/mongoose',
         data: dataObj
       }).then(function (res) {
-        console.log(res);
+        //places data on editor
+        var editor = ace.edit("editor");
+        editor.getSession().setMode("ace/mode/javascript");
+        //sets the value to the parsed code and places the cursor at the end
+        editor.setValue(res.data, 1);
       });
     };
 

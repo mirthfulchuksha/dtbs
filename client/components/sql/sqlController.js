@@ -5,7 +5,8 @@ angular.module('DTBS.main')
   'CodeParser',
   'canvasData',
   'AccessSchemaService',
-  function ($scope, $timeout, CodeParser, canvasData, AccessSchemaService) {
+  '$location',
+  function ($scope, $timeout, CodeParser, canvasData, AccessSchemaService, $location) {
   
     //from Form Controller
 
@@ -44,8 +45,13 @@ angular.module('DTBS.main')
         $scope.db.lang = schema.language;
 
         //update table data and change d3
-        $scope.tableStorage = schema.data;
-        $scope.interactCanvas();
+        if(schema.language === 'SQL') {
+          $scope.tableStorage = schema.data;
+          $scope.interactCanvas();  
+        } else {
+          window.localStorage.setItem('tempTable', JSON.stringify(schema));
+          $location.path('/mongo');
+        }
       });
     };
 

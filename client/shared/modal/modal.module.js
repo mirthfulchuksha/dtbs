@@ -25,7 +25,11 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     CodeParser.fetchOneSchema($scope.dbpicker, function (schema) {
       //put retrieved schema into local storage to be pulled out by recoverinfo()
       window.localStorage.setItem('tempTable', JSON.stringify(schema));
-      $location.path('/sql');
+      if(schema.language === 'SQL') {
+        $location.path('/sql');
+      } else {
+        $location.path('/mongo');
+      }
     });
   };
 
