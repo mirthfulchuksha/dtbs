@@ -156,10 +156,14 @@
       <br>
       <div class="addForeign" ng-if="primaryKeyPresent !== false">
         <hr>
-        <button class="btn btn-success" ng-click="addForeignKey()">
+        <button class="button" ng-click="addForeignKey()">
           <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key
         </button>
         <br>
+
+        <label ng-if="seeForeignKeys === true">Column ID: </label>
+          <input ng-if="seeForeignKeys === true" class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
+
 
         <div> <!--ng-repeat="fkey in foreignKeys track by $index"> -->
           <label ng-if="seeForeignKeys === true">Select which table to connect:</label>
@@ -168,11 +172,10 @@
           </select>
         </div>
         <br>
-        <button "btn btn-default" ng-if="seeForeignKeys === true" ng-click="saveForeignKey(currentField.FK); currentField.FK=undefined" class="pull-right">Save Foreign Key</button>
+        <button "btn btn-default" ng-if="seeForeignKeys === true" ng-click="saveForeignKey(currentField.FK, currentField.fieldID); currentField.FK=undefined; currentField.fieldID=''" class="pull-right">Save Foreign Key</button>
       </div>
       <br>
 
-<!-- May want to have a checkbox asking if it is the primary key, if check this then save as primary key  and do not show box again UNLESS deleted.???? -->
     </form>
 
     <div style="">

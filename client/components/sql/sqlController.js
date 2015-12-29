@@ -295,12 +295,12 @@ angular.module('DTBS.main')
 
     };
 
-    $scope.saveForeignKey = function (keyName) {
+    $scope.saveForeignKey = function (tableName, keyName) {
 
       //working, foreign key can be saved with value that is in the PK, also add FK to the PK
-      $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[keyName]['fkFormat'];
+      $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[tableName]['fkFormat'];
+      console.log($scope.currentTable['foreignKeys']);
       $scope.seeForeignKeys = false;
-      delete $scope.potentialFKs[keyName];
 
     };
 
@@ -322,7 +322,8 @@ angular.module('DTBS.main')
         $scope.primaryKeyPresent = false;
 
       } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
-     
+        console.log("this should be happening");
+        console.log($scope.id++, "scope id");
         $scope.currentTable['id'] = $scope.id;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.id] = $scope.currentTable;
