@@ -56,6 +56,8 @@ angular.module('DTBS.main')
         dataObj.data.push(dbStorage[table]);
       }
 
+      console.log('pre parse mongo', dataObj);
+
       return $http({
         method: 'POST',
         url: '/mongoose',
