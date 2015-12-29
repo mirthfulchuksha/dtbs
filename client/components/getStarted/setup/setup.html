@@ -20,14 +20,15 @@
             <option ng-repeat="db in user.dbList">{{db.name}}</option>
           </select>
         <span ng-show="dbExist">You already have a database with this name!</span>
-
-        <h4 class="text-center">Existing Schema!</h4>
-        <label>Saved
-          <select ng-model="dbpicker" class="form-control" required>
-            <option ng-repeat="schema in savedSchemas track by $index">{{savedSchemas[$index].name}}</option>
-          </select>
-        </label>
-        <p><a type="submit" ng-click="loadSchema()" class="button expanded">Load</a></p>
+        <div ng-show="savedSchemas.length > 0">
+          <h4 class="text-center">Existing Schema</h4>
+          <label>Saved
+            <select ng-model="dbpicker" class="form-control" required>
+              <option ng-repeat="schema in savedSchemas track by $index">{{savedSchemas[$index].name}}</option>
+            </select>
+          </label>
+          <p><a type="submit" ng-click="loadSchema()" class="button expanded">Load</a></p>
+        </div>
       </div>
     </form>
   </div>
