@@ -5,7 +5,8 @@ angular.module('DTBS.main')
   'CodeParser',
   'mongoData',
   'AccessSchemaService',
-  function ($scope, $timeout, CodeParser, mongoData, AccessSchemaService) {
+  '$location',
+  function ($scope, $timeout, CodeParser, mongoData, AccessSchemaService, $location) {
 
     //Object to store current collection of schemas.
     $scope.schemaStorage = {};
@@ -34,6 +35,9 @@ angular.module('DTBS.main')
     $scope.edit = false;
     $scope.view = true;
 
+    //db updating storage
+    $scope.db = {};
+
     //Variables used to saving and visualization renering
     var secondsToWaitBeforeSave = 0; 
     var secondsToWaitBeforeRender = 1; 
@@ -45,6 +49,29 @@ angular.module('DTBS.main')
         $scope.typeEdit = value;
       }
       $scope.visibleEditModal = !$scope.visibleEditModal;
+    };
+
+    $scope.savedSchemas = [];
+    var findSavedSchemas = function () {
+      CodeParser.fetchSchemas(function (schemas) {
+        $scope.savedSchemas = schemas;
+      });
+    };
+
+    $scope.loadNewSchema = function (index) {
+      CodeParser.fetchOneSchema($scope.savedSchemas[index].name, function (schema) {
+        //update DB
+        $scope.db.name = schema.name;
+        $scope.db.lang = schema.language;
+
+        if(schema.language === 'Mongo') {
+          $scope.schemaStorage = schema.data;
+          $scope.interactCanvas();  
+        } else {
+          window.localStorage.setItem('tempTable', JSON.stringify(schema));
+          $location.path('/sql');
+        }
+      });
     };
 
     //Setting all relevant variables to the selected schema's information during editing.
@@ -267,5 +294,71 @@ angular.module('DTBS.main')
       a.remove();
       canvas.remove();
     };
+
+    var timeout = null;
+    var saveUpdates = function() {
+     if ($scope.schemaStorage) {
+       //update the factory's representation of table storage and fetch code of the current structure
+       CodeParser.update($scope.db, $scope.schemaStorage);
+       CodeParser.fetchMongo();
+       //save table to factory
+       AccessSchemaService.setTempSchema($scope.schemaStorage);
+     } else {
+       console.log("Tried to save updates to item #" + ($scope.schemaStorage) + " but the form is invalid.");
+     }
+    };
+    var debounceUpdate = function(newVal, oldVal) {
+     if (newVal !== oldVal) {
+      //waits for timeout to apply the changes on the server side
+       if (timeout) {
+         $timeout.cancel(timeout);
+       }
+       timeout = $timeout(saveUpdates, secondsToWaitBeforeSave * 1000);
+     }
+    };
+
+    var changeTableID = function (num) {
+      $scope.id = num;
+    }
+
+    $scope.recoverInfo = function () {
+      var recovered = window.localStorage.getItem('tempTable');
+      if(recovered) {
+        var parsedRecovered = JSON.parse(recovered);
+
+        if(parsedRecovered.data) {
+          //if the recovered data is the record of an entire schema and not just the table storage
+          $scope.db.name = parsedRecovered.name;
+          $scope.db.lang = parsedRecovered.language;
+          $scope.schemaStorage = parsedRecovered.data;
+        } else {
+          $scope.schemaStorage = parsedRecovered;
+        }
+
+        $scope.id = Object.keys($scope.schemaStorage).length;
+
+        window.localStorage.removeItem('tempTable');  
+
+        var amount = Object.keys(parsedRecovered.data).length;
+        //rebuild visuals        
+        $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
+        $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
+        $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 1000);
+      } else {
+        $scope.schemaStorage = {};
+      }
+
+      //pull out existing schemas
+      findSavedSchemas();
+    };
+
+    $scope.$on('codeParser:new-code-saved', function (e, data) {
+      findSavedSchemas();
+    });
+
+    $scope.$watch('schemaStorage', debounceUpdate, true);
+
+    //on set up to check local storage
+    $timeout($scope.recoverInfo());
   }
 ]);

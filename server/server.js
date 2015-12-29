@@ -23,11 +23,15 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-//this will go on Heroku eventually
+
+//env variables for oauth
 var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || 'nope';
 var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || 'nope';
 
-//stuff that passport needs
+/*
+  passport initialization
+*/
+
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
@@ -36,7 +40,7 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-//GITHUB STRATEGY: this is where interaction with user profiles needs to happen
+//GITHUB STRATEGY
 passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
@@ -46,10 +50,7 @@ passport.use(new GitHubStrategy({
   function (req, accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
-    // console.log(profile);
-      // we will probably want
-      // to associate the GitHub account with a user record in our database,
-      // and return that user instead of the git profile itself
+      // passes profile to callback for user creation or login
       return done(null, profile);
     });
   }
@@ -67,8 +68,8 @@ app.get('/auth/callback',
   function(req, res) {
     var username = res.req.user.username;
     var id = res.req.user.id;
+    //special function to handle github logins because they have no password
     helper.githubHandler(req, res, username, id);
-    //helper.findUser(req, res, username, id);
     res.redirect('/#/setup');
   });
 
