@@ -25,6 +25,7 @@ angular.module('DTBS.main')
       return data;
     },
     alertSave: function () {
+      console.log("In Alert Save (2)");
       alert();
     }
   }

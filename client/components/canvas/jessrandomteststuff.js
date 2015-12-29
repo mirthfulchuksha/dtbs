@@ -18,83 +18,20 @@
     chats_id INT,
     FOREIGN KEY (chats_id) REFERENCES chats(id)
   );
-// function to put schemaStorage into datajson format
-var buildNested = function (doc, documentName) {
-    var result = [];
-    var subroutine = function (doc, documentName) {
-      if (doc.type !== "Nested Document") {
-        var child = {};
-        child.name = documentName;
-        child.size = 5000;
-        child.type = doc.type;
-        return child;
-      } else {
-        var obj = {};
-        obj.name = documentName;
-        obj.type = doc.type;
-        obj.children = [];
-        for (var key in doc.keys) {
-          if (key !== "type") {
-            obj.children.push(subroutine(doc.keys[key], key));
-          }
-        }
-        return obj;
+
+
+  var mongoose1 = "var blogSchema = new Schema({
+      title:  String,
+      author: String,
+      body:   String,
+      comments: [{ body: String, date: Date }],
+      date: { type: Date, default: Date.now },
+      hidden: Boolean,
+      meta: {
+        votes: Number,
+        favs:  Number
       }
-    };
-    result = subroutine(doc, documentName);
-    return result.children;
-  };
-
-  var treeFormatter = function (schemaStorage) {
-    var schemaArray = [];
-    var finalArray = [];
-    // Format into array of objects
-    for (var key in schemaStorage) {
-      schemaArray.push(schemaStorage[key]);
-    }
-    // Loop through each schema object in the array
-    for (var i = 0; i < schemaArray.length; i++) {
-      var jsonSchema = {};
-      var schema = schemaArray[i];
-      jsonSchema.name = schema.name;
-      jsonSchema.children = [];
-      for (var key in schema.keys) {
-        var field = {};
-        field.name = key;
-        field.type = schema.keys[key].type;
-        if (schema.keys[key].type !== "Nested Document") {
-          field.size = 5000;
-        } else {
-          field.children = buildNested(schema.keys[key], field.name);
-        }
-        jsonSchema.children.push(field);
-      } 
-      finalArray.push(jsonSchema);
-    }
-    return finalArray;
-  };
-
-var doc = {
-  "type": "Nested Document",
-  "Upvotes": {
-    "type": "Number"
-  },
-  "Favourites": {
-    "type": "Nested Document",
-    "User": {
-      "type": "Nested Document",
-      "Name": {
-        "type": "Nested Document",
-        "value": {"type": "String"}
-      }
-    },
-    "Email": {
-      "type": "String"
-    }
-  }
-};
-var documentName = "Metadata";
-
+    });";
 
 var datajson1 = [{
           "name": "blogSchema",
@@ -204,27 +141,6 @@ var datajson1 = [{
           "name": "blogSchema"
         }
       };
-
-
-
-{
-  "type": "text",
-  "attr": {
-    "x": "338",
-    "y": "299",
-    "fill": "#000000",
-    "stroke": "none",
-    "style": "font-size: 12px; cursor: move;"
-  },
-  "childNodes": [
-    {
-      "type": "#text",
-      "attr": {
-        "text": "test"
-      }
-    }
-  ]
-}
 
 
 var schemaStorage = {

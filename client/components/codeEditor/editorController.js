@@ -1,16 +1,15 @@
 angular.module('DTBS.main')
   .controller('EditorController', [ '$scope', 'CodeParser', 'AccessSchemaService', 'canvasSave', function ($scope, CodeParser, AccessSchemaService, canvasSave) {
-    var tablePositions;
+
     $scope.db = {};
     $scope.downloadCode = function () {
       CodeParser.saveCode();
     };
-    $scope.$on('canvas:save-data', function (e, data) {
-      tablePositions = data;
-    });
+    
     $scope.saveSchema = function () {
+      console.log("In Save Schema (1)");
       canvasSave.alertSave();
-      CodeParser.saveSchema(tablePositions);
+      // CodeParser.saveSchema(tablePositions);
     };
 
     $scope.updateFactory = function (language) {

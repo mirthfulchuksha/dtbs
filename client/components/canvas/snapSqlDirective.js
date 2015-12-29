@@ -2,8 +2,9 @@ angular.module('DTBS.main')
 .directive('snapSql', [
            'SnapService', 
            'canvasData', 
-           'canvasSave', 
-           'canvasFormat', function (SnapService, canvasData, canvasSave, canvasFormat) {
+           'canvasSave',
+           'CodeParser',
+           'canvasFormat', function (SnapService, canvasData, canvasSave, CodeParser, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -28,6 +29,7 @@ angular.module('DTBS.main')
               obj1 = line.from;
               obj2 = line.to;
             }
+            
             var bb1 = obj1.getTransformedBB(),
                 bb2 = obj2.getTransformedBB(),
                 p = [{x: bb1.x + bb1.width / 2, y: bb1.y - 1},
@@ -96,6 +98,8 @@ angular.module('DTBS.main')
             this.animate({"fill-opacity": 0}, 500);
             // Fade paired element on mouse up
             this.animate({"fill-opacity": 1}, 500);
+            console.log(this);
+            console.log( 'testing group positions', this.getTransformedBB() );
           };
 
           var connections = [];
@@ -235,19 +239,20 @@ angular.module('DTBS.main')
           var positions = {};
           positions.startXs = [];
           positions.startYs = [];
-          
-          shapes.forEach(function (shape) {
             // if it's a header field, it will be grey
-            if ((shape.attr("fill")).toString() === "rgb(211, 211, 211)") {
-              positions.startXs.push(shape.attr("x"));
-              positions.startYs.push(shape.attr("y"));
-            }
-          });
+          var headers = $('#svgout rect[fill=#d3d3d3]');
+          for (var i = 0; i < headers.length; i++) {
+            // positions.startXs.push(headers[i].getBBox().x);
+            positions.startXs.push(headers[i].getTransformedBB().x);
+            // positions.startYs.push(headers[i].getBBox().y);            
+            positions.startYs.push(headers[i].getTransformedBB().y);            
+          }
 
-          var saveGraph = angular.copy(positions);
-          canvasSave.push(positions);
+          console.log("In Snap Save (3)", positions);
+          CodeParser.saveSchema(positions);
+          // canvasSave.push(positions);
         });
       });
     }
   };
-}]);
+}]); //165, 80
