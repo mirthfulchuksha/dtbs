@@ -195,6 +195,17 @@ angular.module('DTBS.main')
 
       //need to delete foreign keys in other tables prior to steps below
       //may want to hide any additional editing functions until PK selected
+      // for (var key in $scope.tableStorage){
+      //   if ($scope.tableStorage.key['foreignKeys'] !== {}){
+      //     for (var key2 in $scope.tableStorage[key]['foreignKeys']) {
+      //       if ($scope.tableStorage.key['foreignKeys'].key2['tableName'] === $scope.currentTable['name']){
+      //         console.log('locating foreign key to delete');
+      //       }
+      //     }
+      //   }
+        
+      // }
+
       $scope.currentTable['primaryKey'] = {};
       $scope.primaryKeyPresent = false;
 
@@ -236,7 +247,6 @@ angular.module('DTBS.main')
         tableName: tableName,
         fkFormat: {
           basicType: basicType,
-          id: tableName + '_' + id,
           origin: $scope.id,
           type: type,
           tableName: tableName
@@ -299,8 +309,10 @@ angular.module('DTBS.main')
 
       //working, foreign key can be saved with value that is in the PK, also add FK to the PK
       $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[tableName]['fkFormat'];
-      console.log($scope.currentTable['foreignKeys']);
+      $scope.currentTable['foreignKeys'][keyName]['id'] = keyName;
+      console.log($scope.currentTable);
       $scope.seeForeignKeys = false;
+
 
     };
 
@@ -323,11 +335,12 @@ angular.module('DTBS.main')
 
       } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
         console.log("this should be happening");
-        console.log($scope.id++, "scope id");
+        console.log($scope.id, "scope id");
         $scope.currentTable['id'] = $scope.id;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.id] = $scope.currentTable;
         $scope.id++;
+        console.log($scope.id, "second scope id");
 
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
         $scope.toggleEditModal('none'); 
