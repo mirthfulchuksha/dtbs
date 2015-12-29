@@ -79,7 +79,7 @@
 
   <div class="reveal" id="mongoEditModal" data-reveal>
     <h4>Add/Edit Schema</h4>
-    <form role="form" id="schemaEdit">
+    <form role="form" id="schemaEdit" name="schemaEdit">
       <div class="row">
         <div class="create" ng-show="typeEdit === 'createMongo'">
           <label>Schema Name: </label>
@@ -182,7 +182,8 @@
       </span>
 
       <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn"
-        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right; margin-right:0 !important">Done</button>
+        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right; margin-right:0 !important"
+        ng-disabled="addingKey">Done</button>
 
       <button type="submit" class="button mongoBtn" class="pull-right"
         ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''" style="float:right; margin-right:.5em">Delete Schema</button>

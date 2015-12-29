@@ -62,7 +62,7 @@ input {
   left: 0;
   top: 3em;
   bottom: 0;
-  position: fixed;
+  position: absolute;
   z-index: -1;
   display: block;
   padding: 0 .25em;
@@ -95,7 +95,7 @@ input {
 
 /*Editor Styles*/
 .output-wrapper {
-  position: fixed;
+  position: absolute;
   display: block;
   right: 0;
   top: 0;
@@ -209,7 +209,7 @@ input {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  position: fixed;
+  position: absolute;
   width: 100%;
   margin-top: -4em;
 }
@@ -473,10 +473,10 @@ input {
   background-color: #93006c;
 }
 
-#mongoEditModal, #sqlEditModal{
+#mongoEditModal, #sqlEditModal {
   top: 1em !important;
   overflow: auto;
-  max-height: 35em !important;
+  max-height: 30em !important;
   padding-bottom: 0;
 }
 
@@ -762,4 +762,17 @@ a i {
 
 .extended-input {
   width: 35em;
+}
+
+button:disabled {
+/*  background-color: #734968 !important;
+  color: #CC9DC0;*/
+  opacity: .5;
+}
+
+button:disabled:hover {
+/*  background-color: #734968 !important;
+  color: #CC9DC0;*/
+  background-color: #D10084 !important;
+  opacity: .5;
 }
