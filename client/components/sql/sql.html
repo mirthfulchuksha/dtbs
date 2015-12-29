@@ -1,7 +1,10 @@
 <nav class="navbar">
-  <div class="navbar-header">
-    <a class="brand" href="">dtbs</a>
-    <a href="/logout" class="btn">Logout</a>
+  <div style="height:3em; float:left; margin-left:7%; width:9em">
+    <img src="styles/assets/dtbs-logo1.png" style="height:2em; width:auto; margin-top:.5em; margin-right:5em">
+  </div>
+  <div style="height:3em; width:auto; float:left; padding-top:2px">
+    <a href="/" class="button nav">Home</a>
+    <a href="/logout" class="button nav">Logout</a>
   </div>
 </nav>
 
@@ -55,6 +58,7 @@
   </div>
 
   <div class="editButtonContainer">
+    <p class="tool-header">tools</p>
     <a ng-click="toggleEditModal('createSQL')" data-open="sqlEditModal"
       class="button expanded mongoBtn">
       <i class="fi-page" style="font-size:16px"></i></a>
