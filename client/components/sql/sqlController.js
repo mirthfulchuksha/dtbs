@@ -46,7 +46,6 @@ angular.module('DTBS.main')
         $scope.db.lang = schema.language;
 
         //update table data and change d3
-<<<<<<< HEAD
         if(schema.language === 'SQL') {
           $scope.tableStorage = schema.data;
           $scope.interactCanvas();  
@@ -54,12 +53,10 @@ angular.module('DTBS.main')
           window.localStorage.setItem('tempTable', JSON.stringify(schema));
           $location.path('/mongo');
         }
-=======
         $scope.tableStorage = schema.data;
         //load the previous table positions
         $scope.positions = schema.graph;
         $scope.interactCanvas();
->>>>>>> snap sql positions loading but only for header field rectangle
       });
     };
 
