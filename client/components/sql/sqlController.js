@@ -181,6 +181,7 @@ angular.module('DTBS.main')
       }
       $scope.visibleEditModal = !$scope.visibleEditModal; 
     };
+
    //this function loads a previously saved table for editing
     $scope.setTable = function (tableName) {
 
@@ -193,37 +194,50 @@ angular.module('DTBS.main')
         }
         if ($scope.tableStorage[key]["name"] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
+          console.log($scope.potentialFKs, 'here are the current FKs available - updating?');
         }
       }
 
     };
 
+    //delete primary key and any associated foreign keys on other tables
     $scope.deletePrimaryKey = function () {
-
+      console.log($scope.tableStorage, 'here is the table storage prior to deleting')
+      var deleted = false;
       for (var key in $scope.tableStorage){
         for (var key2 in $scope.tableStorage[key]['foreignKeys']) {
           if ($scope.tableStorage[key]['foreignKeys'][key2]){
             if ($scope.tableStorage[key]['foreignKeys'][key2]['tableName'] === $scope.currentTable['name']){
               delete $scope.tableStorage[key]['foreignKeys'][key2];
+              deleted = true;
             }
           }
         }
-        $scope.tableStorage[key]['attrs'] = [];
-        $scope.tableStorage[key]['attrs'][0] = $scope.tableStorage[key].primaryKey;
 
-        for (var key in $scope.tableStorage[key].regFields){
-          $scope.tableStorage[key]['attrs'].push($scope.tableStorage[key].regFields[key]);
+        if (deleted === true) {
+          console.log('deleting FKs from other tables');
+          $scope.tableStorage[key]['attrs'] = [];
+          $scope.tableStorage[key]['attrs'][0] = $scope.tableStorage[key]['primaryKey'];
+
+          for (var key3 in $scope.tableStorage[key]['regFields']){
+            if ($scope.tableStorage[key]['regFields'][key3]) {
+              $scope.tableStorage[key]['attrs'].push($scope.tableStorage[key]['regFields'][key3]);
+            }
+          }
+          for (var key4 in $scope.tableStorage[key]['foreignKeys']){
+            if ($scope.tableStorage[key]['foreignKeys'][key4]){
+              $scope.tableStorage[key]['attrs'].push($scope.tableStorage[key]['foreignKeys'][key4]);
+            }
+          }
         }
-        for (var key in $scope.tableStorage[key].foreignKeys){
-          $scope.tableStorage[key]['attrs'].push($scope.tableStorage[key].foreignKeys[key]);
-        }
-        
       }
 
       $scope.currentTable['primaryKey'] = {};
       $scope.primaryKeyPresent = false;
-      console.log($scope.tableStorage);
+      console.log($scope.tableStorage, 'here is the table storage after deleting');
+      $scope.interactCanvas();
 
+      
     };
 
     //Delete a field
@@ -279,7 +293,7 @@ angular.module('DTBS.main')
       $scope.primaryKeyPresent = true;//also, needs to set primaryKeyPresent to TRUE
 
       $scope.addingField = false;
-      console.log($scope.currentTable);
+
 
       //add all potential foreign keys (primary keys from all other tables) to $scope.potentialFKs
       for (var key in $scope.tableStorage){
@@ -522,6 +536,7 @@ angular.module('DTBS.main')
        console.log("Tried to save updates to item #" + ($scope.tableStorage.length) + " but the form is invalid.");
      }
     };
+
     var debounceUpdate = function(newVal, oldVal) {
      if (newVal !== oldVal) {
       //waits for timeout to apply the changes on the server side
