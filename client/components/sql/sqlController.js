@@ -182,7 +182,6 @@ angular.module('DTBS.main')
     };
 
     $scope.setTable = function (tableName) {
-      console.log(tableName);
       //this function loads a previously saved table for editing
       for (var key in $scope.tableStorage) {
         console.log($scope.tableStorage[key]['name']);
@@ -463,11 +462,16 @@ angular.module('DTBS.main')
 
     var changeTableID = function (num) {
       $scope.id = num;
-    }
+    };
+
+    var changeTableStorage = function (newTable) {
+      $scope.tableStorage = newTable;
+    };
 
     /*
       THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
     */
+
     $scope.recoverInfo = function () {
       var recovered = window.localStorage.getItem('tempTable');
       if(recovered) {
@@ -478,10 +482,6 @@ angular.module('DTBS.main')
           $scope.db.name = parsedRecovered.name;
           $scope.db.lang = parsedRecovered.language;
           $scope.tableStorage = parsedRecovered.data;
-          console.log($scope.tableStorage);
-        } else {
-          console.log("?????");
-          $scope.tableStorage = parsedRecovered;
         }
 
         $scope.id = Object.keys($scope.tableStorage).length;
@@ -489,14 +489,12 @@ angular.module('DTBS.main')
         window.localStorage.removeItem('tempTable');  
 
         var amount = Object.keys(parsedRecovered.data).length;
-        //rebuild visuals        
+        //rebuild visuals
+        $timeout(changeTableStorage.bind(null, parsedRecovered.data), secondsToWaitBeforeRender * 1000);
         $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
         $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
         $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 1000);
-      } else {
-        $scope.tableStorage = {};
       }
-
       //pull out existing schemas
       findSavedSchemas();
     };
