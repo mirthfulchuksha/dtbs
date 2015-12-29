@@ -155,7 +155,6 @@ angular.module('DTBS.main')
         };
         var shapes;
         scope.$on('canvas:new-data', function (e, data) {
-          console.log(data, "data")
 
           $("#svgout").empty();
           var dataArr = [];
@@ -176,13 +175,12 @@ angular.module('DTBS.main')
             var table = dataArr[i];
             var width = tableWidth(dataArr[i]) * 8;
             var startX, startY;
-            console.log(data.graph, "graph data")
             if (!Object.keys(data.graph).length > 0) {
               startX = randomIntFromInterval(40, 600);
               startY = randomIntFromInterval(40, 300);
             } else {
-              startX = data.graph.startXs[counter];
-              startY = data.graph.startYs[counter];
+              startX = parseInt(data.graph.startXs[counter]);
+              startY = parseInt(data.graph.startYs[counter]);
             }
 
             var startYText = startY+15, startXText = startX+10;
