@@ -334,13 +334,10 @@ angular.module('DTBS.main')
         $scope.primaryKeyPresent = false;
 
       } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
-        console.log("this should be happening");
-        console.log($scope.id, "scope id");
         $scope.currentTable['id'] = $scope.id;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.id] = $scope.currentTable;
         $scope.id++;
-        console.log($scope.id, "second scope id");
 
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
         $scope.toggleEditModal('none'); 
@@ -492,12 +489,6 @@ angular.module('DTBS.main')
       $scope.tableStorage[table.id].attrs.splice(index,1);
     };
 
-    // $scope.seeKeyModal = false;
-    // $scope.toggleKeyModal = function () {
-    //   $scope.seeKeyModal = !$scope.seeKeyModal;
-    //   console.log($scope.seeKeyModal);
-    // };
-
 
     // $scope.modalTitle = function (name) {
     //   $("#tableTitle .modal-title").html("Add/Edit Fields for '" + name + "'");
@@ -531,6 +522,10 @@ angular.module('DTBS.main')
       $scope.tableStorage = data.data;
       $scope.id = Object.keys($scope.tableStorage).length;
       $scope.interactCanvas();
+    });
+
+    $scope.$on('codeParser:new-code-saved', function (e, data) {
+      findSavedSchemas();
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);

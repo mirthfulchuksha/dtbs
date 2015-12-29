@@ -89,6 +89,8 @@ angular.module('DTBS.main')
         data: saveStuff
       }).success(function (data, status, headers, config) {
         console.log("Saved!");
+        //send out message for controllers to refresh load menu
+        $rootScope.$broadcast('codeParser:new-code-saved', data);
       }).error(function (data, status, headers, config) {
         console.log("Cannot save");
       });
