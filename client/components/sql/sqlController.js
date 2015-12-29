@@ -48,15 +48,16 @@ angular.module('DTBS.main')
         //update table data and change d3
         if(schema.language === 'SQL') {
           $scope.tableStorage = schema.data;
+          $scope.positions = schema.graph;
           $scope.interactCanvas();  
         } else {
           window.localStorage.setItem('tempTable', JSON.stringify(schema));
           $location.path('/mongo');
         }
-        $scope.tableStorage = schema.data;
-        //load the previous table positions
-        $scope.positions = schema.graph;
-        $scope.interactCanvas();
+        // $scope.tableStorage = schema.data;
+        // load the previous table positions
+        // $scope.positions = schema.graph;
+        // $scope.interactCanvas();
       });
     };
 

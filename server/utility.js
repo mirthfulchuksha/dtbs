@@ -68,6 +68,7 @@ module.exports = {
 
   parseTable: function (req, res, next) {
     var tables = req.body.data;
+    console.log(tables);
 
     var schema = "";
     for(var i = 0; i < tables.length; i++){
