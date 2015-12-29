@@ -266,7 +266,17 @@ angular.module('DTBS.main')
 
     //when save primary key button is pressed, sets all required information for currentTable's primaryKey object
     $scope.savePrimaryKey = function (id, basicType, type, size, attributes, def, tableName) {
+
       $scope.currentTable['name'] = tableName;
+
+      //if table is being edited when PK is created, set origin on fK format to the table's id # rather than $scope.id.
+      if ($scope.edit === true) {
+        var currentID = $scope.currentTable['id'];
+      } else {
+        var currentID = $scope.id;
+      }
+      console.log(currentID, 'this is the currentID');
+
       $scope.currentTable.primaryKey = {
 
         id: id,
@@ -276,7 +286,7 @@ angular.module('DTBS.main')
         tableName: tableName,
         fkFormat: {
           basicType: basicType,
-          origin: $scope.id,
+          origin: currentID,
           type: type,
           tableName: tableName
         }
@@ -401,20 +411,21 @@ angular.module('DTBS.main')
       } else {
 
         //needs work **************************************** - instead, maybe call delete PK first then delete the rest??
-        for (var key in $scope.tableStorage){
-          console.log($scope.tableStorage);
-          if ($scope.tableStorage[key]['foreignKeys'][currentTable]){
-            console.log('found it');
-            for (var i = $scope.tableStorage[key]['attrs'].length - 1; i < 0; i--) {
-              if ($scope.tableStorage[key]['attrs'][i] === $scope.currentTable['primaryKey']['fkFormat']){
-                $scope.tableStorage[key]['attrs'].slice(i, 1);
-                console.log('sliced out fk');
-              }
-            }
-            delete $scope.tableStorage.key['foreignKeys'][currentTable];
-            console.log('deleted fk from fk obj')
-          }
-        }
+        $scope.deletePrimaryKey();
+        // for (var key in $scope.tableStorage){
+        //   console.log($scope.tableStorage);
+        //   if ($scope.tableStorage[key]['foreignKeys'][currentTable]){
+        //     console.log('found it');
+        //     for (var i = $scope.tableStorage[key]['attrs'].length - 1; i < 0; i--) {
+        //       if ($scope.tableStorage[key]['attrs'][i] === $scope.currentTable['primaryKey']['fkFormat']){
+        //         $scope.tableStorage[key]['attrs'].slice(i, 1);
+        //         console.log('sliced out fk');
+        //       }
+        //     }
+        //     delete $scope.tableStorage.key['foreignKeys'][currentTable];
+        //     console.log('deleted fk from fk obj')
+        //   }
+        // }
         delete $scope.tableStorage[$scope.currentTable['id']];
 
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
