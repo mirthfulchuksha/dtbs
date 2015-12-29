@@ -1,7 +1,10 @@
 <nav class="navbar">
-  <div class="navbar-header">
-    <a class="brand" href="">dtbs</a>
-    <a href="/logout" class="btn">Logout</a>
+  <div style="height:3em; float:left; margin-left:7%; width:9em">
+    <img src="styles/assets/dtbs-logo1.png" style="height:2em; width:auto; margin-top:.5em; margin-right:5em">
+  </div>
+  <div style="height:3em; width:auto; float:left; padding-top:2px">
+    <a href="/" class="button nav">Home</a>
+    <a href="/logout" class="button nav">Logout</a>
   </div>
 </nav>
 
@@ -10,7 +13,7 @@
     <div class="code-opts">
       <ul id="output" class="dropdown menu" data-dropdown-menu>
         <li class="menu">
-          <a href="" style="width:7em; margin-right:1em; font-weight:600">Output</a>
+          <a href="" style="width:7em; margin-right:1em">Output</a>
           <ul>
             <li><a href="" ng-click="updateFactory('Mongoose')">Mongoose </a></li>
             <li><a href="" ng-click="updateFactory('ActiveRecord')">Active Record </a></li>
@@ -51,18 +54,19 @@
   </div>
 
   <div class="editButtonContainer">
+    <p class="tool-header">tools</p>
     <a ng-click="toggleEditModal('createMongo')" data-open="mongoEditModal"
-      class="button expanded mongoBtn">
-      <i class="fi-page" style="font-size:16px"></i></a>
+      class="button mongoBtn">
+      <i class="fi-page" style="font-size:16px"></i><span>Create Schema</span></a>
     <a ng-click="toggleEditModal('editMongo')" data-open="mongoEditModal"
-      class="button expanded mongoBtn">
-      <i class="fi-pencil" style="font-size:16px"></i></a>
+      class="button mongoBtn">
+      <i class="fi-pencil" style="font-size:16px"></i><span>Edit Schema</span></a>
     <a id='mytoggler' ng-click="toggleCanvasView()"
-      class="button expanded mongoBtn">
-      <i class="fi-contrast" style="font-size:16px"></i></a>
+      class="button mongoBtn">
+      <i class="fi-contrast" style="font-size:16px"></i><span>Toggle View</span></a>
     <a id="savepicture" ng-click="saveSVG(view)"
-      class="button expanded mongoBtn">
-      <i class="fi-photo" style="font-size:16px"></i></a>
+      class="button mongoBtn">
+      <i class="fi-photo" style="font-size:16px"></i><span>Save Image</span></a>
   </div>
 
   <div class="reveal" id="mongoEditModal" data-reveal>
@@ -148,7 +152,6 @@
 </div>
 
 <script>
-
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode("ace/mode/sql");
@@ -158,7 +161,6 @@
   });
   $(document).foundation();
   var elem = new Foundation.DropdownMenu($('#output'));
-  // var toolTip = new Foundation.Tooltip($('.has-tip'));
 
   $(document).ready(function() {
     $('#code_button').on('click', function () {
@@ -166,16 +168,10 @@
       $('.super-wrap').animate({'right':(state ? -400: 0)}, 'slow');
       $('#code_button').text((state ? '<<': '>>'));
     });
-    // $(".has-tip").tooltip({
-    //   content: function(event, ui) { return $(this).attr('data-id'); },
-    //   position: { my: "left", at: "right" },
-    //   tooltipClass: "toolTip"
-    // });
   });
 
   $('.addKey').on('click', function () {
     var modal = $("#mongoEditModal");
     modal.animate({ scrollTop: modal.prop("scrollHeight") - modal.height() }, 0);
   });
-
 </script>
