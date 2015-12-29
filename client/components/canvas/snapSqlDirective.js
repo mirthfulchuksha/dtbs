@@ -80,7 +80,7 @@ angular.module('DTBS.main')
             }
           }
         });
-        scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes, initialPositions) {
+        scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes) {
           var color, i, ii, tempS, tempT;
           var dragger = function () {
             this.data('origTransform', this.transform().local )
@@ -155,11 +155,12 @@ angular.module('DTBS.main')
         };
         var shapes;
         scope.$on('canvas:new-data', function (e, data) {
+          console.log(data, "data")
 
           $("#svgout").empty();
           var dataArr = [];
-          for (var key in data) {
-            dataArr.push(data[key]);
+          for (var key in data.data) {
+            dataArr.push(data.data[key]);
           }
           shapes = [];
           var texts = [], tableReferences = [], fieldTypes = [];
@@ -175,12 +176,13 @@ angular.module('DTBS.main')
             var table = dataArr[i];
             var width = tableWidth(dataArr[i]) * 8;
             var startX, startY;
-            if (!initialPositions) {
+            console.log(data.graph, "graph data")
+            if (!Object.keys(data.graph).length > 0) {
               startX = randomIntFromInterval(40, 600);
               startY = randomIntFromInterval(40, 300);
             } else {
-              startX = initialPositions.startXs[counter];
-              startY = initialPositions.startYs[counter];
+              startX = data.graph.startXs[counter];
+              startY = data.graph.startYs[counter];
             }
 
             var startYText = startY+15, startXText = startX+10;
@@ -226,13 +228,8 @@ angular.module('DTBS.main')
             var fkConnection = [shapes[link.source], shapes[link.target]];
             fkConnections.push(fkConnection);
           });
-          console.log(data, "Data")
-          if (data.graph) {
-            var initialPositions = data.graph;
-            scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes, initialPositions);
-          } else {
-            scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
-          }
+
+          scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
         });
         
         scope.$on('canvas:alert-data', function (e, data) {

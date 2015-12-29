@@ -134,8 +134,8 @@ angular.module('DTBS.main')
         };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
-          for (var key in data) {
-            dataArr.push(data[key]);
+          for (var key in data.data) {
+            dataArr.push(data.data[key]);
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
