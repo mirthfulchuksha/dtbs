@@ -478,7 +478,9 @@ angular.module('DTBS.main')
           $scope.db.name = parsedRecovered.name;
           $scope.db.lang = parsedRecovered.language;
           $scope.tableStorage = parsedRecovered.data;
+          console.log($scope.tableStorage);
         } else {
+          console.log("?????");
           $scope.tableStorage = parsedRecovered;
         }
 
