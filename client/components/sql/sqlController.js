@@ -171,7 +171,6 @@ angular.module('DTBS.main')
     };
 
     $scope.setTable = function (tableName) {
-      tableName = tableName.replace('<script>', '').replace('</script>', '');
       console.log(tableName);
       //this function loads a previously saved table for editing
       for (var key in $scope.tableStorage) {
@@ -196,6 +195,17 @@ angular.module('DTBS.main')
 
       //need to delete foreign keys in other tables prior to steps below
       //may want to hide any additional editing functions until PK selected
+      // for (var key in $scope.tableStorage){
+      //   if ($scope.tableStorage.key['foreignKeys'] !== {}){
+      //     for (var key2 in $scope.tableStorage[key]['foreignKeys']) {
+      //       if ($scope.tableStorage.key['foreignKeys'].key2['tableName'] === $scope.currentTable['name']){
+      //         console.log('locating foreign key to delete');
+      //       }
+      //     }
+      //   }
+        
+      // }
+
       $scope.currentTable['primaryKey'] = {};
       $scope.primaryKeyPresent = false;
 
@@ -237,7 +247,6 @@ angular.module('DTBS.main')
         tableName: tableName,
         fkFormat: {
           basicType: basicType,
-          id: tableName + '_' + id,
           origin: $scope.id,
           type: type,
           tableName: tableName
@@ -267,10 +276,11 @@ angular.module('DTBS.main')
     };
 
     $scope.saveField = function (id, basicType, type, size, attributes, def){
+
       $scope.currentTable.regFields[id] = {
 
         basicType: basicType,
-        id: id.replace('<script>', '').replace('</script>', ''),
+        id: id,
         type: type,
         size: size,
 
@@ -295,12 +305,14 @@ angular.module('DTBS.main')
 
     };
 
-    $scope.saveForeignKey = function (keyName) {
+    $scope.saveForeignKey = function (tableName, keyName) {
 
       //working, foreign key can be saved with value that is in the PK, also add FK to the PK
-      $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[keyName]['fkFormat'];
+      $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[tableName]['fkFormat'];
+      $scope.currentTable['foreignKeys'][keyName]['id'] = keyName;
+      console.log($scope.currentTable);
       $scope.seeForeignKeys = false;
-      delete $scope.potentialFKs[keyName];
+
 
     };
 
@@ -322,11 +334,13 @@ angular.module('DTBS.main')
         $scope.primaryKeyPresent = false;
 
       } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
-     
+        console.log("this should be happening");
+        console.log($scope.id, "scope id");
         $scope.currentTable['id'] = $scope.id;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.id] = $scope.currentTable;
         $scope.id++;
+        console.log($scope.id, "second scope id");
 
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
         $scope.toggleEditModal('none'); 
@@ -340,6 +354,7 @@ angular.module('DTBS.main')
     };
 
     $scope.setAttrsArray = function () {
+      console.log('setting attrs array');
       $scope.currentTable['attrs'] = [];
       $scope.currentTable['attrs'][0] = $scope.currentTable.primaryKey;
 
@@ -371,6 +386,7 @@ angular.module('DTBS.main')
             for (var i = $scope.tableStorage[key]['attrs'].length - 1; i < 0; i--) {
               if ($scope.tableStorage[key]['attrs'][i] === $scope.currentTable['primaryKey']['fkFormat']){
                 $scope.tableStorage[key]['attrs'].slice(i, 1);
+                console.log('sliced out fk');
               }
             }
             delete $scope.tableStorage.key['foreignKeys'][currentTable];
@@ -513,7 +529,7 @@ angular.module('DTBS.main')
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;
-      $scope.id = Object.keys($scope.tableStorage).length + 1;
+      $scope.id = Object.keys($scope.tableStorage).length;
       $scope.interactCanvas();
     });
     //event listener for updating or server side calls on save
