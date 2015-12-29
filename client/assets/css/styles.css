@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'Moriston Personal';
-  src: url('./assets/MoristonPersonal-Bold.eot');
-  src: url('./assets/MoristonPersonal-Bold.eot?#iefix') format('embedded-opentype'),
-    url('./assets/MoristonPersonal-Bold.woff') format('woff'),
-    url('./assets/MoristonPersonal-Bold.ttf') format('truetype');
+  src: url('../font/MoristonPersonal-Bold.eot');
+  src: url('../font/MoristonPersonal-Bold.eot?#iefix') format('embedded-opentype'),
+       url('../font/MoristonPersonal-Bold.woff') format('woff'),
+       url('../font/MoristonPersonal-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
@@ -24,8 +24,8 @@ p {
 
 svg {
   background-color: transparent;
-  width:100%;
-  height:450px
+  width: 100%;
+  height: 450px
 }
 
 input {
@@ -33,7 +33,7 @@ input {
   border-style: none;
   border-color: #ccc;
   background-color: #eee;
-  border-radius:5px;
+  border-radius: 5px;
   width: 100px;
   height: 30px;
   overflow: auto;
@@ -55,23 +55,23 @@ input {
 }
 
 .editButtonContainer {
-  width: 5em;
-  height: 18em;
+  width: 4em;
+  height: 17em;
   background-color: #292c2f;
  /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);*/
   left: 0;
-  top: 2em;
+  top: 3em;
   bottom: 0;
   position: fixed;
   z-index: -1;
   display: block;
-  padding: 1em;
-  z-index:10;
+  padding: 0 .25em;
+  z-index: 10;
 }
 
 .editButtonContainer a i {
   width: auto !important;
-  color: white;
+  color: #D287AE;
   font-size: 18px;
 }
 
@@ -157,19 +157,24 @@ input {
 .treelabel {
   font: 8px sans-serif;
 }
-/*.treenode {
-    fill: #fff;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-}
+
+/*
 .treenode {
-    font: 10px sans-serif;
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
+
+.treenode {
+  font: 10px sans-serif;
+}
+
 .treelink {
-    fill: none;
-    stroke: #ff8888;
-    stroke-width: 1.5px;
-}*/
+  fill: none;
+  stroke: #ff8888;
+  stroke-width: 1.5px;
+}
+*/
 
 #code_button {
   display:block;
@@ -178,7 +183,7 @@ input {
   font-size: 20px;
   min-height:50px;
   width: 50px;
-  color: #d74797;
+  color: #C96C9E;
   text-align: center;
   z-index: 1;
 }
@@ -198,7 +203,7 @@ input {
 .parallax-background {
   background-color: #292c2f;
   height: 900px;
-  background-image: url('./assets/Linework2.jpg');
+  background-image: url('../img/Linework2.jpg');
   background-repeat: repeat-x;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -225,20 +230,24 @@ input {
 }
 
 .row {
-  max-width: 1400px; }
+  max-width: 1400px;
+}
 
 /**/
 .features {
   text-align: center;
 }
+
 .blurb p {
   padding: 0 1em 0 1em;
   font-size: 14px;
 }
+
 .features hr {
   width: 25%;
   margin: 1rem auto;
 }
+
 .features .round-icon {
   background: #ff0084; /* Old browsers */
   background: -moz-linear-gradient(top,  #ff0084 0%, #a50060 100%); /* FF3.6-15 */
@@ -252,12 +261,14 @@ input {
   width: 100px;
   font-size: 3rem;
 }
+
 .features .round-icon span {
   color: #fff;
   display: table-cell;
   text-align: center;
   vertical-align: middle;
 }
+
 @media only screen and (max-width: 40em) {
   .features .columns {
     margin-bottom: 5rem;
@@ -287,44 +298,51 @@ input {
   padding: 4em 0 4em 0;
   background-color: #E8E8E8;
 }
+
 .profile {
   text-align: left;
   margin-bottom: 2em;
   height: 100px;
 }
+
 .bio {
   font-size: 12px;
   float: left;
 }
+
 .bio a {
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 600;
   color: #4B0060;
 }
+
 @media only screen and (min-width: 40.063em) {
   .footer .columns:nth-child(n+2) {
     border-left: 1px solid #b3b3b3;
     min-height: 175px;
   }
 }
+
 .footer-links {
   margin: 0 auto;
   list-style-type: none;
   text-align: left;
   float: left;
-  padding-left:1em;
+  padding-left: 1em;
 }
+
 .footer-links li {
   margin-top: 1em;
   padding-top: 1em;
 }
+
 .figure {
-  width:100px;
-  height:100px;
-  border-radius:50%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   border: solid #4B0060 4px;
-  overflow:hidden;
+  overflow: hidden;
   background-color: #4B0060;
   float: left;
   margin-top: -.2em;
@@ -335,16 +353,18 @@ input {
   background-color: #292c2f;
   text-align: center;
   font-size: 1.2rem;
-  height:5em;
+  height: 5em;
   padding-top: 1em;
   width: 100%;
   text-transform: uppercase;
 }
+
 .footer p.copyright {
   color: #8f9296;
   font-size: 0.5em;
   margin: 0;
 }
+
 .footer .links a {
   font-size: .8em;
   list-style: none;
@@ -360,11 +380,13 @@ input {
   text-transform: uppercase;
   font-weight: 600;
 }
+
 .github:hover {
   color: #4B0060;
   text-transform: uppercase;
   font-weight: 600;
 }
+
 .profile-card, .login{
   padding: 1rem !important;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
@@ -372,6 +394,7 @@ input {
   background-color: #fff;
   font-size: 12px;
 }
+
 .profile-card img {
   width: 8rem;
   display: block;
@@ -380,9 +403,11 @@ input {
   border-radius: 50%;
   box-shadow: 2px 2px 5px #888888;
 }
+
 .profile-card .profile-info {
   padding: 1rem;
 }
+
 .profile-card .profile-info h4 {
   font-size: 14px;
   font-weight: 600;
@@ -391,34 +416,34 @@ input {
   text-align: center;
   text-transform: uppercase;
 }
+
 .profile-card .profile-info p {
   text-align: center;
 }
+
 .profile-card .profile-info .inline-list {
   text-align: center;
   margin-bottom: 1rem;
 }
+
 .profile-card .profile-info .inline-list li {
   float: none;
   display: inline-block;
 }
+
 .profile-card .profile-info .inline-list i.fi-social-github {
   font-size: 1.5rem;
   color: #333;
 }
+
 .profile-card .profile-info .inline-list i.fi-social-github:hover {
   color: #4B0060;
 }
+
 .login {
   margin-top: 5em;
 }
 
-.button.expanded {
-  background-color: #FF009A; /* Old browsers */
-  width: 150px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
 .button.expanded:hover {
   background-color: #93006c;
 }
@@ -434,13 +459,18 @@ input {
   color: #C5E7C6;
 }
 
-.mongoBtn {
-  width: 100% !important;
-  background-color: #d74797 !important;
+.button.expanded {
+  background-color: #D10084; /* Old browsers */
+  width: 150px;
 }
 
-.mongoBtn:hover {
-  background-color: #93006c !important;
+.button.mongoBtn {
+  width: 150px !important;
+  background-color: #D10084; /* Old browsers */
+}
+
+.button.mongoBtn:hover {
+  background-color: #93006c;
 }
 
 #mongoEditModal, #sqlEditModal{
@@ -474,7 +504,7 @@ input {
 }
 
 #output a {
-  color: #d74797;
+  color: #C96C9E;
 }
 
 #output i:hover {
@@ -482,13 +512,13 @@ input {
 }
 
 .dropdown.menu .is-dropdown-submenu-parent.is-down-arrow > a::after {
-  border-color: #d74797 transparent transparent !important;
+  border-color: #C96C9E transparent transparent !important;
   margin-left: 1em;
 }
 
 .code-opts {
   height: 3em;
-  border-left: solid #d74797 1px;
+  border-left: solid #C96C9E 1px;
   padding-top:.4em;
   background-color: #292c2f;
   top: 0;
@@ -499,20 +529,62 @@ input {
 }
 
 .addKey {
-  padding-top:2em;
-  height:5em;
+  padding-top: 1em;
   color:green;
+  font-size: 18px !important;
+  text-align: left;
+  height: 2em;
+  padding-left: .2em;
 }
 
 .addKey:hover {
   text-shadow: 0px 0px 9px rgba(54, 255, 26, 1);
+  cursor: pointer;
+}
+
+.deleteKey {
+  top: 0;
+  color:red;
+  font-size: 18px !important;
+  text-align: center;
+  position: relative;
+  padding-top: 4%;
+}
+
+.deleteKey:hover {
+  text-shadow: 0px 0px 9px rgba(255, 0, 0, 1);
+  cursor: pointer;
+}
+
+.deleteKey i {
+  margin-top: .5em !important;
+}
+
+.cancelKey {
+  margin-top: .5em;
+  color:red;
+  font-size: 18px !important;
+  text-align: left;
+  height: 2em;
+  padding-left: .2em;
+}
+
+.cancelKey:hover {
+  text-shadow: 0px 0px 9px rgba(255, 0, 0, 1);
+  cursor: pointer;
+}
+
+.keyLabel {
+  text-transform: uppercase;
+  color: #93006c;
+  font-weight: 600;
 }
 
 .editButtonContainer span {
-  min-width:8em;
+  min-width: 8em;
   width: auto !important;
   height: auto;
-  padding:5px;
+  padding: 5px;
   opacity: 0;
   background: #93006c;
   -webkit-transition-delay: 0; /* Safari */
@@ -521,9 +593,50 @@ input {
   margin-top: -5px;
   margin-left: 10px;
   z-index: 5;
+  font-size: 12px;
 }
 
-.editButtonContainer a:hover span {
+.menu span {
+  min-width:8em;
+  width: auto !important;
+  height: auto;
+  padding: 5px;
+  opacity: 0;
+  background: #93006c;
+  -webkit-transition-delay: 0; /* Safari */
+  transition-delay: 0;
+  position: absolute;
+  margin-top: 2em;
+  margin-left: -4.7em;
+  z-index: 5;
+  color: white;
+  text-transform: none;
+  font-weight: 400;
+  text-align: center;
+  font-size: 12px;
+}
+
+.dataType span {
+  min-width:9em;
+  width: auto !important;
+  height: auto;
+  padding: 5px 10px 5px 10px;
+  opacity: 0;
+  background: #93006c;
+  -webkit-transition-delay: 0; /* Safari */
+  transition-delay: 0;
+  position: absolute;
+  margin-top: -4.5em;
+  margin-left: -10em;
+  z-index: 5;
+  color: white;
+  text-transform: none;
+  font-weight: 400;
+  text-align: left;
+  font-size: 12px;
+ }
+
+.editButtonContainer a:hover span, .menu a:hover span, .dataType a:hover span {
   -webkit-transition-delay: 1s; /* Safari */
   transition-delay: 1s;
   opacity: 1;
@@ -533,14 +646,13 @@ input {
   font-size: 12px;
   text-transform: uppercase;
   font-weight: 600;
-  color: #d74797;
+  color: #C96C9E;
   text-align: center;
 }
 
 .button.nav {
   margin-top: .5em;
   background-color: transparent;
-  /*border-left: solid #d74797 1px;*/
   padding-left: 3em;
   float: left;
 }
@@ -550,3 +662,70 @@ input {
   background-color: transparent;
 }
 
+.toolBtn.button {
+  background-color: transparent !important;
+  width: 100% !important;
+}
+
+.toolBtn.button:hover i {
+  color: white !important;
+}
+
+.arrow-box {
+  position: relative;
+  background: #93006c;
+}
+.arrow-box:after {
+  right: 100%;
+  top: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(147, 0, 108, 0);
+  border-right-color: #93006c;
+  border-width: 5px;
+  margin-top: -5px;
+}
+
+.arrow-box-editor {
+  position: relative;
+  background: #93006c;
+}
+
+.arrow-box-editor:after {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(147, 0, 108, 0);
+  border-bottom-color: #93006c;
+  border-width: 5px;
+  margin-left: -5px;
+}
+
+.arrow-box-editor-modal {
+  position: relative;
+  background: #93006c;
+}
+
+.arrow-box-editor-modal:after {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(147, 0, 108, 0);
+  border-top-color: #93006c;
+  border-width: 5px;
+  margin-left: -5px;
+}

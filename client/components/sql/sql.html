@@ -3,7 +3,7 @@
     <img src="styles/assets/dtbs-logo1.png" style="height:2em; width:auto; margin-top:.5em; margin-right:5em">
   </div>
   <div style="height:3em; width:auto; float:left; padding-top:2px">
-    <a href="/" class="button nav">Home</a>
+    <a href="#/" class="button nav">Home</a>
     <a href="/logout" class="button nav">Logout</a>
   </div>
 </nav>
@@ -20,8 +20,8 @@
             <li><a href="" ng-click="updateFactory('SQL')">SQL </a></li>
           </ul>
         </li>
-        <li class="menu" ng-show="savedSchemas.length > 0">
-          <a href="" style="width:7em; margin-right:1em; font-weight:600">Load</a>
+        <li class="menu">
+          <a href="" style="width:6em; margin-right:1em; font-weight:600">Load</a>
           <ul>
             <li><a href="" ng-repeat="schema in savedSchemas track by $index" ng-click="loadNewSchema($index)">{{savedSchemas[$index].name}} </a></li>
           </ul>
@@ -29,17 +29,20 @@
         <li>
           <a class="" role="button" id="download"
             target="_self" href="" download="" ng-click="downloadCode()">
-            <i class="fi-download" style="font-size:16px"></i>
+            <i class="fi-download" style="font-size:18px"></i><span class="arrow-box-editor">
+              Download Code</span>
           </a>
         </li>
         <li>
-          <a class="btn btn-default" role="button" id="save" href="" ng-click="saveSchema()">
-            <i class="fi-save" style="font-size:16px"></i>
+          <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+            <i class="fi-save" style="font-size:18px"></i><span class="arrow-box-editor">
+              Save Schema</span>
           </a>
         </li>
         <li>
           <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-            <i class="fi-refresh" style="font-size:16px"></i>
+            <i class="fi-refresh" style="font-size:18px"></i><span class="arrow-box-editor">
+              Refresh</span>
           </a>
         </li>
       </ul>
@@ -60,17 +63,17 @@
   <div class="editButtonContainer">
     <p class="tool-header">tools</p>
     <a ng-click="toggleEditModal('createSQL')" data-open="sqlEditModal"
-      class="button expanded mongoBtn">
-      <i class="fi-page" style="font-size:16px"></i></a>
+      class="toolBtn button">
+      <i class="fi-page" style="font-size:18px;"></i><span class="arrow-box">Create Schema</span></a>
     <a ng-click="toggleEditModal('editSQL')" data-open="sqlEditModal"
-      class="button expanded mongoBtn">
-      <i class="fi-pencil" style="font-size:16px"></i></a>
+      class="toolBtn button">
+      <i class="fi-pencil" style="font-size:18px;"></i><span class="arrow-box">Edit Schema</span></a>
     <a id='mytoggler' ng-click="toggleCanvasView()"
-      class="button expanded mongoBtn">
-      <i class="fi-contrast" style="font-size:16px"></i></a>
+      class="toolBtn button">
+      <i class="fi-contrast" style="font-size:18px;"></i><span class="arrow-box">Toggle View</span></a>
     <a id="savepicture" ng-click="saveSVG(view)"
-      class="button expanded mongoBtn">
-      <i class="fi-photo" style="font-size:16px"></i></a>
+      class="toolBtn button">
+      <i class="fi-photo" style="font-size:18px;"></i><span class="arrow-box">Save Image</span></a>
   </div>
 
   <div class="reveal" id="sqlEditModal" data-reveal>
@@ -198,7 +201,6 @@
   });
   $(document).foundation();
   var elem = new Foundation.DropdownMenu($('#output'));
-  // var toolTip = new Foundation.Tooltip($('.has-tip'));
 
   $(document).ready(function() {
     $('#code_button').on('click', function () {
@@ -206,11 +208,6 @@
       $('.super-wrap').animate({'right':(state ? -400: 0)}, 'slow');
       $('#code_button').text((state ? '<<': '>>'));
     });
-    // $(".has-tip").tooltip({
-    //   content: function(event, ui) { return $(this).attr('data-id'); },
-    //   position: { my: "left", at: "right" },
-    //   tooltipClass: "toolTip"
-    // });
   });
 
   $('.sqlInput').on('change', function () {
