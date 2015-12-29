@@ -7,7 +7,7 @@ angular.module('DTBS.main')
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Constants for the SVG
-        var width = 700, height = 450, root;
+        var width = 1000, height = 650, root;
 
         // Set up the custom colour scale
         var colorLength = 75, colors = [];
@@ -40,7 +40,6 @@ angular.module('DTBS.main')
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
           }
-          console.log(colors, "colors")
           var cluster = d3.layout.cluster()
                           .size([height, width]);
 

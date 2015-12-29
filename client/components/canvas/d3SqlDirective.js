@@ -3,55 +3,64 @@ angular.module('DTBS.main')
 .directive('d3Sql', [
    'd3Service',
    'canvasData',
+   'canvasSave',
    'canvasFormat',
-   function (d3Service, canvasData, canvasFormat) {
+   function (d3Service, canvasData, canvasSave, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
       d3Service.d3().then(function (d3) {
         // Positioning constants for the layout
-        var width = 1000, height = 450;
+        var width = 1000, height = 650;
 
         // Create the SVG
         var svg = d3.selectAll("#designer");
+        var force, node, link, alpha;
        
-        scope.render = function (tableData) {
+        scope.render = function (tableData, loaded) {
 
           // Set up the custom colour scale
-          var colorLength = 75, colors = [];
-          var color = d3.scale.linear().domain([1,colorLength])
-                .interpolate(d3.interpolateHcl)
-                .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
-
-          tableData.forEach(function (table) {
-            var tableColor = Math.floor(Math.random() * colorLength + 1);
-            colors.push(tableColor);
+          var colors = [],
+              customRange = canvasFormat.colorSchema(),
+              flattened = [];
+          customRange.forEach(function (palette) {
+            flattened.concat(palette);
           });
+          var color = d3.scale.ordinal().range(flattened);
 
+          for (var k = 0; k < tableData.length; k++) {
+            var palette = Math.floor(Math.random() * 8);
+            var tableColor = Math.floor(Math.random() * customRange[palette].length);
+            colors.push(customRange[palette][tableColor]);
+          }
 
           //Set up the force layout
-          var force = d3.layout.force()
+          force = d3.layout.force()
             .charge(-500)
             //.linkDistance(80)
-            .linkDistance(function(d) { return  d.value; }) 
+            .linkDistance(function(d) { 
+              return d.value;
+            }) 
             .size([width, height]);
 
-          var container = canvasFormat.dataBuilder(tableData, true);
-          var graph = canvasFormat.fkLinks(container, tableData);
+          var graph;
+          if (loaded) {
+            graph = tableData;
+          } else {
+            var container = canvasFormat.dataBuilder(tableData, true);
+            graph = canvasFormat.fkLinks(container, tableData);
+          }
           
           var svg = d3.select("#designer");
+
           //Creates the graph data structure out of the json data
           force.nodes(graph.nodes)
               .links(graph.links)
               .start();
 
-          force.charge(function(node) {
-            return -300;
-          });
-
           //Create all the line svgs but without locations yet
-          var link = svg.selectAll(".link")
+          link = svg.selectAll(".link")
               .data(graph.links)
               .enter().append("line")
               .style("stroke", "grey")
@@ -64,7 +73,7 @@ angular.module('DTBS.main')
               })
               .attr("class", "link");
 
-          var node = svg.selectAll(".node")
+          node = svg.selectAll(".node")
               .data(graph.nodes)
               .enter().append("g")
               .attr("class", "node")
@@ -88,7 +97,7 @@ angular.module('DTBS.main')
                   return 4;
               })
               .style("fill", function (d) {
-                return color(colors[d.group-1]);
+                return colors[d.group-1];
               });
           // append the field/table name
           node.append("text")
@@ -105,9 +114,9 @@ angular.module('DTBS.main')
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
-            svg.selectAll("circle")
-                .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
-                .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
+              svg.selectAll("circle")
+                  .attr("cx", function (d) { return d.x = Math.max(d.size/2, Math.min(width - d.size/2, d.x)); })
+                  .attr("cy", function (d) { return d.y = Math.max(d.size/2, Math.min(height - d.size/2, d.y)); });
 
             svg.selectAll("text").attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; });
@@ -125,13 +134,30 @@ angular.module('DTBS.main')
         };
         scope.$on('canvas:new-data', function (e, data) {
           var dataArr = [];
-          for (var key in data) {
-            dataArr.push(data[key]);
+          for (var key in data.data) {
+            dataArr.push(data.data[key]);
           }
           svg.selectAll("*").remove();
           scope.render(dataArr);
         });
+        var savedGraph = { nodes: [], links: [] };
+        // Placeholder for being able to restore node positions
+        scope.$on('canvas:alert-data', function (e, data) {
+          // pass through the json to the front end
+          var graph = {};
+
+          savedGraph.nodes = node.data();
+          savedGraph.links = link.data(); 
+          // svg.selectAll("*").remove();
+
+          // scope.render(temp1, true);
+          // svg.selectAll("*").remove();
+
+          graph.storedNodes = JSON.stringify(force.nodes());
+          graph.storedLinks = JSON.stringify(force.links());
+          var saveGraph = angular.copy(graph);
+          // canvasSave.push(saveGraph);
+        });
       });
     }};
 }]);
-

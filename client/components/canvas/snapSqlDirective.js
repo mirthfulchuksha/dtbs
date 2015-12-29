@@ -1,12 +1,17 @@
 angular.module('DTBS.main')
-.directive('snapSql', ['SnapService', 'canvasData', 'canvasFormat', function (SnapService, canvasData, canvasFormat) {
+.directive('snapSql', [
+           'SnapService', 
+           'canvasData', 
+           'canvasSave',
+           'CodeParser',
+           'canvasFormat', function (SnapService, canvasData, canvasSave, CodeParser, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
       SnapService.Snap().then(function (Snap) {
-        Snap.plugin(  function( Snap, Element, Paper, global ) {
-          
+        
+        Snap.plugin(  function( Snap, Element, Paper, global ) {  
           Element.prototype.getTransformedBB = function() {
             var bb = this.getBBox(1);
             var t = this.node.getTransformToElement( this.paper.node );
@@ -24,6 +29,7 @@ angular.module('DTBS.main')
               obj1 = line.from;
               obj2 = line.to;
             }
+            
             var bb1 = obj1.getTransformedBB(),
                 bb2 = obj2.getTransformedBB(),
                 p = [{x: bb1.x + bb1.width / 2, y: bb1.y - 1},
@@ -76,7 +82,6 @@ angular.module('DTBS.main')
             }
           }
         });
-
         scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes) {
           var color, i, ii, tempS, tempT;
           var dragger = function () {
@@ -150,28 +155,35 @@ angular.module('DTBS.main')
           });
           return max;
         };
-
+        var shapes;
         scope.$on('canvas:new-data', function (e, data) {
 
           $("#svgout").empty();
           var dataArr = [];
-          for (var key in data) {
-            dataArr.push(data[key]);
+          for (var key in data.data) {
+            dataArr.push(data.data[key]);
           }
-          var shapes = [], texts = [], tableReferences = [], fieldTypes = [];
+          shapes = [];
+          var texts = [], tableReferences = [], fieldTypes = [];
           var s = Snap("#svgout");
           
           var randomIntFromInterval = function (min,max) {
             return Math.floor(Math.random()*(max-min+1)+min);
           };
           var dragGroups = [];
-          
+          var counter = 0;
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
             var table = dataArr[i];
             var width = tableWidth(dataArr[i]) * 8;
-            var startX = randomIntFromInterval(40, 600);
-            var startY = randomIntFromInterval(40, 300);
+            var startX, startY;
+            if (!Object.keys(data.graph).length > 0) {
+              startX = randomIntFromInterval(40, 600);
+              startY = randomIntFromInterval(40, 300);
+            } else {
+              startX = parseInt(data.graph.startXs[counter]);
+              startY = parseInt(data.graph.startYs[counter]);
+            }
 
             var startYText = startY+15, startXText = startX+10;
             var tableText = s.text(startXText, startYText, table.name);
@@ -184,6 +196,7 @@ angular.module('DTBS.main')
             tableReferences.push("header");
             fieldTypes.push("header");
             var isPk = true;
+            counter++;
             table.attrs.forEach(function (field) {
               if (isPk) {
                 tableReferences.push("primary");
@@ -215,12 +228,24 @@ angular.module('DTBS.main')
             var fkConnection = [shapes[link.source], shapes[link.target]];
             fkConnections.push(fkConnection);
           });
+
           scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
         });
         
+        scope.$on('canvas:alert-data', function (e, data) {
+          var positions = {};
+          positions.startXs = [];
+          positions.startYs = [];
+          // if it's a header field, it will be grey
+          for (var i = 0; i < shapes.length; i++) {
+            if ((shapes[i].attr("fill")).toString() === "rgb(211, 211, 211)") {
+              positions.startXs.push(shapes[i].getTransformedBB().x);
+              positions.startYs.push(shapes[i].getTransformedBB().y);
+            }
+          }
+          CodeParser.saveSchema(positions);
+        });
       });
     }
   };
 }]);
-
-

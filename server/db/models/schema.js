@@ -7,7 +7,8 @@ var schemaModel  = mongoose.Schema({
   user: String,
   name: String,
   language: String,
-  data: {}
+  data: {},
+  graph: {}
 });
 
 schemaModel.plugin(autoIncrement.plugin, 'Schema');

@@ -4,14 +4,15 @@ angular.module('DTBS.main')
   '$timeout',
   'CodeParser',
   'canvasData',
+  'canvasSave',
   'AccessSchemaService',
   '$location',
-  function ($scope, $timeout, CodeParser, canvasData, AccessSchemaService, $location) {
-  
+  function ($scope, $timeout, CodeParser, canvasData, canvasSave, AccessSchemaService, $location) {  
     //from Form Controller
 
     //Object to store current collection of tables.
     $scope.tableStorage = {};
+    $scope.positions = {};
 
     //Object for storing table that is being created or edited.
     $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
@@ -52,6 +53,10 @@ angular.module('DTBS.main')
           window.localStorage.setItem('tempTable', JSON.stringify(schema));
           $location.path('/mongo');
         }
+        $scope.tableStorage = schema.data;
+        //load the previous table positions
+        $scope.positions = schema.graph;
+        $scope.interactCanvas();
       });
     };
 
@@ -410,7 +415,9 @@ angular.module('DTBS.main')
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
-      var updatedData = angular.copy($scope.tableStorage);
+      var updatedData = {};
+      updatedData.data = angular.copy($scope.tableStorage);
+      updatedData.graph = angular.copy($scope.positions);
       canvasData.push(updatedData);
     };
     
@@ -420,6 +427,7 @@ angular.module('DTBS.main')
     };
 
     $scope.saveSVG = function () {
+
       if ($scope.view) {
         svg_xml = document.getElementById('designer');
       } else {
@@ -430,8 +438,8 @@ angular.module('DTBS.main')
 
       // Create a canvas
       var canvas = document.createElement('canvas');
-      canvas.height = 350;
-      canvas.width = 640;
+      canvas.height = 650;
+      canvas.width = 1000;
       canvas.style.background = 'white';
 
       canvg(canvas, str);
@@ -522,6 +530,10 @@ angular.module('DTBS.main')
        timeout = $timeout(saveUpdates, secondsToWaitBeforeSave * 1000);
      }
     };
+
+    $scope.$on('canvas:save-data', function (e, data) {
+      var graph = data;
+    });
 
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal

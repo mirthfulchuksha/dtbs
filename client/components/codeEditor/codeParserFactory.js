@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-  .factory('CodeParser', [ '$http', '$rootScope', function ($http, $rootScope) {
+  .factory('CodeParser', [ '$http', '$rootScope', 'canvasSave', function ($http, $rootScope, canvasSave) {
     var dbName = "",
         dbLang = "",
         dbFilename = "",
@@ -86,15 +86,15 @@ angular.module('DTBS.main')
       console.log(dbFilename);
     };
 
-    var saveSchema = function () {
+    var saveSchema = function (graphLayout) {
       //console.log('sending scheme to server');
       var saveStuff = {
         dbUser: dbUser,
         dbName: dbName,
         dbLang: dbLang,
-        tableStorage: dbStorage
+        tableStorage: dbStorage,
+        graphLayout: graphLayout
       };
-
       $http({
         url: '/saveSchema',
         method: 'POST',
