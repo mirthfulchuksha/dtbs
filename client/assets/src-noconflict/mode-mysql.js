@@ -9,7 +9,7 @@ var DocCommentHighlightRules = function() {
         "start" : [ {
             token : "comment.doc.tag",
             regex : "@[\\w\\d_]+" // TODO: fix email addresses
-        }, 
+        },
         DocCommentHighlightRules.getTagRule(),
         {
             defaultToken : "comment.doc",
@@ -68,7 +68,7 @@ var MysqlHighlightRules = function() {
         "variable.language": variable
     }, "identifier", true);
 
-    
+
     function string(rule) {
         var start = rule.start;
         var escapeSeq = rule.escape;
@@ -86,7 +86,7 @@ var MysqlHighlightRules = function() {
     this.$rules = {
         "start" : [ {
             token : "comment", regex : "(?:-- |#).*$"
-        },  
+        },
         string({start: '"', escape: /\\[0'"bnrtZ\\%_]?/}),
         string({start: "'", escape: /\\[0'"bnrtZ\\%_]?/}),
         DocCommentHighlightRules.getStartRule("doc-start"),
@@ -149,7 +149,7 @@ var Mode = function() {
 };
 oop.inherits(Mode, TextMode);
 
-(function() {       
+(function() {
     this.lineCommentStart = ["--", "#"]; // todo space
     this.blockComment = {start: "/*", end: "*/"};
 

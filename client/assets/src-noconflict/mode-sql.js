@@ -17,7 +17,7 @@ var SqlHighlightRules = function() {
     );
 
     var builtinFunctions = (
-        "avg|count|first|last|max|min|sum|ucase|lcase|mid|len|round|rank|now|format|" + 
+        "avg|count|first|last|max|min|sum|ucase|lcase|mid|len|round|rank|now|format|" +
         "coalesce|ifnull|isnull|nvl"
     );
 

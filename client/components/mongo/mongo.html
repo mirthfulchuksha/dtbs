@@ -1,9 +1,9 @@
 <nav class="navbar">
   <div style="height:3em; float:left; margin-left:7%; width:9em">
-    <img src="styles/assets/dtbs-logo1.png" style="height:2em; width:auto; margin-top:.5em; margin-right:5em">
+    <img src="assets/img/dtbs-logo1.png" style="height:2em; width:auto; margin-top:.5em; margin-right:5em">
   </div>
   <div style="height:3em; width:auto; float:left; padding-top:2px">
-    <a href="/" class="button nav">Home</a>
+    <a href="#/" class="button nav">Home</a>
     <a href="/logout" class="button nav">Logout</a>
   </div>
 </nav>
@@ -29,17 +29,20 @@
         <li>
           <a class="" role="button" id="download"
             target="_self" href="" download="" ng-click="downloadCode()">
-            <i class="fi-download" style="font-size:16px"></i>
+            <i class="fi-download" style="font-size:18px"></i><span class="arrow-box-editor">
+              Download Code</span>
           </a>
         </li>
         <li>
           <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
-            <i class="fi-save" style="font-size:16px"></i>
+            <i class="fi-save" style="font-size:18px"></i><span class="arrow-box-editor">
+              Save Schema</span>
           </a>
         </li>
         <li>
           <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-            <i class="fi-refresh" style="font-size:16px"></i>
+            <i class="fi-refresh" style="font-size:18px"></i><span class="arrow-box-editor">
+              Refresh</span>
           </a>
         </li>
       </ul>
@@ -62,46 +65,62 @@
   <div class="editButtonContainer">
     <p class="tool-header">tools</p>
     <a ng-click="toggleEditModal('createMongo')" data-open="mongoEditModal"
-      class="button mongoBtn">
-      <i class="fi-page" style="font-size:16px"></i><span>Create Schema</span></a>
+      class="toolBtn button">
+      <i class="fi-page" style="font-size:18px;"></i><span class="arrow-box">Create Schema</span></a>
     <a ng-click="toggleEditModal('editMongo')" data-open="mongoEditModal"
-      class="button mongoBtn">
-      <i class="fi-pencil" style="font-size:16px"></i><span>Edit Schema</span></a>
+      class="toolBtn button">
+      <i class="fi-pencil" style="font-size:18px;"></i><span class="arrow-box">Edit Schema</span></a>
     <a id='mytoggler' ng-click="toggleCanvasView()"
-      class="button mongoBtn">
-      <i class="fi-contrast" style="font-size:16px"></i><span>Toggle View</span></a>
+      class="toolBtn button">
+      <i class="fi-contrast" style="font-size:18px;"></i><span class="arrow-box">Toggle View</span></a>
     <a id="savepicture" ng-click="saveSVG(view)"
-      class="button mongoBtn">
-      <i class="fi-photo" style="font-size:16px"></i><span>Save Image</span></a>
+      class="toolBtn button">
+      <i class="fi-photo" style="font-size:18px;"></i><span class="arrow-box">Save Image</span></a>
   </div>
 
   <div class="reveal" id="mongoEditModal" data-reveal>
     <h4>Add/Edit Schema</h4>
-    <form role="form" name="schemaEdit">
+    <form role="form" id="schemaEdit">
       <div class="row">
         <div class="create" ng-show="typeEdit === 'createMongo'">
           <label>Schema Name: </label>
-            <input type="text" style="width:31em" placeholder="Type name..."
-              ng-model="currentSchema.name" required/>
+            <input type="text" style="width:35em" placeholder="Type name..."
+              ng-model="currentSchema.name" class="schemaName" required/>
         </div>
       </div>
+      <hr>
       <div class="edit" ng-show="typeEdit === 'editMongo'">
         <label>Choose Schema to Edit:</label>
           <select ng-model="oldSchema" ng-change="setSchema(oldSchema)" required>
             <option ng-repeat="schema in schemaStorage">{{schema.name}}</option>
           </select>
       </div>
-      <div ng-repeat="(key,val) in allKeys"> <!--currentSchema['keys']"> -->
+
+      <div class="row" style="height:5em; margin-bottom:2em !important" ng-repeat="(key,val) in allKeys">
+        <div class="medium-8 columns" style="margin-bottom:1em !important">
+          <label><span class="keyLabel">Key:</span> {{key}}</label>
+          <label><span class="keyLabel">Type:</span> {{val.display}}</label>
+          <label><span class="keyLabel" ng-if="val.location">Location:</span> {{val.location}}</label>
+        </div>
+        <div class="deleteKey medium-4 columns" ng-click="deleteKey(key, val)">
+          <div class="row">
+            <div style="float:left; text-align:right; padding-right:0 !important"
+              class="medium-5 columns">
+              <i class="fi-trash deleteKey" class="pull-right"></i>
+            </div>
+            <div style="font-size:11px !important; margin-top:.4em; float:left; text-align:left"
+              class="medium-7 columns">
+              delete key
+            </div>
+          </div>
+        </div>
         <hr>
-        <label>Key: {{key}} Type: {{val.display}}</label>
-        <button "button expanded mongoBtn" ng-click="deleteKey(key, val)" class="pull-right">Delete Key</button>
-        <br>
       </div>
-      <hr>
+
       <div ng-show="addingKey === true" class="row" style="display:inline">
 
         <label>Add To:</label>
-          <select ng-model="nestedLocation" style="width:31em" required>
+          <select ng-model="nestedLocation" style="width:35em" required>
             <option ng-repeat="(key, val) in nestedDocuments">{{key}}</option>
           </select>
 
@@ -109,30 +128,44 @@
           <label>Key Name: </label>
             <input type="text" ng-model="keyName" placeholder="Enter key name" required/>
         </div>
-        <div class="medium-6 columns" style="float:left; height:5em">
-          <label>Data Type:</label>
+        <div class="medium-5 columns dataType" style="float:left; height:5em">
+          <label>Data Type:
+            <a class="keyLabel" href="">?
+              <span class="arrow-box-editor-modal">
+                Choose 'Mixed' for nested document <br>and select 'nested document?' checkbox
+              </span>
+            </a></label>
+
             <select ng-model="keyValue" required>
               <option>String</option>
               <option>Number</option>
               <option>Date</option>
               <option>Buffer</option>
               <option>Boolean</option>
-              <option>Mixed Object</option>
+              <option>Mixed</option>
               <option>Mixed Array</option>
               <option>ObjectID</option>
               <option>Array</option>
             </select>
         </div>
-        <div class="addKey medium-1 columns" style="">
-          <span ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedDocuments['Main']"
-            class="fi-check addKey"></span>
+        <div class="addKey medium-2 columns"
+          ng-click="saveKey(keyName, keyValue, nestedDocument, nestedLocation); keyValue='0'; keyName=''; nestedDocument=undefined; nestedLocation=nestedDocuments['Main']">
+          <i class="fi-check addKey"></i><span style="font-size:11px !important">save key</span>
+        </div>
+        <div class="cancelKey medium-2 columns"
+          ng-click="addingKey = false; keyValue = ''">
+          <i class="fi-x cancelKey"></i><span style="font-size:11px !important">  cancel</span>
         </div>
       </div>
-      <br>
 
-      <div ng-show="keyValue === 'Mixed' && (depth[nestedLocation] == undefined || depth[nestedLocation] < 10)">
-      <label>Nested document?<label>
-        <input type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="nestedDocument"/>
+      <div ng-show="keyValue === 'Mixed' && (depth[nestedLocation] == undefined || depth[nestedLocation] < 10) && addingKey">
+        <label for="cb" class="row">
+            <div style="float:left">
+              Nested Document?
+            </div>
+            <input id="cb" type="checkbox" style="float:left; margin-left:15px;"
+              ng-true-value="true" ng-false-value="false" ng-model="nestedDocument"/>
+        </label>
       </div>
 
       <div ng-show="keyValue === 'Mixed' && depth[nestedLocation] === 10">
@@ -143,15 +176,17 @@
     </form>
 
     <div style="">
+      <br>
       <span class="addKey">
-        <button class="button" ng-click="addKey(currentSchema.name)" ng-show="currentSchema.name || showAddKey === true">
+        <button class="button" ng-click="addKey(currentSchema.name)"
+          ng-show="currentSchema.name || showAddKey === true">
           <span class="fi-plus"></span> Add Key</button>
       </span>
 
-      <button type="submit" data-close aria-label="Close reveal" class="button expanded mongoBtn"
-        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right">Done</button>
+      <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn"
+        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right; margin-right:0 !important">Done</button>
 
-      <button type="submit" class="button expanded mongoBtn" class="pull-right"
+      <button type="submit" class="button mongoBtn" class="pull-right"
         ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''" style="float:right; margin-right:.5em">Delete Schema</button>
     </div>
   </div>
@@ -165,6 +200,7 @@
     tabSize: 2,
     useSoftTabs: true
   });
+
   $(document).foundation();
   var elem = new Foundation.DropdownMenu($('#output'));
 
@@ -173,6 +209,13 @@
       var state = parseInt($('.super-wrap').css('right'), 10) > -1;
       $('.super-wrap').animate({'right':(state ? -400: 0)}, 'slow');
       $('#code_button').text((state ? '<<': '>>'));
+    });
+    $('.cancelKey').on('click', function () {
+      $(':input','#schemaEdit')
+        .not('.schemaName')
+        .val('')
+        .removeAttr('checked')
+        .removeAttr('selected');
     });
   });
 
