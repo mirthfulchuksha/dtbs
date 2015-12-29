@@ -40,7 +40,6 @@ angular.module('DTBS.main')
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
           }
-          console.log(colors, "colors")
           var cluster = d3.layout.cluster()
                           .size([height, width]);
 

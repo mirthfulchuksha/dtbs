@@ -40,11 +40,7 @@ angular.module('DTBS.main')
             .charge(-500)
             //.linkDistance(80)
             .linkDistance(function(d) { 
-              if (!loaded) {
-                return d.value;
-              } else {
-                return;
-              }
+              return d.value;
             }) 
             .size([width, height]);
 
@@ -145,17 +141,17 @@ angular.module('DTBS.main')
           scope.render(dataArr);
         });
         var savedGraph = { nodes: [], links: [] };
+        // Placeholder for being able to restore node positions
         scope.$on('canvas:alert-data', function (e, data) {
           // pass through the json to the front end
           var graph = {};
 
           savedGraph.nodes = node.data();
-            savedGraph.links = link.data(); 
-            console.log(savedGraph, "saved graph")
-            svg.selectAll("*").remove();
+          savedGraph.links = link.data(); 
+          // svg.selectAll("*").remove();
 
-            scope.render(temp1, true);
-            // svg.selectAll("*").remove();
+          // scope.render(temp1, true);
+          // svg.selectAll("*").remove();
 
           graph.storedNodes = JSON.stringify(force.nodes());
           graph.storedLinks = JSON.stringify(force.links());
@@ -165,233 +161,3 @@ angular.module('DTBS.main')
       });
     }};
 }]);
-var temp1 =
-{
-  "nodes": [
-    {
-      "name": "users",
-      "type": "title",
-      "pk": {
-        "id": "id",
-        "type": "INT",
-        "basicType": "Numeric",
-        "size": "",
-        "attributes": [
-          "NOT NULL"
-        ],
-        "fkFormat": {
-          "id": "users_id",
-          "origin": 1,
-          "basicType": "Numeric",
-          "type": "INT",
-          "tableName": "users"
-        },
-        "tableName": "users"
-      },
-      "group": 1,
-      "size": 45,
-      "id": 1,
-      "index": 0,
-      "weight": 3,
-      "x": 618.078816132288,
-      "y": 205.43291268236456,
-      "px": 618.078816132288,
-      "py": 205.43291268236456,
-      "fixed": 1
-    },
-    {
-      "name": "id",
-      "type": "field",
-      "isPk": true,
-      "group": 1,
-      "size": 25,
-      "id": 1,
-      "index": 1,
-      "weight": 1,
-      "x": 674.9501621290509,
-      "y": 165.40122823012447,
-      "px": 674.9501621290509,
-      "py": 165.40122823012447,
-      "fixed": 1
-    },
-    {
-      "name": "name",
-      "type": "field",
-      "isPk": false,
-      "group": 1,
-      "size": 25,
-      "id": 1,
-      "index": 2,
-      "weight": 1,
-      "x": 434.3089256131086,
-      "y": 337.4673879756488,
-      "px": 434.3089256131086,
-      "py": 337.4673879756488,
-      "fixed": 1
-    },
-    {
-      "name": "email",
-      "type": "field",
-      "isPk": false,
-      "group": 1,
-      "size": 25,
-      "id": 1,
-      "index": 3,
-      "weight": 1,
-      "x": 477.089817938607,
-      "y": 123.73187917580358,
-      "px": 477.089817938607,
-      "py": 123.73187917580358,
-      "fixed": 1
-    }
-  ],
-  "links": [
-    {
-      "source": {
-        "name": "users",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "type": "INT",
-          "basicType": "Numeric",
-          "size": "",
-          "attributes": [
-            "NOT NULL"
-          ],
-          "fkFormat": {
-            "id": "users_id",
-            "origin": 1,
-            "basicType": "Numeric",
-            "type": "INT",
-            "tableName": "users"
-          },
-          "tableName": "users"
-        },
-        "group": 1,
-        "size": 45,
-        "id": 1,
-        "index": 0,
-        "weight": 3,
-        "x": 618.078816132288,
-        "y": 205.43291268236456,
-        "px": 618.078816132288,
-        "py": 205.43291268236456,
-        "fixed": 1
-      },
-      "target": {
-        "name": "id",
-        "type": "field",
-        "isPk": true,
-        "group": 1,
-        "size": 25,
-        "id": 1,
-        "index": 1,
-        "weight": 1,
-        "x": 674.9501621290509,
-        "y": 165.40122823012447,
-        "px": 674.9501621290509,
-        "py": 165.40122823012447,
-        "fixed": 1
-      },
-      "value": 50
-    },
-    {
-      "source": {
-        "name": "users",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "type": "INT",
-          "basicType": "Numeric",
-          "size": "",
-          "attributes": [
-            "NOT NULL"
-          ],
-          "fkFormat": {
-            "id": "users_id",
-            "origin": 1,
-            "basicType": "Numeric",
-            "type": "INT",
-            "tableName": "users"
-          },
-          "tableName": "users"
-        },
-        "group": 1,
-        "size": 45,
-        "id": 1,
-        "index": 0,
-        "weight": 3,
-        "x": 618.078816132288,
-        "y": 205.43291268236456,
-        "px": 618.078816132288,
-        "py": 205.43291268236456,
-        "fixed": 1
-      },
-      "target": {
-        "name": "name",
-        "type": "field",
-        "isPk": false,
-        "group": 1,
-        "size": 25,
-        "id": 1,
-        "index": 2,
-        "weight": 1,
-        "x": 434.3089256131086,
-        "y": 337.4673879756488,
-        "px": 434.3089256131086,
-        "py": 337.4673879756488,
-        "fixed": 1
-      },
-      "value": 50
-    },
-    {
-      "source": {
-        "name": "users",
-        "type": "title",
-        "pk": {
-          "id": "id",
-          "type": "INT",
-          "basicType": "Numeric",
-          "size": "",
-          "attributes": [
-            "NOT NULL"
-          ],
-          "fkFormat": {
-            "id": "users_id",
-            "origin": 1,
-            "basicType": "Numeric",
-            "type": "INT",
-            "tableName": "users"
-          },
-          "tableName": "users"
-        },
-        "group": 1,
-        "size": 45,
-        "id": 1,
-        "index": 0,
-        "weight": 3,
-        "x": 618.078816132288,
-        "y": 205.43291268236456,
-        "px": 618.078816132288,
-        "py": 205.43291268236456,
-        "fixed": 1
-      },
-      "target": {
-        "name": "email",
-        "type": "field",
-        "isPk": false,
-        "group": 1,
-        "size": 25,
-        "id": 1,
-        "index": 3,
-        "weight": 1,
-        "x": 477.089817938607,
-        "y": 123.73187917580358,
-        "px": 477.089817938607,
-        "py": 123.73187917580358,
-        "fixed": 1
-      },
-      "value": 50
-    }
-  ]
-}

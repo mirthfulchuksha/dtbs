@@ -1,12 +1,16 @@
 angular.module('DTBS.main')
-.directive('snapSql', ['SnapService', 'canvasData', 'canvasFormat', function (SnapService, canvasData, canvasFormat) {
+.directive('snapSql', [
+           'SnapService', 
+           'canvasData', 
+           'canvasSave', 
+           'canvasFormat', function (SnapService, canvasData, canvasSave, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
       SnapService.Snap().then(function (Snap) {
-        Snap.plugin(  function( Snap, Element, Paper, global ) {
-          
+        
+        Snap.plugin(  function( Snap, Element, Paper, global ) {  
           Element.prototype.getTransformedBB = function() {
             var bb = this.getBBox(1);
             var t = this.node.getTransformToElement( this.paper.node );
@@ -76,7 +80,6 @@ angular.module('DTBS.main')
             }
           }
         });
-
         scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes) {
           var color, i, ii, tempS, tempT;
           var dragger = function () {
@@ -150,7 +153,7 @@ angular.module('DTBS.main')
           });
           return max;
         };
-
+        var shapes;
         scope.$on('canvas:new-data', function (e, data) {
 
           $("#svgout").empty();
@@ -158,7 +161,8 @@ angular.module('DTBS.main')
           for (var key in data) {
             dataArr.push(data[key]);
           }
-          var shapes = [], texts = [], tableReferences = [], fieldTypes = [];
+          shapes = [];
+          var texts = [], tableReferences = [], fieldTypes = [];
           var s = Snap("#svgout");
           
           var randomIntFromInterval = function (min,max) {
@@ -218,9 +222,24 @@ angular.module('DTBS.main')
           scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
         });
         
+        scope.$on('canvas:alert-data', function (e, data) {
+          // pass through the json to the front end
+          var positions = {};
+          positions.startXs = [];
+          positions.startYs = [];
+          
+          shapes.forEach(function (shape) {
+            // is header
+            if ((shape.attr("fill")).toString() === "rgb(211, 211, 211)") {
+              positions.startXs.push(shape.attr("x"));
+              positions.startYs.push(shape.attr("y"));
+            }
+          });
+
+          var saveGraph = angular.copy(positions);
+          canvasSave.push(positions);
+        });
       });
     }
   };
 }]);
-
-
