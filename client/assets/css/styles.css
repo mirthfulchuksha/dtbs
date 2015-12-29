@@ -62,7 +62,7 @@ input {
   left: 0;
   top: 3em;
   bottom: 0;
-  position: fixed;
+  position: absolute;
   z-index: -1;
   display: block;
   padding: 0 .25em;
@@ -94,8 +94,8 @@ input {
 }
 
 /*Editor Styles*/
-.super-wrap {
-  position: fixed;
+.output-wrapper {
+  position: absolute;
   display: block;
   right: 0;
   top: 0;
@@ -209,7 +209,7 @@ input {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  position: fixed;
+  position: absolute;
   width: 100%;
   margin-top: -4em;
 }
@@ -473,10 +473,10 @@ input {
   background-color: #93006c;
 }
 
-#mongoEditModal, #sqlEditModal{
+#mongoEditModal, #sqlEditModal {
   top: 1em !important;
   overflow: auto;
-  max-height: 35em !important;
+  max-height: 30em !important;
   padding-bottom: 0;
 }
 
@@ -516,7 +516,7 @@ input {
   margin-left: 1em;
 }
 
-.code-opts {
+.code-options {
   height: 3em;
   border-left: solid #C96C9E 1px;
   padding-top:.4em;
@@ -728,4 +728,51 @@ input {
   border-top-color: #93006c;
   border-width: 5px;
   margin-left: -5px;
+}
+
+.logo {
+  height: 2em;
+  width: auto;
+  margin-top: .5em;
+  margin-right: 5em;
+}
+
+.logo-container {
+  height: 3em;
+  float: left;
+  margin-left: 7%;
+  width: 9em;
+}
+
+.nav-buttons {
+  height: 3em;
+  width: auto;
+  float: left;
+  padding-top: 2px;
+}
+
+.dropdown-head {
+  width: 7em;
+  margin-right: 1em;
+}
+
+a i {
+  font-size: 18px;
+}
+
+.extended-input {
+  width: 35em;
+}
+
+button:disabled {
+/*  background-color: #734968 !important;
+  color: #CC9DC0;*/
+  opacity: .5;
+}
+
+button:disabled:hover {
+/*  background-color: #734968 !important;
+  color: #CC9DC0;*/
+  background-color: #D10084 !important;
+  opacity: .5;
 }

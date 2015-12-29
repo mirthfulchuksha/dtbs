@@ -1,19 +1,20 @@
 <nav class="navbar">
-  <div style="height:3em; float:left; margin-left:7%; width:9em">
-    <img src="assets/img/dtbs-logo1.png" style="height:2em; width:auto; margin-top:.5em; margin-right:5em">
+  <div class="logo-container">
+    <img src="assets/img/dtbs-logo1.png" class="logo">
   </div>
-  <div style="height:3em; width:auto; float:left; padding-top:2px">
+  <div class="nav-buttons">
     <a href="#/" class="button nav">Home</a>
     <a href="/logout" class="button nav">Logout</a>
+    <a href="/setup" class="button nav">New Database</a>
   </div>
 </nav>
 
-<div class="super-wrap">
+<div class="output-wrapper">
   <div class="editor-wrapper" ng-controller="EditorController">
-    <div class="code-opts">
+    <div class="code-options">
       <ul id="output" class="dropdown menu" data-dropdown-menu>
         <li class="menu">
-          <a href="" style="width:7em; margin-right:1em">Output</a>
+          <a href="" class="dropdown-head">Output</a>
           <ul>
             <li><a href="" ng-click="updateFactory('Mongoose')">Mongoose </a></li>
             <li><a href="" ng-click="updateFactory('ActiveRecord')">Active Record </a></li>
@@ -21,7 +22,7 @@
           </ul>
         </li>
         <li class="menu" ng-show="savedSchemas.length > 0">
-          <a href="" style="width:7em; margin-right:1em; font-weight:600">Load</a>
+          <a href="" class="dropdown-head">Load</a>
           <ul>
             <li><a href="" ng-repeat="schema in savedSchemas track by $index" ng-click="loadNewSchema($index)">{{savedSchemas[$index].name}} </a></li>
           </ul>
@@ -29,25 +30,24 @@
         <li>
           <a class="" role="button" id="download"
             target="_self" href="" download="" ng-click="downloadCode()">
-            <i class="fi-download" style="font-size:18px"></i><span class="arrow-box-editor">
+            <i class="fi-download"></i><span class="arrow-box-editor">
               Download Code</span>
           </a>
         </li>
         <li>
           <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
-            <i class="fi-save" style="font-size:18px"></i><span class="arrow-box-editor">
+            <i class="fi-save"></i><span class="arrow-box-editor">
               Save Schema</span>
           </a>
         </li>
         <li>
           <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
-            <i class="fi-refresh" style="font-size:18px"></i><span class="arrow-box-editor">
+            <i class="fi-refresh"></i><span class="arrow-box-editor">
               Refresh</span>
           </a>
         </li>
       </ul>
     </div>
-
     <div id="editor">
       <textarea ng-model="editorText">/* Your Output will appear here! */</textarea>
     </div>
@@ -56,7 +56,6 @@
 </div>
 
 <div ng-controller='MongoController'>
-
   <div id='mongoDesignCanvas'>
     <svg id="tree" d3-mongo-tree></svg>
     <svg id="dendro" style="display:none" d3-mongo-dendro></svg>
@@ -66,26 +65,26 @@
     <p class="tool-header">tools</p>
     <a ng-click="toggleEditModal('createMongo')" data-open="mongoEditModal"
       class="toolBtn button">
-      <i class="fi-page" style="font-size:18px;"></i><span class="arrow-box">Create Schema</span></a>
+      <i class="fi-page"></i><span class="arrow-box">Create Schema</span></a>
     <a ng-click="toggleEditModal('editMongo')" data-open="mongoEditModal"
       class="toolBtn button">
-      <i class="fi-pencil" style="font-size:18px;"></i><span class="arrow-box">Edit Schema</span></a>
+      <i class="fi-pencil"></i><span class="arrow-box">Edit Schema</span></a>
     <a id='mytoggler' ng-click="toggleCanvasView()"
       class="toolBtn button">
-      <i class="fi-contrast" style="font-size:18px;"></i><span class="arrow-box">Toggle View</span></a>
+      <i class="fi-contrast"></i><span class="arrow-box">Toggle View</span></a>
     <a id="savepicture" ng-click="saveSVG(view)"
       class="toolBtn button">
-      <i class="fi-photo" style="font-size:18px;"></i><span class="arrow-box">Save Image</span></a>
+      <i class="fi-photo"></i><span class="arrow-box">Save Image</span></a>
   </div>
 
   <div class="reveal" id="mongoEditModal" data-reveal>
     <h4>Add/Edit Schema</h4>
-    <form role="form" id="schemaEdit">
+    <form role="form" id="schemaEdit" name="schemaEdit">
       <div class="row">
         <div class="create" ng-show="typeEdit === 'createMongo'">
           <label>Schema Name: </label>
-            <input type="text" style="width:35em" placeholder="Type name..."
-              ng-model="currentSchema.name" class="schemaName" required/>
+            <input type="text" placeholder="Type name..."
+              ng-model="currentSchema.name" class="schemaName extended-input" required/>
         </div>
       </div>
       <hr>
@@ -120,7 +119,7 @@
       <div ng-show="addingKey === true" class="row" style="display:inline">
 
         <label>Add To:</label>
-          <select ng-model="nestedLocation" style="width:35em" required>
+          <select ng-model="nestedLocation" class="extended-input" required>
             <option ng-repeat="(key, val) in nestedDocuments">{{key}}</option>
           </select>
 
@@ -143,7 +142,6 @@
               <option>Buffer</option>
               <option>Boolean</option>
               <option>Mixed</option>
-              <option>Mixed Array</option>
               <option>ObjectID</option>
               <option>Array</option>
             </select>
@@ -184,7 +182,8 @@
       </span>
 
       <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn"
-        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right; margin-right:0 !important">Done</button>
+        ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right; margin-right:0 !important"
+        ng-disabled="addingKey">Done</button>
 
       <button type="submit" class="button mongoBtn" class="pull-right"
         ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''" style="float:right; margin-right:.5em">Delete Schema</button>
@@ -206,8 +205,8 @@
 
   $(document).ready(function() {
     $('#code_button').on('click', function () {
-      var state = parseInt($('.super-wrap').css('right'), 10) > -1;
-      $('.super-wrap').animate({'right':(state ? -400: 0)}, 'slow');
+      var state = parseInt($('.output-wrapper').css('right'), 10) > -1;
+      $('.output-wrapper').animate({'right':(state ? -400: 0)}, 'slow');
       $('#code_button').text((state ? '<<': '>>'));
     });
     $('.cancelKey').on('click', function () {
