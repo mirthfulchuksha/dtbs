@@ -7,9 +7,8 @@ angular.module('DTBS.main')
     };
     
     $scope.saveSchema = function () {
-      console.log("In Save Schema (1)");
+      // The call to code parser is made in the snap sql directive
       canvasSave.alertSave();
-      // CodeParser.saveSchema(tablePositions);
     };
 
     $scope.updateFactory = function (language) {

@@ -87,7 +87,6 @@ angular.module('DTBS.main')
     };
 
     var saveSchema = function (graphLayout) {
-      console.log("In Save Schema (4)");
       //console.log('sending scheme to server');
       var saveStuff = {
         dbUser: dbUser,

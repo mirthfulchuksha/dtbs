@@ -98,8 +98,6 @@ angular.module('DTBS.main')
             this.animate({"fill-opacity": 0}, 500);
             // Fade paired element on mouse up
             this.animate({"fill-opacity": 1}, 500);
-            console.log(this);
-            console.log( 'testing group positions', this.getTransformedBB() );
           };
 
           var connections = [];
@@ -235,24 +233,19 @@ angular.module('DTBS.main')
         });
         
         scope.$on('canvas:alert-data', function (e, data) {
-          // pass through the json to the front end
           var positions = {};
           positions.startXs = [];
           positions.startYs = [];
-            // if it's a header field, it will be grey
-          var headers = $('#svgout rect[fill=#d3d3d3]');
-          for (var i = 0; i < headers.length; i++) {
-            // positions.startXs.push(headers[i].getBBox().x);
-            positions.startXs.push(headers[i].getTransformedBB().x);
-            // positions.startYs.push(headers[i].getBBox().y);            
-            positions.startYs.push(headers[i].getTransformedBB().y);            
+          // if it's a header field, it will be grey
+          for (var i = 0; i < shapes.length; i++) {
+            if ((shapes[i].attr("fill")).toString() === "rgb(211, 211, 211)") {
+              positions.startXs.push(shapes[i].getTransformedBB().x);
+              positions.startYs.push(shapes[i].getTransformedBB().y);
+            }
           }
-
-          console.log("In Snap Save (3)", positions);
           CodeParser.saveSchema(positions);
-          // canvasSave.push(positions);
         });
       });
     }
   };
-}]); //165, 80
+}]);
