@@ -94,7 +94,7 @@ input {
 }
 
 /*Editor Styles*/
-.super-wrap {
+.output-wrapper {
   position: fixed;
   display: block;
   right: 0;
@@ -516,7 +516,7 @@ input {
   margin-left: 1em;
 }
 
-.code-opts {
+.code-options {
   height: 3em;
   border-left: solid #C96C9E 1px;
   padding-top:.4em;
@@ -728,4 +728,38 @@ input {
   border-top-color: #93006c;
   border-width: 5px;
   margin-left: -5px;
+}
+
+.logo {
+  height: 2em;
+  width: auto;
+  margin-top: .5em;
+  margin-right: 5em;
+}
+
+.logo-container {
+  height: 3em;
+  float: left;
+  margin-left: 7%;
+  width: 9em;
+}
+
+.nav-buttons {
+  height: 3em;
+  width: auto;
+  float: left;
+  padding-top: 2px;
+}
+
+.dropdown-head {
+  width: 7em;
+  margin-right: 1em;
+}
+
+a i {
+  font-size: 18px;
+}
+
+.extended-input {
+  width: 35em;
 }
