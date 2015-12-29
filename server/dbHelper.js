@@ -104,7 +104,7 @@ module.exports = {
     //query
     {name: req.body.dbName}, 
     //update
-    {user: req.body.dbUser, name: req.body.dbName, language: req.body.dbLang, data: req.body.tableStorage},
+    {user: req.body.dbUser, name: req.body.dbName, language: req.body.dbLang, data: req.body.tableStorage, graph: req.body.graphLayout},
     //options to return updated schema
     {'new': true},
     function (err, schema) {

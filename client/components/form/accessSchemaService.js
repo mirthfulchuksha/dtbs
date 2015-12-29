@@ -20,17 +20,6 @@ angular.module('DTBS.main')
       return Object.keys(tempSchema).length;
     };
 
-    var savePositions = function (graph) {
-      return $http({
-        method: 'POST',
-        url: '/savePositions',
-        data: graph
-      })
-      .then(function (res) {
-        console.log(res, "saved the graph!")
-      });
-    };
-
     var schemaBuilder = function (structObject, callback) {
       var dataObj = {data: structObject};
       return $http({
@@ -48,7 +37,6 @@ angular.module('DTBS.main')
     return {
       setTempSchema: setTempSchema,
       getTempSchema: getTempSchema,
-      savePositions: savePositions,
       schemaBuilder: schemaBuilder
     };
   }]);

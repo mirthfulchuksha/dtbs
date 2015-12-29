@@ -80,7 +80,7 @@ angular.module('DTBS.main')
             }
           }
         });
-        scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes) {
+        scope.render = function (s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes, initialPositions) {
           var color, i, ii, tempS, tempT;
           var dragger = function () {
             this.data('origTransform', this.transform().local )
@@ -169,13 +169,19 @@ angular.module('DTBS.main')
             return Math.floor(Math.random()*(max-min+1)+min);
           };
           var dragGroups = [];
-          
+          var counter = 0;
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
             var table = dataArr[i];
             var width = tableWidth(dataArr[i]) * 8;
-            var startX = randomIntFromInterval(40, 600);
-            var startY = randomIntFromInterval(40, 300);
+            var startX, startY;
+            if (!initialPositions) {
+              startX = randomIntFromInterval(40, 600);
+              startY = randomIntFromInterval(40, 300);
+            } else {
+              startX = initialPositions.startXs[counter];
+              startY = initialPositions.startYs[counter];
+            }
 
             var startYText = startY+15, startXText = startX+10;
             var tableText = s.text(startXText, startYText, table.name);
@@ -188,6 +194,7 @@ angular.module('DTBS.main')
             tableReferences.push("header");
             fieldTypes.push("header");
             var isPk = true;
+            counter++;
             table.attrs.forEach(function (field) {
               if (isPk) {
                 tableReferences.push("primary");
@@ -219,7 +226,13 @@ angular.module('DTBS.main')
             var fkConnection = [shapes[link.source], shapes[link.target]];
             fkConnections.push(fkConnection);
           });
-          scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
+          console.log(data, "Data")
+          if (data.graph) {
+            var initialPositions = data.graph;
+            scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes, initialPositions);
+          } else {
+            scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
+          }
         });
         
         scope.$on('canvas:alert-data', function (e, data) {
@@ -229,7 +242,7 @@ angular.module('DTBS.main')
           positions.startYs = [];
           
           shapes.forEach(function (shape) {
-            // is header
+            // if it's a header field, it will be grey
             if ((shape.attr("fill")).toString() === "rgb(211, 211, 211)") {
               positions.startXs.push(shape.attr("x"));
               positions.startYs.push(shape.attr("y"));
