@@ -114,16 +114,16 @@ angular.module('DTBS.main')
               var fieldColor;
               switch(fieldTypes[i]) {
                 case "Numeric":
-                    fieldColor = "#ff8169";
+                    fieldColor = "#bad6c5";
                     break;
                 case "Bit":
-                    fieldColor = "#ff55c3";
+                    fieldColor = "#ef861a";
                     break;
                 case "DateTime":
-                    fieldColor = "#b06df7";
+                    fieldColor = "#93afdd";
                     break;
                 case "String":
-                    fieldColor = "#7076ff";
+                    fieldColor = "#c765b7";
                     break;
               }
               tempS = shapes[i].attr({fill: fieldColor, stroke: color, "fill-opacity": 0.5, "stroke-width": 1, cursor: "move"});

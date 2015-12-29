@@ -21,19 +21,18 @@ angular.module('DTBS.main')
         scope.render = function (tableData, loaded) {
 
           // Set up the custom colour scale
-          var colorLength = 75, colors = [];
-          var color = d3.scale.linear().domain([1,colorLength])
-                .interpolate(d3.interpolateHcl)
-                .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
-  
-          // tableData.forEach(function (table) {
-          //   var tableColor = Math.floor(Math.random() * colorLength + 1);
-          //   colors.push(tableColor);
-          // });
+          var colors = [],
+              customRange = canvasFormat.colorSchema(),
+              flattened = [];
+          customRange.forEach(function (palette) {
+            flattened.concat(palette);
+          });
+          var color = d3.scale.ordinal().range(flattened);
 
-          for (var z = 0; z < 20; z++) {
-            var tableColor = Math.floor(Math.random() * colorLength + 1);
-            colors.push(tableColor);
+          for (var k = 0; k < tableData.length; k++) {
+            var palette = Math.floor(Math.random() * 8);
+            var tableColor = Math.floor(Math.random() * customRange[palette].length);
+            colors.push(customRange[palette][tableColor]);
           }
 
           //Set up the force layout
@@ -102,7 +101,7 @@ angular.module('DTBS.main')
                   return 4;
               })
               .style("fill", function (d) {
-                return color(colors[d.group-1]);
+                return colors[d.group-1];
               });
           // append the field/table name
           node.append("text")

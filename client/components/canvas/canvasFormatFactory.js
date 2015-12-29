@@ -2,6 +2,19 @@ angular.module('DTBS.main')
 
 .factory('canvasFormat', function() {
 
+  var colorSchema = function () {
+    var colors = [
+      ["#da5b60" , "#e8898f" , "#f194a2" , "#e8a1b7" , "e5a0bc", "#ddabab" , "#bb5b6f" , "#b17796" ],
+      ["#f17f66" , "#ef861a" , "#d78775" , "#e0936d" , "#c78881" ],
+      ["#e7ac46" , "#e2b757" , "#dec089" , "#edc88c" ],
+      ["#deea97" , "#dee18b" , "#ead88c" , "#b8a681" , "#d3cb9b" ],
+      ["#89b6bc" , "#a3ccc8" , "#bad6c5" , "#d1d7af" , "#bbb8a9" ],
+      ["#8e7ab4" , "#8c89c2" , "#93afdd" , "#98b0cc" , "#9da4d9" ],
+      ["#c765b7" , "#ad4294" , "#af75b4" , "#bb92be" , "#d88cc0" , "#823082" , "#a04f90" , "#baadbf" ],
+      ["#c24595" , "#cc4994" , "#e36aac" , "#e36aac" , "#cc4994" , "#b8508a" , "#e870aa" , "#d74797" , "#a01282" , "#bc9eaa" ]
+    ];
+    return colors;
+  };
   var buildCentralNode = function(table, groupNumber) {
     var centralNode = {
       name: table.name,
@@ -108,6 +121,7 @@ angular.module('DTBS.main')
     return graph;
   };
   return {
+    colorSchema: colorSchema,
     buildCentralNode: buildCentralNode,
     buildFieldNode: buildFieldNode,
     dataBuilder: dataBuilder,
