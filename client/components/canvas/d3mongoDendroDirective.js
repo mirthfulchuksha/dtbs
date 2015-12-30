@@ -15,13 +15,18 @@ angular.module('DTBS.main')
         var width = 1000, height = 650, root;
 
         // Set up the custom colour scale
-        var colors = [],
-            customRange = canvasFormat.colorSchema(),
-            flattened = [];
-        customRange.forEach(function (palette) {
-          flattened.concat(palette);
-        });
-        var color = d3.scale.ordinal().range(flattened);
+        // var colors = [],
+        //     customRange = canvasFormat.colorSchema(),
+        //     flattened = [];
+        // customRange.forEach(function (palette) {
+        //   flattened.concat(palette);
+        // });
+        // var color = d3.scale.ordinal().range(flattened);
+
+        var colorLength = 75, colors = [];
+        var color = d3.scale.linear().domain([1,colorLength])
+                      .interpolate(d3.interpolateHcl)
+                      .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
 
         var maxDepth = function (root) {
           var max = 0;
@@ -45,10 +50,14 @@ angular.module('DTBS.main')
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
 
-          for (var k = 0; k <= maxHeight; k++) {
-            var palette = Math.floor(Math.random() * 8);
-            var tableColor = Math.floor(Math.random() * customRange[palette].length);
-            colors.push(customRange[palette][tableColor]);
+          // for (var k = 0; k <= maxHeight; k++) {
+          //   var palette = Math.floor(Math.random() * 8);
+          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
+          //   colors.push(customRange[palette][tableColor]);
+          // }
+          for (var i = 0; i <= maxHeight; i++) {
+            var tableColor = Math.floor(Math.random() * colorLength);
+            colors.push(tableColor);
           }
           var cluster = d3.layout.cluster()
                           .size([height, width]);
@@ -95,12 +104,12 @@ angular.module('DTBS.main')
                 if (d.name === "Collection") {
                   return "#823082";
                 } else {
-                  return colors[d.depth-1];
+                  return color(colors[d.depth-1]);
                 }
               })
               .attr("stroke", function (d) {
                 if (d.type === "Nested Document") {
-                  return d3.rgb(colors[d.depth-1]).darker();
+                  return d3.rgb(color(colors[d.depth-1])).darker();
                 } else {
                   return "white";
                 }

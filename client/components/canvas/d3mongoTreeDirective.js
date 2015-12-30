@@ -15,13 +15,17 @@ angular.module('DTBS.main')
         var width = 1000, height = 650, root;
 
         // Set up the custom colour scale
-        var colors = [],
-            customRange = canvasFormat.colorSchema(),
-            flattened = [];
-        customRange.forEach(function (palette) {
-          flattened.concat(palette);
-        });
-        var color = d3.scale.ordinal().range(flattened);
+        var colorLength = 75, colors = [];
+        var color = d3.scale.linear().domain([1,colorLength])
+                      .interpolate(d3.interpolateHcl)
+                      .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+        // var colors = [],
+        //     customRange = canvasFormat.colorSchema(),
+        //     flattened = [];
+        // customRange.forEach(function (palette) {
+        //   flattened.concat(palette);
+        // });
+        // var color = d3.scale.ordinal().range(flattened);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
@@ -42,12 +46,16 @@ angular.module('DTBS.main')
           return max;
         };
 
-        scope.render = function (root) {
+        scope.render = function (root, id) {
           var maxHeight = maxDepth(root);
-          for (var k = 0; k <= maxHeight; k++) {
-            var palette = Math.floor(Math.random() * 8);
-            var tableColor = Math.floor(Math.random() * customRange[palette].length);
-            colors.push(customRange[palette][tableColor]);
+          // for (var k = 0; k <= maxHeight; k++) {
+          //   var palette = Math.floor(Math.random() * 8);
+          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
+          //   colors.push(customRange[palette][tableColor]);
+          // }
+          for (var i = 0; i <= maxHeight; i++) {
+            var tableColor = Math.floor(Math.random() * colorLength);
+            colors.push(tableColor);
           }
           var tick = function () {
             link.attr("x1", function (d) { return d.source.x; })
@@ -63,6 +71,7 @@ angular.module('DTBS.main')
           };
           var force = d3.layout.force()
             .size([width, height])
+            .gravity(0)
             .linkDistance(function (d) {
               // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
@@ -82,6 +91,7 @@ angular.module('DTBS.main')
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
 
+          
           root.fixed = true;
             root.x = width / 2;
             root.y = height / 2;
@@ -116,9 +126,11 @@ angular.module('DTBS.main')
                 .attr("class", "node")
                 .style("fill", function (d) {
                   if (d.name === "Collection") {
-                    return "#823082";
+                    // return "#823082";
+                    return color(1);
                   } else {
-                    return colors[d.depth];
+                    // return colors[d.depth];
+                    return color(colors[d.depth]);
                   }
                 })
                 .attr("cx", function (d) { return d.x; })
@@ -134,9 +146,11 @@ angular.module('DTBS.main')
                 })
                 .attr("stroke", function (d) {
                   if (d.name === "Collection") {
-                    return "#9da4d9";
+                    // return "#9da4d9";
+                    return color(8);
                   } else if (d.type === "Nested Document") {
-                    return d3.rgb(colors[d.depth]).darker();
+                    // return d3.rgb(colors[d.depth]).darker();
+                    return d3.rgb(color(colors[d.depth])).darker();
                   } else {
                     return "white";
                   }
@@ -210,6 +224,7 @@ angular.module('DTBS.main')
             dataArr.push(data[key]);
           }
           var schemaData = treeFormat.treeFormatter(dataArr);
+          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
