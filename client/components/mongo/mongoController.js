@@ -170,7 +170,6 @@ angular.module('DTBS.main')
 
       //delete childLocations in $scope.nestedDocuments object
       for (var j in $scope.allKeys[key]['childLocations']) {
-        console.log($scope.allKeys[key]['childLocations']);
         delete $scope.nestedDocuments[j];
       }
 

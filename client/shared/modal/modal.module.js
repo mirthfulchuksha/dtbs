@@ -148,7 +148,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.setup = function () {
-    console.log("called, setup", $scope.db)
     $scope.updateFactory();
     var path = $scope.db.lang === 'SQL' ? '/sql' : '/mongo';
     $location.path(path);

@@ -216,7 +216,6 @@ angular.module('DTBS.main')
         }
 
         if (deleted === true) {
-          console.log('deleting FKs from other tables');
           $scope.tableStorage[key]['attrs'] = [];
           $scope.tableStorage[key]['attrs'][0] = $scope.tableStorage[key]['primaryKey'];
 

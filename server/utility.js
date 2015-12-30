@@ -75,7 +75,6 @@ module.exports = {
 
   parseTable: function (req, res, next) {
     var tables = req.body.data;
-    console.log(tables);
 
     var schema = "";
     for(var i = 0; i < tables.length; i++){
@@ -145,7 +144,7 @@ module.exports = {
   parseMongo: function (req, res, next) {
     var schema = "";
     var dbName = req.body.dbName;
-    console.log(req.body);
+    
     var tableStructArray = req.body.data;
     schema += "use " + dbName + "\n\n";
 
@@ -161,7 +160,6 @@ module.exports = {
     var schema = "";
     var dbName = req.body.dbName;
     var mongoStruct = req.body.data;
-    console.log(mongoStruct);
 
     schema += "\
   var mongoose = require('mongoose');\n\n";
@@ -272,7 +270,7 @@ module.exports = {
           var originTableName = keys[key].origin;
           //ading to fk obj for the table
           keys[key]["tableName"] = originTableName;
-          fkObj[originTableName] = keys[key];
+          fkObj[keys[key].id] = keys[key];
           //find origin
           for(var foreignKeyTable in finishedTableStorage) {
             if(finishedTableStorage[foreignKeyTable].name === originTableName) {
