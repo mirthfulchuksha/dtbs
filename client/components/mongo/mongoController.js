@@ -273,7 +273,7 @@ angular.module('DTBS.main')
       // Create a canvas
       var canvas = document.createElement('canvas');
       canvas.height = 650;
-      canvas.width = 1000;
+      canvas.width = 1200;
       canvas.style.background = 'white';
 
       canvg(canvas, str);
