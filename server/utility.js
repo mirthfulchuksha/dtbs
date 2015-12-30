@@ -20,7 +20,13 @@ var bookshelfTypeDict = {
 var mongooseTypeDict = {
   'Number' : 'Number',
   'Numeric': 'Number',
-  'String': 'String'
+  'String': 'String',
+  'Date': 'Date',
+  'Buffer': 'Buffer',
+  'Boolean' : 'Boolean',
+  'Mixed' : 'Mixed',
+  'ObjectID' : 'ObjectID',
+  'Array' : 'Array' 
 };
 
 var basicTypes = { 
@@ -139,6 +145,7 @@ module.exports = {
   parseMongo: function (req, res, next) {
     var schema = "";
     var dbName = req.body.dbName;
+    console.log(req.body);
     var tableStructArray = req.body.data;
     schema += "use " + dbName + "\n\n";
 

@@ -252,7 +252,6 @@ angular.module('DTBS.main')
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
-      console.log($scope.schemaStorage, "schemaStorage");
       var updatedData = angular.copy($scope.schemaStorage);
       mongoData.push(updatedData);
     };
@@ -342,9 +341,9 @@ angular.module('DTBS.main')
 
         var amount = Object.keys(parsedRecovered.data).length;
         //rebuild visuals        
-        $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
-        $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
-        $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 1000);
+        $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 500);
+        $timeout(saveUpdates, secondsToWaitBeforeRender * 500);
+        $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 500);
       } else {
         $scope.schemaStorage = {};
       }

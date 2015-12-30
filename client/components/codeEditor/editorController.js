@@ -7,6 +7,8 @@ angular.module('DTBS.main')
       CodeParser.saveCode();
     };
 
+    var mongoORMS = ['Mongo', 'Mongoose', 'Active Record'];
+
     $scope.$on('canvas:save-data', function (e, data) {
       $scope.positions = data;
     });
@@ -20,7 +22,11 @@ angular.module('DTBS.main')
     $scope.updateFactory = function (language) {
       $scope.db.lang = language;
       CodeParser.update($scope.db);
-      CodeParser.fetchCode();
+      if(mongoORMS.indexOf($scope.db.lang) > -1) {
+        CodeParser.fetchMongo();
+      } else {
+        CodeParser.fetchCode();
+      }
     };
 
     $scope.rebuildSchema = function () {

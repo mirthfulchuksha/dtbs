@@ -339,7 +339,7 @@ angular.module('DTBS.main')
     };
 
     $scope.saveForeignKey = function (tableName, keyName) {
-
+      keyName = keyName.replace('<script>','').replace('</script>', '');
       //working, foreign key can be saved with value that is in the PK, also add FK to the PK
       $scope.currentTable['foreignKeys'][keyName] = $scope.potentialFKs[tableName]['fkFormat'];
       $scope.currentTable['foreignKeys'][keyName]['id'] = keyName;
@@ -502,10 +502,10 @@ angular.module('DTBS.main')
 
         var amount = Object.keys(parsedRecovered.data).length + 1;
         //rebuild visuals
-        $timeout(changeTableStorage.bind(null, parsedRecovered.data), secondsToWaitBeforeRender * 1000);
-        $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
-        $timeout(saveUpdates, secondsToWaitBeforeRender * 1000);
-        $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 1000);
+        $timeout(changeTableStorage.bind(null, parsedRecovered.data), secondsToWaitBeforeRender * 500);
+        $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 500);
+        $timeout(saveUpdates, secondsToWaitBeforeRender * 500);
+        $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 500);
       }
       //pull out existing schemas
       findSavedSchemas();

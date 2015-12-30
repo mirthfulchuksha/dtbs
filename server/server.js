@@ -105,7 +105,7 @@ app.post('/update', function (req, res, next) {
   util.parseTable(req, res, next);
 });
 
-app.post('/mongo', function (req, res, next) {
+app.post('/mongoCode', function (req, res, next) {
   util.parseMongo(req, res, next);
 });
 

@@ -11,7 +11,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
     $scope.showModal = !$scope.showModal;
   };
 
-  $scope.savedSchemas = [{name:"db1"}, {name:"db2"}];
+  $scope.savedSchemas = [];
   var showSavedSchemas = function () {
     CodeParser.fetchSchemas(function (res) {
       $scope.savedSchemas = res;
@@ -130,7 +130,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.updateFactory = function () {
-    console.log("called")
     switch ($scope.db.lang) {
       case "SQL":
         $scope.db.fileName = $scope.db.lang + '_Schema.sql';
