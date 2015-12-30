@@ -53,16 +53,50 @@
     "post: String,",
     "metadata: {",
     "  votes: Number,",
-    "  favs: Number",
+    "  favs: {",
+    "    random: Number",
+    "  }",
     "},",
     "category: String",
     "});"
   ];
 
-  var buildJSON = function (schemaArray) {
-    for (var i = 1; i < schemaArray.length-1; i++) {
-      var pair = stringify(schemaArray[i]);
+    var mongoose2 = [
+    "author: String,",
+    "summary: String,",
+    "post: String,",
+    "metadata: {",
+    "  votes: Number,",
+    "  favs: {",
+    "    random: Number",
+    "  }",
+    "},",
+    "category: String"
+  ];
+
+  var buildDoc = function (nestedDoc) {
+    var json = {
+      keys: {};
+    };
+    for (var i = 1; i < nestedDoc.length-1; i++) {
+      if (nestedDoc[i].charAt(0) !== " ") {
+        var pair = stringify(nestedDoc[i]);
+        json[pair.key] = {type: pair.val};
+        if (pair.val === "Nested Document") {
+          //take a slice of the thingo and call recursvely
+          var startingPoint = i+1;
+          while (nestedDoc[startingPoint].charAt(0) !== '}') {
+            var nestedPair = stringify(nestedDoc[startingPoint]);
+            json.keys[nestedPair.key] = {type: nestedPair.val};
+            if (nestedPair.val === "Nested Document") {
+              json.keys[nestedPair.key].keys = buildDoc();
+            }
+            startingPoint++;
+          }
+        }
+      }
     }
+    return json;
   };
 
   // "category: String"

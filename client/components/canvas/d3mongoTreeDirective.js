@@ -1,6 +1,11 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoTree', ['d3Service', 'mongoData', 'treeFormat', function (d3Service, mongoData, treeFormat) {
+.directive('d3MongoTree', [
+           'd3Service', 
+           'mongoData', 
+           'treeFormat', 
+           'canvasFormat', 
+           function (d3Service, mongoData, treeFormat, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -10,10 +15,13 @@ angular.module('DTBS.main')
         var width = 1000, height = 650, root;
 
         // Set up the custom colour scale
-        var colorLength = 75, colors = [];
-        var color = d3.scale.linear().domain([1,colorLength])
-              .interpolate(d3.interpolateHcl)
-              .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+        var colors = [],
+            customRange = canvasFormat.colorSchema(),
+            flattened = [];
+        customRange.forEach(function (palette) {
+          flattened.concat(palette);
+        });
+        var color = d3.scale.ordinal().range(flattened);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
@@ -36,9 +44,10 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
-          for (var i = 0; i <= maxHeight; i++) {
-            var tableColor = Math.floor(Math.random() * colorLength);
-            colors.push(tableColor);
+          for (var k = 0; k <= maxHeight; k++) {
+            var palette = Math.floor(Math.random() * 8);
+            var tableColor = Math.floor(Math.random() * customRange[palette].length);
+            colors.push(customRange[palette][tableColor]);
           }
           var tick = function () {
             link.attr("x1", function (d) { return d.source.x; })
@@ -57,9 +66,9 @@ angular.module('DTBS.main')
             .linkDistance(function (d) {
               // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
-                return 70; 
+                return 80; 
               } else {
-                return 45;
+                return 55;
               }
             })
             .charge(-300)
@@ -107,27 +116,27 @@ angular.module('DTBS.main')
                 .attr("class", "node")
                 .style("fill", function (d) {
                   if (d.name === "Collection") {
-                    return color(1);
+                    return "#823082";
                   } else {
-                    return color(colors[d.depth]);
+                    return colors[d.depth];
                   }
                 })
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
-                    return 5;
+                    return 8;
                   } else if (d.type === "Nested Document") {
-                    return 8.5;
+                    return 11.5;
                   } else {
-                    return 12.5;
+                    return 15.5;
                   }
                 })
                 .attr("stroke", function (d) {
                   if (d.name === "Collection") {
-                    return color(8);
+                    return "#9da4d9";
                   } else if (d.type === "Nested Document") {
-                    return d3.rgb(color(colors[d.depth])).darker();
+                    return d3.rgb(colors[d.depth]).darker();
                   } else {
                     return "white";
                   }
@@ -147,7 +156,7 @@ angular.module('DTBS.main')
 
             labels.enter().append("text")
                 .attr("class", "label")
-                .style('font-size', "12px")
+                .style('font-size', "13px")
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
@@ -201,7 +210,6 @@ angular.module('DTBS.main')
             dataArr.push(data[key]);
           }
           var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
