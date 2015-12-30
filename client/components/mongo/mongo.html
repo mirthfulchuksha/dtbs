@@ -119,6 +119,7 @@
 
         <label>Add To:</label>
           <select ng-model="nestedLocation" class="extended-input" required>
+            <option selected="selected">Main</option>
             <option ng-repeat="(key, val) in nestedDocuments">{{key}}</option>
           </select>
 

@@ -66,7 +66,7 @@ angular.module('DTBS.main')
 
         if(schema.language === 'Mongo') {
           $scope.schemaStorage = schema.data;
-          $scope.interactCanvas();  
+          $scope.interactCanvas();
         } else {
           window.localStorage.setItem('tempTable', JSON.stringify(schema));
           $location.path('/sql');
@@ -337,10 +337,10 @@ angular.module('DTBS.main')
 
         $scope.id = Object.keys($scope.schemaStorage).length;
 
-        window.localStorage.removeItem('tempTable');  
+        window.localStorage.removeItem('tempTable');
 
         var amount = Object.keys(parsedRecovered.data).length;
-        //rebuild visuals        
+        //rebuild visuals
         $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 500);
         $timeout(saveUpdates, secondsToWaitBeforeRender * 500);
         $timeout(changeTableID.bind(null, amount), secondsToWaitBeforeRender * 500);
