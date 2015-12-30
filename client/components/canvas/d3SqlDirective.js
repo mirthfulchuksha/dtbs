@@ -88,7 +88,7 @@ angular.module('DTBS.main')
                 // if the node has an origin, it is a foreign key
                 if (d.origin) {
                   // give it a stroke that matches the color of its link
-                  return color(colors[d.origin-1]);
+                  return colors[d.origin-1];
                 } else {
                   return "white";
                 }
