@@ -18,6 +18,7 @@ var bookshelfTypeDict = {
 };
 
 var mongooseTypeDict = {
+  'Number' : 'Number',
   'Numeric': 'Number',
   'String': 'String'
 };
