@@ -157,6 +157,7 @@ angular.module('DTBS.main')
         };
         var shapes;
         scope.$on('canvas:new-data', function (e, data) {
+          console.log(data, "data");
 
           $("#svgout").empty();
           var dataArr = [];
@@ -181,8 +182,13 @@ angular.module('DTBS.main')
               startX = randomIntFromInterval(40, 600);
               startY = randomIntFromInterval(40, 300);
             } else {
-              startX = parseInt(data.graph.startXs[counter]);
-              startY = parseInt(data.graph.startYs[counter]);
+              if (data.graph.startXs[counter] === undefined) {
+                startX = randomIntFromInterval(40, 600);
+                startY = randomIntFromInterval(40, 300);
+              } else {
+                startX = parseInt(data.graph.startXs[counter]);
+                startY = parseInt(data.graph.startYs[counter]);
+              }
             }
 
             var startYText = startY+15, startXText = startX+10;
@@ -243,7 +249,6 @@ angular.module('DTBS.main')
               positions.startYs.push(shapes[i].getTransformedBB().y);
             }
           }
-
           var saveGraph = angular.copy(positions);
           canvasSave.push(saveGraph);
         });

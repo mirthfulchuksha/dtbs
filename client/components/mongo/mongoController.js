@@ -252,6 +252,7 @@ angular.module('DTBS.main')
 
     $scope.interactCanvas = function () {
       //info to send to d3, all manipulation needs to be finished before calling this.
+      console.log($scope.schemaStorage, "schemaStorage");
       var updatedData = angular.copy($scope.schemaStorage);
       mongoData.push(updatedData);
     };
