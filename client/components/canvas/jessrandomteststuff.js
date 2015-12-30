@@ -33,6 +33,144 @@
       }
     });";
 
+  var mongoose2 = [
+    "var blogSchemaModel = mongoose.Schema({",
+    "author: String,",
+    "summary: String,",
+    "post: String,",
+    "metadata: {",
+    "  votes: Number,",
+    "  favs: Number",
+    "},",
+    "category: String",
+    "});"
+  ];
+
+  //takes in input and returns a new schemastorage
+  var reverseMongo = function (schema) {
+    var schemaStorage = {};
+    schemaStorage.name = schema[0].split(" ")[1];
+    schemaStorage.id = 0;
+    schemaStorage.depth = 0;
+    schemaStorage.keys = {};
+    schemaStorage.nestedDocuments = {
+      Main: true
+    };
+    schemaStorage.allKeys = {};
+    for (var i = 1; i < schema.length-1; i++) {
+      if (schema[i].charAt(0) !== " " && schema[i].charAt(0) !== "}") {
+        // it is a key
+        var key = schema[i].split(" ")[0].slice(0, -1);
+        var val = schema[i].split(" ")[1];
+        if (val && val.charAt(val.length-1) === ",") {
+          val = val.slice(0, -1);
+        }
+        schemaStorage.keys[key] = {type: val};
+        schemaStorage.allKeys[key] = {
+          display: val,
+          location: "Main",
+          type: val
+        };
+      }
+    }
+    return schemaStorage;
+  };
+
+  {
+    "0": {
+      "keys": {
+        "author": {
+          "type": "String"
+        },
+        "summary": {
+          "type": "String"
+        },
+        "post": {
+          "type": "String"
+        },
+        "metadata": {
+          "type": "Nested Document",
+          "keys": {
+            "tags": {
+              "type": "Array"
+            },
+            "likes": {
+              "type": "Number"
+            },
+            "shares": {
+              "type": "Number"
+            }
+          }
+        },
+        "category": {
+          "type": "String"
+        }
+      },
+      "name": "blogSchema",
+      "id": 0,
+      "depth": {
+        "Main": 1,
+        "true": 2
+      },
+      "nestedDocuments": {
+        "Main": true,
+        "Main > metadata": true
+      },
+      "allKeys": {
+        "author": {
+          "display": "String",
+          "location": "Main",
+          "type": "String"
+        },
+        "summary": {
+          "display": "String",
+          "location": "Main",
+          "type": "String"
+        },
+        "post": {
+          "display": "String",
+          "location": "Main",
+          "type": "String"
+        },
+        "metadata": {
+          "display": "Nested Document",
+          "location": "Main",
+          "type": "Nested Document",
+          "childKeys": {
+            "tags": true,
+            "likes": true,
+            "shares": true
+          },
+          "childLocations": {
+            "Main > metadata": true,
+            "undefined": true
+          }
+        },
+        "tags": {
+          "display": "Array",
+          "location": "Main > metadata",
+          "type": "Array"
+        },
+        "likes": {
+          "display": "Number",
+          "location": "Main > metadata",
+          "type": "Number"
+        },
+        "shares": {
+          "display": "Number",
+          "location": "Main > metadata",
+          "type": "Number"
+        },
+        "category": {
+          "display": "String",
+          "location": "Main",
+          "type": "String"
+        }
+      }
+    }
+  }
+
+
 var datajson1 = [{
           "name": "blogSchema",
               "children": [{
