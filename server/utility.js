@@ -20,7 +20,13 @@ var bookshelfTypeDict = {
 var mongooseTypeDict = {
   'Number' : 'Number',
   'Numeric': 'Number',
-  'String': 'String'
+  'String': 'String',
+  'Date': 'Date',
+  'Buffer': 'Buffer',
+  'Boolean' : 'Boolean',
+  'Mixed' : 'Mixed',
+  'ObjectID' : 'ObjectID',
+  'Array' : 'Array' 
 };
 
 var basicTypes = { 
