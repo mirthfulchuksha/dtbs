@@ -56,11 +56,20 @@ angular.module('DTBS.main')
         dataObj.data.push(dbStorage[table]);
       }
 
-      console.log('pre parse mongo', dataObj);
+      dataObj.dbName = dbName;
+
+      var url;
+      if(dbLang === 'Mongoose') {
+        url = '/mongoose';
+      } else if(dbLang === 'Mongo') {
+        url = '/mongoCode';
+      } else if(dbLang === 'Active Record') {
+        url = '/activeRecord';
+      }
 
       return $http({
         method: 'POST',
-        url: '/mongoose',
+        url: url,
         data: dataObj
       }).then(function (res) {
         //places data on editor

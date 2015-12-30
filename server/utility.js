@@ -145,6 +145,7 @@ module.exports = {
   parseMongo: function (req, res, next) {
     var schema = "";
     var dbName = req.body.dbName;
+    console.log(req.body);
     var tableStructArray = req.body.data;
     schema += "use " + dbName + "\n\n";
 
