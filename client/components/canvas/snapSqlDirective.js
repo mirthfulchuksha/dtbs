@@ -243,7 +243,9 @@ angular.module('DTBS.main')
               positions.startYs.push(shapes[i].getTransformedBB().y);
             }
           }
-          CodeParser.saveSchema(positions);
+
+          var saveGraph = angular.copy(positions);
+          canvasSave.push(saveGraph);
         });
       });
     }

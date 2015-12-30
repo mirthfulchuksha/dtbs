@@ -49,7 +49,7 @@ angular.module('DTBS.main')
         if(schema.language === 'SQL') {
           $scope.tableStorage = schema.data;
           $scope.positions = schema.graph;
-          $scope.interactCanvas();  
+          $scope.interactCanvas();
         } else {
           window.localStorage.setItem('tempTable', JSON.stringify(schema));
           $location.path('/mongo');
@@ -490,6 +490,7 @@ angular.module('DTBS.main')
           $scope.db.name = parsedRecovered.name;
           $scope.db.lang = parsedRecovered.language;
           $scope.tableStorage = parsedRecovered.data;
+          $scope.positions = parsedRecovered.graph;
         }
 
         $scope.id = Object.keys($scope.tableStorage).length;

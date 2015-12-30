@@ -2,13 +2,19 @@ angular.module('DTBS.main')
   .controller('EditorController', [ '$scope', 'CodeParser', 'AccessSchemaService', 'canvasSave', function ($scope, CodeParser, AccessSchemaService, canvasSave) {
 
     $scope.db = {};
+    $scope.positions;
     $scope.downloadCode = function () {
       CodeParser.saveCode();
     };
+
+    $scope.$on('canvas:save-data', function (e, data) {
+      $scope.positions = data;
+    });
     
     $scope.saveSchema = function () {
       // The call to code parser is made in the snap sql directive
       canvasSave.alertSave();
+      CodeParser.saveSchema($scope.positions);
     };
 
     $scope.updateFactory = function (language) {
