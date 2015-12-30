@@ -496,11 +496,11 @@ angular.module('DTBS.main')
           $scope.positions = parsedRecovered.graph;
         }
 
-        $scope.id = Object.keys($scope.tableStorage).length;
+        $scope.id = Object.keys($scope.tableStorage).length + 1;
 
         window.localStorage.removeItem('tempTable');  
 
-        var amount = Object.keys(parsedRecovered.data).length;
+        var amount = Object.keys(parsedRecovered.data).length + 1;
         //rebuild visuals
         $timeout(changeTableStorage.bind(null, parsedRecovered.data), secondsToWaitBeforeRender * 1000);
         $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
