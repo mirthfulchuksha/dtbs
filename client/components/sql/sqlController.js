@@ -263,7 +263,7 @@ angular.module('DTBS.main')
 
     //when save primary key button is pressed, sets all required information for currentTable's primaryKey object
     $scope.savePrimaryKey = function (id, basicType, type, size, attributes, def, tableName) {
-
+      tableName = tableName.replace('<script>', '').replace('</script>', '');
       $scope.currentTable['name'] = tableName;
 
       //if table is being edited when PK is created, set origin on fK format to the table's id # rather than $scope.id.
@@ -314,7 +314,7 @@ angular.module('DTBS.main')
       $scope.currentTable.regFields[id] = {
 
         basicType: basicType,
-        id: id,
+        id: id.replace('<script>','').replace('</script>',''),
         type: type,
         size: size,
 
@@ -366,6 +366,9 @@ angular.module('DTBS.main')
         $scope.primaryKeyPresent = false;
 
       } else if ($scope.currentTable['tableID'] === undefined && $scope.currentTable['name']!== undefined) {
+        //escaping
+        $scope.currentTable['name'] = $scope.currentTable['name'].replace('<script>','').replace('</script>', '');
+
         $scope.currentTable['id'] = $scope.id;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.id] = $scope.currentTable;
@@ -493,11 +496,11 @@ angular.module('DTBS.main')
           $scope.positions = parsedRecovered.graph;
         }
 
-        $scope.id = Object.keys($scope.tableStorage).length;
+        $scope.id = Object.keys($scope.tableStorage).length + 1;
 
         window.localStorage.removeItem('tempTable');  
 
-        var amount = Object.keys(parsedRecovered.data).length;
+        var amount = Object.keys(parsedRecovered.data).length + 1;
         //rebuild visuals
         $timeout(changeTableStorage.bind(null, parsedRecovered.data), secondsToWaitBeforeRender * 1000);
         $timeout($scope.interactCanvas, secondsToWaitBeforeRender * 1000);
@@ -548,7 +551,7 @@ angular.module('DTBS.main')
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
       $scope.tableStorage = data.data;
-      $scope.id = Object.keys($scope.tableStorage).length;
+      $scope.id = Object.keys($scope.tableStorage).length + 1;
       $scope.interactCanvas();
     });
 
