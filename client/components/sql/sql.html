@@ -112,7 +112,7 @@
       <div>
         <div ng-repeat="(key, val) in currentTable.foreignKeys">
           <hr>
-          <label>Foreign Key linked to {{val['id']}} table</label>
+          <label>Foreign Key ID: {{key}} Linked to {{val['tableName']}} table</label>
           <button ng-click="deleteFK(key)" class="pull-right">Delete Foreign Key</button>
           <br>
         </div>
