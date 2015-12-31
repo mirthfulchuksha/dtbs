@@ -1,4 +1,5 @@
-  
+
+// SAMPLE SQL CODE
   CREATE TABLE users (
     id INT PRIMARY KEY NOT NULL,
     name VARCHAR(45),
@@ -35,15 +36,41 @@
       }
     });";
 
-// 'author: "String",summary: "String",post: "String",metadata: {  votes: "Number",  favs: {    random: "Number"  }},category: "String"';
+// Steps:
+// 1. put into single line of code
+// 2. get the name, put into names array
+// 3. slice out between the curly braces, pass into objectify, put onto schema array
+// 4. pass schema array and names array into build schema storage function to get schema storage
+  
+  var reverseMongo = function (codeEditor) {
+    // split into schemas
+    var schemaArray = codeEditor.split("\n");
+    var namesArray = [];
+    var jsonArray = [];
+    schemaArray.forEach(function (schema) {
+      // get the name, put into names array
+      var name = schema.slice().split("\n")[0].split(" ")[1];
+      namesArray.push(name);
+      // put into a single line of code
+      var singleLine = schema.replace(/\r?\n|\r/g, "");
+      // slice out between the curly braces and push onto the json array
+      var openingIndex = singleLine.indexOf('{');
+      var obj = objectify(singleLine.slice(openingIndex+1, -2));
+      jsonArray.push(obj);
+    });
+    var schemaStorage = buildSchemaStorage(jsonArray, namesArray);
+  };
   var replaceAll = function (str, find, replace) {
     return str.replace(new RegExp(find, 'g'), replace);
   }
 
+  // var singleLine = "var blogSchemaModel = mongoose.Schema({author: String,summary: String,post: String,metadata: {  votes: Number,  favs: {    random: Number  }},category: String});";
+  // 'author: "String",summary: "String",post: "String",metadata: {  votes: "Number",  favs: {    random: "Number"  }},category: "String"';
+  // expects a single line of code e.g. ^^
   var objectify = function (string) {
     // Remove whitespace
     string = string.replace(/\s/g, "");
-    var mongoDataTypes = ['String', 'Number', 'Date'];
+    var mongoDataTypes = ['String', 'Number', 'Date', 'Buffer', 'Boolean', 'Mixed', 'ObjectID', 'Array'];
     mongoDataTypes.forEach(function (type) {
       string = replaceAll(string, type, '"'+type+'"');
     });
@@ -65,149 +92,125 @@
       }
     },
     "category": "String"
+  },{
+    "author": "String",
+    "summary": "String",
+    "post": "String",
+    "metadata": {
+      "votes": "Number",
+      "favs": {
+        "random": "Number",
+        "other": {
+          "last": "String"
+        }
+      }
+    },
+    "category": "String"
   }];
-
-  var reverseMongo = function (schemaArray) {
+  // Expects an array of objects produced by objectify function, e.g. ^^
+  var buildSchemaStorage = function (jsonArray, namesArray) {
     var schemaStorage = {};
     var idCounter = 0;
-    schemaArray.forEach(function (object) {
+
+    jsonArray.forEach(function (object) {
       var schema = {};
+      var allFields = []; // at each field, push on the name, the type and the level
       schema.id = idCounter;
-      // schema.name = namesArray[0];
+      // schema.name = namesArray[idCounter];
       schema.name = "TBD";
-      schema.depth = 0;
       schema.keys = {};
-      schema.allKeys = {};
+      schema.nestedDocuments = buildNestedDocs(object);
+      var startDepth = 0;
+      schema.depth = {};
+      schema.nestedDocuments.forEach(function (level) {
+        schema.depth[level] = startDepth;
+        startDepth++;
+      });
       for (var key in object) {
+        allFields.push([key, object[key], startDepth]);
         schema.keys[key] = {"type": object[key]};
         if (typeof object[key] === "object") {
           schema.keys[key].type = "Nested Document";
           schema.keys[key].keys = buildKeys(object[key]); 
         }
       }
+      var allKeysArray = buildAllKeys(object, 0);
+      allKeysArray.forEach(function (keyArray) {
+        // "Contact Info": "Number Location: Main > Company Info"
+        schema.allKeys[key] = keyArray[1] + "Location: " + schema.nestedDocuments[keyArray[2]];
+      });
+
       schemaStorage[idCounter] = schema;
       idCounter++;
     });
     return schemaStorage;
   };
-    {
-       "votes": "Number",
-       "favs": {
-         "random": "Number",
-         "other": {
-           "last": "String"
-         }
-       }
-     }
-     // returns:
-     {
-      "votes": {
-        "type": "Number"
-      },
-      "favs": {
-        "type": "Nested Document", 
-        "keys": {
-          "random": {"type": "Number"},
-          "other": {
-            "type": "Nested Document",
-            "keys": {
-              "last": {
-                "type": "String"
-              }
-            }
-          }
-        }
+
+// takes in json object and returns an array of levels in the format
+//"nestedDocuments": ["Main", "Main > Company Info"]
+
+  var buildNestedDocs = function (obj, nested) {
+    nested = nested || ["Main"];
+    for (var key in obj) {
+      if (typeof obj[key] !== "object") {
+        continue;
+      } else {
+        nested.push(nested[nested.length-1] + " > " + key);
+        return buildNestedDocs(obj[key], nested);
       }
-     }
+    }
+    return nested;
+  };
   var buildKeys = function (obj) {
     var keys = {};
     for (var key in obj) {
       if (typeof obj[key] !== "object") {
-        return 
+        keys[key] = {"type": obj[key]};
+      } else {
+        keys[key] = {
+          "type": "Nested Document",
+          "keys": buildKeys(obj[key])
+        };
       }
     }
     return keys;
   };
 
-
-  var test = "{
-      title:  String,
-      author: String,
-      body:   String,
-      comments: [{ body: String, date: Date }],
-      date: { type: Date, default: Date.now },
-      hidden: Boolean,
-      meta: {
-        votes: Number,
-        favs:  Number
-      }
-    }";
-
-  var mongoose2 = [
-    "var blogSchemaModel = mongoose.Schema({",
-    "author: String,",
-    "summary: String,",
-    "post: String,",
-    "metadata: {",
-    "  votes: Number,",
-    "  favs: {",
-    "    random: Number",
-    "  }",
-    "},",
-    "category: String",
-    "});"
-  ];
-
-    var mongoose2 = [
-    "author: String,",
-    "summary: String,",
-    "post: String,",
-    "metadata: {",
-    "  votes: Number,",
-    "  favs: {",
-    "    random: Number",
-    "  }",
-    "},",
-    "category: String"
-  ];
-  var singleLine = "var blogSchemaModel = mongoose.Schema({author: String,summary: String,post: String,metadata: {  votes: Number,  favs: {    random: Number  }},category: String});";
-  
-
-  
-
-  var reverseMongo = function (schema) {
-    var schemaStorage = {};
-    schemaStorage.name = schema[0].split(" ")[1];
-    schemaStorage.id = 0;
-    schemaStorage.depth = 0;
-    schemaStorage.keys = {};
-    schemaStorage.nestedDocuments = {
-      Main: true
-    };
-    schemaStorage.allKeys = {};
-    for (var i = 1; i < schema.length-1; i++) {
-      if (schema[i].charAt(0) !== " " && schema[i].charAt(0) !== "}") {
-        // it is a key
-        var pair = stringify(schema[i]);
-        var key = pair.key;
-        var val = pair.val;
-        
-        schemaStorage.keys[key] = {type: val};
-        if (val === "Nested Document") {
-          schemaStorage.keys[key] = {
-            type: val,
-            keys: {}
-          };
-        }
-        schemaStorage.allKeys[key] = {
-          display: val,
-          location: "Main",
-          type: val
-        };
+  var buildAllKeys = function (obj, depth, allKeys) {
+    allKeys = allKeys || [];
+    for (var key in obj) {
+      if (typeof obj[key] !== "object") {
+        allKeys.push([key, obj[key], depth]);
+      } else {
+        allKeys.push([key, "Nested Document", depth]);
+        depth++;
+        allKeys.push(buildAllKeys(obj[key], depth, allKeys));
       }
     }
-    return schemaStorage;
+    return allKeys;
   };
+
+
+  "depth": {
+    "Main": 1,
+    "Main > Company Info": 2
+  },
+  "nestedDocuments": [
+    "Main",
+    "Main > Company Info"
+  ],
+  "allKeys": {
+    "Company Code": "String Location: Main",
+    "Company Info": "Nested Document Location: Main",
+    "Employees": "Number Location: Main > Company Info",
+    "Contact Info": "Number Location: Main > Company Info",
+    "Share Prices": "Array Location: Main"
+  }
+
+
+
+  
+  // SAMPLE SCHEMA STORAGE OBJECT FROM MONGO
 
   {
     "0": {
@@ -304,6 +307,7 @@
   }
 
 
+// SAMPLE TREE DATA
 var datajson1 = [{
           "name": "blogSchema",
               "children": [{
