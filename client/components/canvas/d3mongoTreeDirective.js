@@ -183,22 +183,22 @@ angular.module('DTBS.main')
                   }
                 });
             };
+            var click = function (d) {
+              if (!d3.event.defaultPrevented) {
+                if (d.children) {
+                  d._children = d.children;
+                  d.children = null;
+                } else {
+                  d.children = d._children;
+                  d._children = null;
+                }
+                update();
+              }
+            };
           update();
         };
 
         // Toggle children on click.
-        var click = function (d) {
-          if (!d3.event.defaultPrevented) {
-            if (d.children) {
-              d._children = d.children;
-              d.children = null;
-            } else {
-              d.children = d._children;
-              d._children = null;
-            }
-            update();
-          }
-        };
         // Returns a list of all nodes under the root.
         var flatten = function (root) {
           var nodes = [], i = 0;
