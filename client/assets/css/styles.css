@@ -530,7 +530,7 @@ input {
 
 .addKey {
   padding-top: 1em;
-  color:green;
+  color: green;
   font-size: 18px !important;
   text-align: left;
   height: 2em;
@@ -544,6 +544,8 @@ input {
 
 .addKey:disabled:hover {
   background-color: transparent !important;
+  text-shadow: none;
+  cursor: default;
 }
 
 .deleteKey, .deleteField {
@@ -569,12 +571,12 @@ input {
 }
 
 .cancelKey {
-  margin-top: .5em;
   color:red;
   font-size: 18px !important;
   text-align: left;
   height: 2em;
   padding-left: .2em;
+  padding-bottom: 1em;
 }
 
 .cancelKey:hover {
@@ -782,7 +784,7 @@ button:disabled:hover {
 }
 
 .addKey button:disabled:hover, .addField button:disabled:hover {
-  opacity: .5;
+  opacity: .5 !important;
   background-color: #2199e8 !important;
 }
 
@@ -806,4 +808,8 @@ input.ng-invalid, select.ng-invalid {
   -webkit-box-shadow: 0px 0px 1px 1px rgba(147,0,108,.8);
   -moz-box-shadow: 0px 0px 1px 1px rgba(147,0,108,.8);
   box-shadow: 0px 0px 1px 1px rgba(147,0,108,.8);
+}
+
+button:focus {
+  outline: 0;
 }
