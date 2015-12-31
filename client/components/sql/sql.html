@@ -65,10 +65,10 @@
     <p class="tool-header">tools</p>
     <a ng-click="toggleEditModal('createSQL')" data-open="sqlEditModal"
       class="toolBtn button">
-      <i class="fi-page"></i><span class="arrow-box">Create Schema</span></a>
+      <i class="fi-page"></i><span class="arrow-box">Create Table</span></a>
     <a ng-click="toggleEditModal('editSQL')" data-open="sqlEditModal"
       class="toolBtn button">
-      <i class="fi-pencil"></i><span class="arrow-box">Edit Schema</span></a>
+      <i class="fi-pencil"></i><span class="arrow-box">Edit Table</span></a>
     <a id='mytoggler' ng-click="toggleCanvasView()"
       class="toolBtn button">
       <i class="fi-contrast"></i><span class="arrow-box">Toggle View</span></a>
@@ -205,15 +205,17 @@
             </div>
 
             <div class="medium-3 columns" style="float:right">
-              <button class="addKey" ng-show="primaryKeyPresent !== true && currentTable.name" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" ng-disabled="myForm.$invalid">
-                <i class="fi-check addKey"></i><span style="font-size:11px !important; padding-top:0 !important">save primary</span>
+              <button class="addKey primary" ng-show="primaryKeyPresent !== true && currentField.type" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" ng-disabled="myForm.$invalid" style="padding-top:1.5em !important">
+                <i class="fi-check"></i><span style="font-size:11px !important; padding-left:0 !important">save primary</span>
               </button>
-              <button class="addKey" ng-show="primaryKeyPresent === true && addingField === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" ng-disabled="myForm.$invalid">
-                <i class="fi-check addKey"></i><span style="font-size:11px !important">save field</span>
-              </button>
-              <button class="cancelKey" ng-show="primaryKeyPresent === true && addingField === true"
+              <button class="addKey field" ng-show="primaryKeyPresent === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" ng-disabled="myForm.$invalid">
+                <span ng-show="currentField.type">
+                <i class="fi-check"></i><span style="font-size:11px !important">save field</span>
+                </span
+              </button><br>
+              <button class="cancelKey" ng-show="primaryKeyPresent === true"
                 ng-click="addingField = false; currentField = {}">
-                <i class="fi-x cancelKey"></i><span style="font-size:11px !important">  cancel</span>
+                <i class="fi-x"></i><span style="font-size:11px !important">  cancel</span>
               </button>
             </div>
           </div>
@@ -290,6 +292,9 @@
   });
 
   var modal = $("#sqlEditModal");
+  modal.on('change', function () {
+    modal.animate({ scrollTop: modal.prop("scrollHeight") - modal.height() }, 0);
+  });
   $(':input, span').on('click', function () {
     modal.animate({ scrollTop: modal.prop("scrollHeight") - modal.height() }, 0);
   });
