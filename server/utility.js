@@ -160,7 +160,6 @@ module.exports = {
     var schema = "";
     var dbName = req.body.dbName;
     var mongoStruct = req.body.data;
-    console.log(mongoStruct);
 
     var recursiveNestParse = function (keySet, keyName, depth) {
       var indent = "";
@@ -170,18 +169,23 @@ module.exports = {
 
       schema += "\
     " + indent + keyName + ": {\n";
+      var nestedNum = Object.keys(keySet.keys).length;
+      var nestedCount = 0;
       for(var eachKey in keySet.keys) {
-        console.log("eachKey", eachKey);
-        console.log(keySet.keys[eachKey].type);
         if(keySet.keys[eachKey].type === 'Nested Document'){
           recursiveNestParse(keySet.keys[eachKey], eachKey, depth + 2);
         } else {
           schema += "\
-      " + indent + eachKey + ": " + mongooseTypeDict[keySet.keys[eachKey].type] + ",\n";
+      " + indent + eachKey + ": " + mongooseTypeDict[keySet.keys[eachKey].type];
         }
+        if(nestedCount < nestedNum - 1){
+            schema += ",";
+          }
+        schema += "\n";
+        nestedCount++;
       }
       schema += "\
-    " + indent + "}\n";
+    " + indent + "}";
     };
 
     for(var collectionNum = 0; collectionNum < mongoStruct.length; collectionNum++){
@@ -190,14 +194,20 @@ module.exports = {
       var modelTitle = currentCollection.name;
       schema += "\
   var " + modelTitle + " = new Schema({\n";
+      var itemNum = Object.keys(currentCollection.keys).length;
+      var indexCount = 0;
       for(var key in currentCollection.keys) {
-        console.log("key", currentCollection.keys[key]);
         if(currentCollection.keys[key].type === 'Nested Document') {
           recursiveNestParse(currentCollection.keys[key], key, 0);
         } else {
           schema += "\
-    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n";
+    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type];
         }
+        if(indexCount < itemNum - 1){
+            schema += ",";
+          }
+        schema += "\n";
+        indexCount++;
       }
       schema +="\
   });\n\n";
