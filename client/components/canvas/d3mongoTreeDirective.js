@@ -93,7 +93,7 @@ angular.module('DTBS.main')
           
           root.fixed = true;
             root.x = width / 2;
-            root.y = height / 2;
+            root.y = 100;
 
             // Restart the force layout.
             force.nodes(nodes)
