@@ -48,6 +48,15 @@ angular.module('DTBS.main')
       }
     };
 
+    $scope.rebuildMongoSchema = function () {
+      var editor = ace.edit("editor");
+      var newCode = editor.getValue();
+      
+      AccessSchemaService.mongoBuilder(newCode, function (data) {
+        
+      });
+    };
+
     $scope.rebuildSchema = function () {
       var editor = ace.edit("editor");
       var newCode = editor.getValue();

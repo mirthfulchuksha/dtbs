@@ -20,6 +20,19 @@ angular.module('DTBS.main')
       return Object.keys(tempSchema).length;
     };
 
+    var mongoBuilder = function (code) {
+      console.log(code);
+      var dataObj = {data: code};
+      return $http({
+        method: 'POST',
+        url: '/buildMongo',
+        data: dataObj
+      }).then(function (res) {
+        console.log(res.data);
+        emit(res.data);
+      });
+    };
+
     var schemaBuilder = function (structObject, callback) {
       var dataObj = {data: structObject};
       return $http({
@@ -37,6 +50,7 @@ angular.module('DTBS.main')
     return {
       setTempSchema: setTempSchema,
       getTempSchema: getTempSchema,
-      schemaBuilder: schemaBuilder
+      schemaBuilder: schemaBuilder,
+      mongoBuilder: mongoBuilder
     };
   }]);

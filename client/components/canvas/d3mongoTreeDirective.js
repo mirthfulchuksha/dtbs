@@ -219,8 +219,8 @@ angular.module('DTBS.main')
         };
         scope.$on('mongo:new-data', function (e, data) {
           var dataArr = [];
-          for (var key in t) {
-            dataArr.push(t[key]);
+          for (var key in data) {
+            dataArr.push(data[key]);
           }
           var schemaData = treeFormat.treeFormatter(dataArr);
           // var schemaData = treeFormat.treeFormatter(schemaStorage);
@@ -234,71 +234,5 @@ angular.module('DTBS.main')
       });
     }};
 }]);
-
-var t = {
-  "0": {
-    "id": 0,
-    "name": "blogSchema",
-    "keys": {
-      "title": {
-        "type": "String"
-      },
-      "author": {
-        "type": "String"
-      },
-      "body": {
-        "type": "String"
-      },
-      "comments": {
-        "type": "String"
-      },
-      "date": {
-        "type": "String"
-      },
-      "hidden": {
-        "type": "Boolean"
-      },
-      "meta": {
-        "type": "Nested Document",
-        "keys": {
-          "votes": {
-            "type": "Nested Document",
-            "keys": {
-              "number": {
-                "type": "String"
-              }
-            }
-          },
-          "favs": {
-            "type": "Number"
-          }
-        }
-      }
-    },
-    "nestedDocuments": [
-      "Main",
-      "Main > meta",
-      "Main > meta > votes"
-    ],
-    "depth": {
-      "Main": 0,
-      "Main > meta": 1,
-      "Main > meta > votes": 2
-    },
-    "allKeys": {
-      "title": "String Location: Main",
-      "author": "String Location: Main",
-      "body": "String Location: Main",
-      "comments": "String Location: Main",
-      "date": "String Location: Main",
-      "hidden": "Boolean Location: Main",
-      "meta": "Nested Document Location: Main",
-      "votes": "Nested Document Location: Main > meta",
-      "number": "String Location: Main > meta > votes",
-      "favs": "Number Location: Main > meta > votes"
-    }
-  }
-};
-
 
 
