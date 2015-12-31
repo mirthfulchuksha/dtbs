@@ -27,10 +27,10 @@ module.exports = {
       if(user) {
         module.exports.login(req, res, username, id, user);
       } else {
-        var newUser = {
+        var newUser = new User({
           userName: username + '_gh',
           password: id
-        }
+        });
         newUser.save(function (err, newUser) {
           if (err) return console.error(err);
 
