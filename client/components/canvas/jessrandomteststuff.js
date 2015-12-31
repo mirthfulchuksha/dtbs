@@ -28,10 +28,107 @@
       date: { type: Date, default: Date.now },
       hidden: Boolean,
       meta: {
-        votes: Number,
+        votes: {
+          number: 
+        },
         favs:  Number
       }
     });";
+
+// 'author: "String",summary: "String",post: "String",metadata: {  votes: "Number",  favs: {    random: "Number"  }},category: "String"';
+  var replaceAll = function (str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
+
+  var objectify = function (string) {
+    // Remove whitespace
+    string = string.replace(/\s/g, "");
+    var mongoDataTypes = ['String', 'Number', 'Date'];
+    mongoDataTypes.forEach(function (type) {
+      string = replaceAll(string, type, '"'+type+'"');
+    });
+    var obj=eval("({"+string+"})");
+    return obj;
+  };
+
+  var schemaArray = [{
+    "author": "String",
+    "summary": "String",
+    "post": "String",
+    "metadata": {
+      "votes": "Number",
+      "favs": {
+        "random": "Number",
+        "other": {
+          "last": "String"
+        }
+      }
+    },
+    "category": "String"
+  }];
+
+  var reverseMongo = function (schemaArray) {
+    var schemaStorage = {};
+    var idCounter = 0;
+    schemaArray.forEach(function (object) {
+      var schema = {};
+      schema.id = idCounter;
+      // schema.name = namesArray[0];
+      schema.name = "TBD";
+      schema.depth = 0;
+      schema.keys = {};
+      schema.allKeys = {};
+      for (var key in object) {
+        schema.keys[key] = {"type": object[key]};
+        if (typeof object[key] === "object") {
+          schema.keys[key].type = "Nested Document";
+          schema.keys[key].keys = buildKeys(object[key]); 
+        }
+      }
+      schemaStorage[idCounter] = schema;
+      idCounter++;
+    });
+    return schemaStorage;
+  };
+    {
+       "votes": "Number",
+       "favs": {
+         "random": "Number",
+         "other": {
+           "last": "String"
+         }
+       }
+     }
+     // returns:
+     {
+      "votes": {
+        "type": "Number"
+      },
+      "favs": {
+        "type": "Nested Document", 
+        "keys": {
+          "random": {"type": "Number"},
+          "other": {
+            "type": "Nested Document",
+            "keys": {
+              "last": {
+                "type": "String"
+              }
+            }
+          }
+        }
+      }
+     }
+  var buildKeys = function (obj) {
+    var keys = {};
+    for (var key in obj) {
+      if (typeof obj[key] !== "object") {
+        return 
+      }
+    }
+    return keys;
+  };
+
 
   var test = "{
       title:  String,
@@ -73,43 +170,11 @@
     "},",
     "category: String"
   ];
+  var singleLine = "var blogSchemaModel = mongoose.Schema({author: String,summary: String,post: String,metadata: {  votes: Number,  favs: {    random: Number  }},category: String});";
+  
 
-  var buildDoc = function (nestedDoc) {
-    var json = {
-      keys: {};
-    };
-    for (var i = 1; i < nestedDoc.length-1; i++) {
-      if (nestedDoc[i].charAt(0) !== " ") {
-        var pair = stringify(nestedDoc[i]);
-        json[pair.key] = {type: pair.val};
-        if (pair.val === "Nested Document") {
-          //take a slice of the thingo and call recursvely
-          var startingPoint = i+1;
-          while (nestedDoc[startingPoint].charAt(0) !== '}') {
-            var nestedPair = stringify(nestedDoc[startingPoint]);
-            json.keys[nestedPair.key] = {type: nestedPair.val};
-            if (nestedPair.val === "Nested Document") {
-              json.keys[nestedPair.key].keys = buildDoc();
-            }
-            startingPoint++;
-          }
-        }
-      }
-    }
-    return json;
-  };
+  
 
-  // "category: String"
-  var stringify = function (keyValString) {
-    var result = {};
-    var split = keyValString.split(" ");
-    result.key = split[0].slice(0, -1);
-    result.val = split[1].charAt(split[1].length-1) === "," ? split[1].slice(0,-1) : split[1];
-    result.val = result.val === "{" ? "Nested Document" : result.val;
-    return result;
-  }
-
-  //takes in input and returns a new schemastorage
   var reverseMongo = function (schema) {
     var schemaStorage = {};
     schemaStorage.name = schema[0].split(" ")[1];
