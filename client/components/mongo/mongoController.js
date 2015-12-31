@@ -359,7 +359,7 @@ angular.module('DTBS.main')
       //for some reason the data is buried two levels deep in the response, no big deal
       console.log(data);
       $scope.schemaStorage = data;
-      //$scope.id = Object.keys($scope.schemaStorage).length + 1;
+      $scope.id = Object.keys($scope.schemaStorage).length;
       console.log($scope.schemaStorage);
       $scope.interactCanvas();
     });

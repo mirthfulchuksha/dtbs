@@ -162,25 +162,38 @@ module.exports = {
     var mongoStruct = req.body.data;
     console.log(mongoStruct);
 
+    var recursiveNestParse = function (keySet, keyName, depth) {
+      var indent = "";
+      for(var i = 0; i < depth; i++) {
+        indent += " ";
+      }
+
+      schema += "\
+    " + indent + keyName + ": {\n";
+      for(var eachKey in keySet.keys) {
+        console.log("eachKey", eachKey);
+        console.log(keySet.keys[eachKey].type);
+        if(keySet.keys[eachKey].type === 'Nested Document'){
+          recursiveNestParse(keySet.keys[eachKey], eachKey, depth + 2);
+        } else {
+          schema += "\
+      " + indent + eachKey + ": " + mongooseTypeDict[keySet.keys[eachKey].type] + ",\n";
+        }
+      }
+      schema += "\
+    " + indent + "}\n";
+    };
+
     for(var collectionNum = 0; collectionNum < mongoStruct.length; collectionNum++){
       var currentCollection = mongoStruct[collectionNum];
 
-      var modelTitle = currentCollection.name + "Model";
+      var modelTitle = currentCollection.name;
       schema += "\
   var " + modelTitle + " = new Schema({\n";
       for(var key in currentCollection.keys) {
         console.log("key", currentCollection.keys[key]);
         if(currentCollection.keys[key].type === 'Nested Document') {
-          schema += "\
-          {\n";
-          var currentKeySet = currentCollection.keys[key];
-          while(currentKeySet.keys) {
-            for(var eachKey in currentKeySet.keys) {
-              schema += "\
-            " + eachKey + ": " + mongooseTypeDict[currentKeySet.keys[eachKey].type] + ",\n";
-            }
-          }
-          schema += "}\n";
+          recursiveNestParse(currentCollection.keys[key], key, 0);
         } else {
           schema += "\
     "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n";
@@ -188,7 +201,6 @@ module.exports = {
       }
       schema +="\
   });\n\n";
-
   /*
       var capitalizedTitle = capitalize(currentCollection.name);
       schema += "\
@@ -302,6 +314,9 @@ module.exports = {
   }
 };
 
+/*
+  used for building SQL structure!!
+*/
 var inputParser = function (inputTable, tableId) {
   var inputArr = inputTable; // placeholder
   // splitting and trimming is already done on the client side
