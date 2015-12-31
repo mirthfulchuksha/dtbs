@@ -74,7 +74,7 @@
     mongoDataTypes.forEach(function (type) {
       string = replaceAll(string, type, '"'+type+'"');
     });
-    var obj=eval("({"+string+"})");
+    var obj = eval("({"+string+"})");
     return obj;
   };
 
@@ -114,7 +114,6 @@
 
     jsonArray.forEach(function (object) {
       var schema = {};
-      var allFields = []; // at each field, push on the name, the type and the level
       schema.id = idCounter;
       // schema.name = namesArray[idCounter];
       schema.name = "TBD";
@@ -126,18 +125,18 @@
         schema.depth[level] = startDepth;
         startDepth++;
       });
+      var allKeysArray = buildAllKeys(object, 0);
       for (var key in object) {
-        allFields.push([key, object[key], startDepth]);
         schema.keys[key] = {"type": object[key]};
         if (typeof object[key] === "object") {
           schema.keys[key].type = "Nested Document";
           schema.keys[key].keys = buildKeys(object[key]); 
         }
       }
-      var allKeysArray = buildAllKeys(object, 0);
+      schema.allKeys = {};
       allKeysArray.forEach(function (keyArray) {
         // "Contact Info": "Number Location: Main > Company Info"
-        schema.allKeys[key] = keyArray[1] + "Location: " + schema.nestedDocuments[keyArray[2]];
+        schema.allKeys[keyArray[0]] = keyArray[1] + " Location: " + schema.nestedDocuments[keyArray[2]];
       });
 
       schemaStorage[idCounter] = schema;
@@ -184,7 +183,7 @@
       } else {
         allKeys.push([key, "Nested Document", depth]);
         depth++;
-        allKeys.push(buildAllKeys(obj[key], depth, allKeys));
+        buildAllKeys(obj[key], depth, allKeys);
       }
     }
     return allKeys;
