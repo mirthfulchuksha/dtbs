@@ -6,6 +6,7 @@ module.exports.reverseMongo = function (req, res, next) {
     var jsonArray = [];
     schemaArray.forEach(function (schema) {
       // get the name, put into names array
+      schema = schema.trim();
       var name = schema.slice().split("\n")[0].split(" ")[1];
       namesArray.push(name);
       // put into a single line of code 

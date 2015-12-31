@@ -161,25 +161,61 @@ module.exports = {
     var dbName = req.body.dbName;
     var mongoStruct = req.body.data;
 
-    schema += "\
-  var mongoose = require('mongoose');\n\n";
+    var recursiveNestParse = function (keySet, keyName, depth) {
+      var indent = "";
+      for(var i = 0; i < depth; i++) {
+        indent += " ";
+      }
+
+      schema += "\
+    " + indent + keyName + ": {\n";
+      var nestedNum = Object.keys(keySet.keys).length;
+      var nestedCount = 0;
+      for(var eachKey in keySet.keys) {
+        if(keySet.keys[eachKey].type === 'Nested Document'){
+          recursiveNestParse(keySet.keys[eachKey], eachKey, depth + 2);
+        } else {
+          schema += "\
+      " + indent + eachKey + ": " + mongooseTypeDict[keySet.keys[eachKey].type];
+        }
+        if(nestedCount < nestedNum - 1){
+            schema += ",";
+          }
+        schema += "\n";
+        nestedCount++;
+      }
+      schema += "\
+    " + indent + "}";
+    };
 
     for(var collectionNum = 0; collectionNum < mongoStruct.length; collectionNum++){
       var currentCollection = mongoStruct[collectionNum];
 
-      var modelTitle = currentCollection.name + "Model";
+      var modelTitle = currentCollection.name;
       schema += "\
-  var " + modelTitle + " = mongoose.Schema({\n";
+  var " + modelTitle + " = new Schema({\n";
+      var itemNum = Object.keys(currentCollection.keys).length;
+      var indexCount = 0;
       for(var key in currentCollection.keys) {
-        schema += "\
-    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n"
+        if(currentCollection.keys[key].type === 'Nested Document') {
+          recursiveNestParse(currentCollection.keys[key], key, 0);
+        } else {
+          schema += "\
+    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type];
+        }
+        if(indexCount < itemNum - 1){
+            schema += ",";
+          }
+        schema += "\n";
+        indexCount++;
       }
       schema +="\
   });\n\n";
-
+  /*
       var capitalizedTitle = capitalize(currentCollection.name);
       schema += "\
   var " + capitalizedTitle + " = mongoose.model('" + capitalizedTitle + "', " + modelTitle + ");\n\n"; 
+  */
     }
     res.send(schema, 200);
   },
@@ -288,6 +324,9 @@ module.exports = {
   }
 };
 
+/*
+  used for building SQL structure!!
+*/
 var inputParser = function (inputTable, tableId) {
   var inputArr = inputTable; // placeholder
   // splitting and trimming is already done on the client side
