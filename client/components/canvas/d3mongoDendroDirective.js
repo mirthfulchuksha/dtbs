@@ -1,6 +1,11 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoDendro', ['d3Service', 'mongoData', 'treeFormat', function (d3Service, mongoData, treeFormat) {
+.directive('d3MongoDendro', [
+           'd3Service', 
+           'mongoData', 
+           'treeFormat', 
+           'canvasFormat', 
+           function (d3Service, mongoData, treeFormat, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -10,10 +15,18 @@ angular.module('DTBS.main')
         var width = 1000, height = 650, root;
 
         // Set up the custom colour scale
+        // var colors = [],
+        //     customRange = canvasFormat.colorSchema(),
+        //     flattened = [];
+        // customRange.forEach(function (palette) {
+        //   flattened.concat(palette);
+        // });
+        // var color = d3.scale.ordinal().range(flattened);
+
         var colorLength = 75, colors = [];
         var color = d3.scale.linear().domain([1,colorLength])
-              .interpolate(d3.interpolateHcl)
-              .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+                      .interpolate(d3.interpolateHcl)
+                      .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
 
         var maxDepth = function (root) {
           var max = 0;
@@ -36,6 +49,12 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
+
+          // for (var k = 0; k <= maxHeight; k++) {
+          //   var palette = Math.floor(Math.random() * 8);
+          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
+          //   colors.push(customRange[palette][tableColor]);
+          // }
           for (var i = 0; i <= maxHeight; i++) {
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
@@ -83,7 +102,7 @@ angular.module('DTBS.main')
               .attr("transform", "translate(100,5)")
               .style("fill", function (d) {
                 if (d.name === "Collection") {
-                  return color(8);
+                  return "#823082";
                 } else {
                   return color(colors[d.depth-1]);
                 }
@@ -114,7 +133,6 @@ angular.module('DTBS.main')
             dataArr.push(data[key]);
           }
           var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",

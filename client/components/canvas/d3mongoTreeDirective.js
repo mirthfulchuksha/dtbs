@@ -1,6 +1,11 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoTree', ['d3Service', 'mongoData', 'treeFormat', function (d3Service, mongoData, treeFormat) {
+.directive('d3MongoTree', [
+           'd3Service', 
+           'mongoData', 
+           'treeFormat', 
+           'canvasFormat', 
+           function (d3Service, mongoData, treeFormat, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -12,8 +17,15 @@ angular.module('DTBS.main')
         // Set up the custom colour scale
         var colorLength = 75, colors = [];
         var color = d3.scale.linear().domain([1,colorLength])
-              .interpolate(d3.interpolateHcl)
-              .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+                      .interpolate(d3.interpolateHcl)
+                      .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
+        // var colors = [],
+        //     customRange = canvasFormat.colorSchema(),
+        //     flattened = [];
+        // customRange.forEach(function (palette) {
+        //   flattened.concat(palette);
+        // });
+        // var color = d3.scale.ordinal().range(flattened);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
@@ -34,10 +46,15 @@ angular.module('DTBS.main')
           return max;
         };
 
-        scope.render = function (root) {
+        scope.render = function (root, id) {
           var maxHeight = maxDepth(root);
+          // for (var k = 0; k <= maxHeight; k++) {
+          //   var palette = Math.floor(Math.random() * 8);
+          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
+          //   colors.push(customRange[palette][tableColor]);
+          // }
           for (var i = 0; i <= maxHeight; i++) {
-            var tableColor = Math.floor(Math.random() * colorLength);
+            var tableColor = Math.floor(Math.random() * colorLength+1);
             colors.push(tableColor);
           }
           var tick = function () {
@@ -57,9 +74,9 @@ angular.module('DTBS.main')
             .linkDistance(function (d) {
               // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
-                return 70; 
+                return 80; 
               } else {
-                return 45;
+                return 55;
               }
             })
             .charge(-300)
@@ -73,6 +90,7 @@ angular.module('DTBS.main')
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
 
+          
           root.fixed = true;
             root.x = width / 2;
             root.y = height / 2;
@@ -107,8 +125,10 @@ angular.module('DTBS.main')
                 .attr("class", "node")
                 .style("fill", function (d) {
                   if (d.name === "Collection") {
+                    // return "#823082";
                     return color(1);
                   } else {
+                    // return colors[d.depth];
                     return color(colors[d.depth]);
                   }
                 })
@@ -116,17 +136,19 @@ angular.module('DTBS.main')
                 .attr("cy", function (d) { return d.y; })
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
-                    return 5;
+                    return 8;
                   } else if (d.type === "Nested Document") {
-                    return 8.5;
+                    return 11.5;
                   } else {
-                    return 12.5;
+                    return 15.5;
                   }
                 })
                 .attr("stroke", function (d) {
                   if (d.name === "Collection") {
+                    // return "#9da4d9";
                     return color(8);
                   } else if (d.type === "Nested Document") {
+                    // return d3.rgb(colors[d.depth]).darker();
                     return d3.rgb(color(colors[d.depth])).darker();
                   } else {
                     return "white";
@@ -147,7 +169,7 @@ angular.module('DTBS.main')
 
             labels.enter().append("text")
                 .attr("class", "label")
-                .style('font-size', "12px")
+                .style('font-size', "13px")
                 .attr("x", function (d) { return d.x; })
                 .attr("y", function (d) { return d.y; })
                 .attr("dx", 9)
@@ -197,8 +219,8 @@ angular.module('DTBS.main')
         };
         scope.$on('mongo:new-data', function (e, data) {
           var dataArr = [];
-          for (var key in data) {
-            dataArr.push(data[key]);
+          for (var key in t) {
+            dataArr.push(t[key]);
           }
           var schemaData = treeFormat.treeFormatter(dataArr);
           // var schemaData = treeFormat.treeFormatter(schemaStorage);
@@ -212,6 +234,71 @@ angular.module('DTBS.main')
       });
     }};
 }]);
+
+var t = {
+  "0": {
+    "id": 0,
+    "name": "blogSchema",
+    "keys": {
+      "title": {
+        "type": "String"
+      },
+      "author": {
+        "type": "String"
+      },
+      "body": {
+        "type": "String"
+      },
+      "comments": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "hidden": {
+        "type": "Boolean"
+      },
+      "meta": {
+        "type": "Nested Document",
+        "keys": {
+          "votes": {
+            "type": "Nested Document",
+            "keys": {
+              "number": {
+                "type": "String"
+              }
+            }
+          },
+          "favs": {
+            "type": "Number"
+          }
+        }
+      }
+    },
+    "nestedDocuments": [
+      "Main",
+      "Main > meta",
+      "Main > meta > votes"
+    ],
+    "depth": {
+      "Main": 0,
+      "Main > meta": 1,
+      "Main > meta > votes": 2
+    },
+    "allKeys": {
+      "title": "String Location: Main",
+      "author": "String Location: Main",
+      "body": "String Location: Main",
+      "comments": "String Location: Main",
+      "date": "String Location: Main",
+      "hidden": "Boolean Location: Main",
+      "meta": "Nested Document Location: Main",
+      "votes": "Nested Document Location: Main > meta",
+      "number": "String Location: Main > meta > votes",
+      "favs": "Number Location: Main > meta > votes"
+    }
+  }
+};
 
 
 

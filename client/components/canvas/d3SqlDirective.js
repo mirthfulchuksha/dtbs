@@ -148,15 +148,10 @@ angular.module('DTBS.main')
 
           savedGraph.nodes = node.data();
           savedGraph.links = link.data(); 
-          // svg.selectAll("*").remove();
-
-          // scope.render(temp1, true);
-          // svg.selectAll("*").remove();
 
           graph.storedNodes = JSON.stringify(force.nodes());
           graph.storedLinks = JSON.stringify(force.links());
           var saveGraph = angular.copy(graph);
-          // canvasSave.push(saveGraph);
         });
       });
     }};
