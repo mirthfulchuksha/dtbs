@@ -439,9 +439,9 @@ angular.module('DTBS.main')
     $scope.saveSVG = function () {
 
       if ($scope.view) {
-        svg_xml = document.getElementById('designer');
-      } else {
         svg_xml = document.getElementById('svgout');
+      } else {
+        svg_xml = document.getElementById('designer');
       }
       var serializer = new XMLSerializer();
       var str = serializer.serializeToString(svg_xml);

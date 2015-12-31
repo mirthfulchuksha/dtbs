@@ -262,9 +262,9 @@ angular.module('DTBS.main')
 
     $scope.saveSVG = function () {
       if ($scope.view) {
-        svg_xml = document.getElementById('tree');
-      } else {
         svg_xml = document.getElementById('dendro');
+      } else {
+        svg_xml = document.getElementById('tree');
       }
       var serializer = new XMLSerializer();
       var str = serializer.serializeToString(svg_xml);

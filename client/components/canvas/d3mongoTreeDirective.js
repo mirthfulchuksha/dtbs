@@ -90,7 +90,6 @@ angular.module('DTBS.main')
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
 
-          console.log(nodes, links, "nodes and links")
           root.fixed = true;
             root.x = width / 2;
             root.y = 100;
