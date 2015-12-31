@@ -46,7 +46,7 @@ angular.module('DTBS.main')
           return max;
         };
 
-        scope.render = function (root, id) {
+        scope.render = function (root) {
           var maxHeight = maxDepth(root);
           // for (var k = 0; k <= maxHeight; k++) {
           //   var palette = Math.floor(Math.random() * 8);
@@ -90,10 +90,10 @@ angular.module('DTBS.main')
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
 
-          
+          console.log(nodes, links, "nodes and links")
           root.fixed = true;
             root.x = width / 2;
-            root.y = height / 2;
+            root.y = 100;
 
             // Restart the force layout.
             force.nodes(nodes)
@@ -101,7 +101,7 @@ angular.module('DTBS.main')
                 .start();
 
             // Update the links…
-            link = link.data(links, function (d) { return d.target.id; });
+            link = link.data(links, function (d) { return d.target.idd; });
 
             // Exit any old links.
             link.exit().remove();
@@ -116,7 +116,7 @@ angular.module('DTBS.main')
                 .attr("y2", function (d) { return d.target.y; });
 
             // Update the nodes…
-            node = node.data(nodes, function (d) { return d.id; });
+            node = node.data(nodes, function (d) { return d.idd; });
 
             // Exit any old nodes.
             node.exit().remove();
@@ -162,7 +162,7 @@ angular.module('DTBS.main')
                   dblclick(this); })
                 .call(force.drag);
 
-            labels = labels.data(nodes, function (d) { return d.id; })
+            labels = labels.data(nodes, function (d) { return d.idd; })
 
             // Exit any old labels.
             labels.exit().remove();
@@ -183,34 +183,34 @@ angular.module('DTBS.main')
                   }
                 });
             };
-          // Toggle children on click.
-          var click = function (d) {
-            if (!d3.event.defaultPrevented) {
-              if (d.children) {
-                d._children = d.children;
-                d.children = null;
-              } else {
-                d.children = d._children;
-                d._children = null;
+            var click = function (d) {
+              if (!d3.event.defaultPrevented) {
+                if (d.children) {
+                  d._children = d.children;
+                  d.children = null;
+                } else {
+                  d.children = d._children;
+                  d._children = null;
+                }
+                update();
               }
-              update();
-            }
-          };
-          // Returns a list of all nodes under the root.
-          var flatten = function (root) {
-            var nodes = [], i = 0;
-
-            var recurse = function (node) {
-              if (node.children) node.children.forEach(recurse);
-              if (!node.id) node.id = ++i;
-              nodes.push(node);
-            }
-            recurse(root);
-            return nodes;
-          };
+            };
           update();
         };
 
+        // Toggle children on click.
+        // Returns a list of all nodes under the root.
+        var flatten = function (root) {
+          var nodes = [], i = 0;
+
+          var recurse = function (node) {
+            if (node.children) node.children.forEach(recurse);
+            if (!node.idd) node.idd = ++i;
+            nodes.push(node);
+          }
+          recurse(root);
+          return nodes;
+        };
         var dblclick = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
