@@ -1,33 +1,34 @@
 
 // SAMPLE SQL CODE
-  CREATE TABLE users (
-    id INT PRIMARY KEY NOT NULL,
-    name VARCHAR(45),
-    email BIT(45)
-  );
+  // CREATE TABLE users (
+  //   id INT PRIMARY KEY NOT NULL,
+  //   name VARCHAR(45),
+  //   email BIT(45)
+  // );
 
-  CREATE TABLE chats (
-    id INT PRIMARY KEY NOT NULL,
-    users_id DATE,
-    FOREIGN KEY (users_id) REFERENCES users(id)
-  );
+  // CREATE TABLE chats (
+  //   id INT PRIMARY KEY NOT NULL,
+  //   users_id DATE,
+  //   FOREIGN KEY (users_id) REFERENCES users(id)
+  // );
 
-  CREATE TABLE test (
-    id INT PRIMARY KEY NOT NULL,
-    field1 BIT,
-    field2 CHAR(45),
-    chats_id INT,
-    FOREIGN KEY (chats_id) REFERENCES chats(id)
-  );
+  // CREATE TABLE test (
+  //   id INT PRIMARY KEY NOT NULL,
+  //   field1 BIT,
+  //   field2 CHAR(45),
+  //   chats_id INT,
+  //   FOREIGN KEY (chats_id) REFERENCES chats(id)
+  // );
 
-
-  var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body:   String,comments: String,date: Date,hidden: Boolean,meta: {votes: {number: },favs:  Number}});";
+var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body:   String,comments: String,date: String,hidden: Boolean,meta: {votes: {number: String},favs:  Number}});";
 
 // Steps:
 // 1. put into single line of code
 // 2. get the name, put into names array
 // 3. slice out between the curly braces, pass into objectify, put onto schema array
 // 4. pass schema array and names array into build schema storage function to get schema storage
+
+
   
   var reverseMongo = function (codeEditor) {
     // split into schemas
@@ -42,10 +43,12 @@
       var singleLine = schema.replace(/\r?\n|\r/g, "");
       // slice out between the curly braces and push onto the json array
       var openingIndex = singleLine.indexOf('{');
-      var obj = objectify(singleLine.slice(openingIndex+1, -2));
+      var obj = objectify(singleLine.slice(openingIndex+1, -3));
       jsonArray.push(obj);
     });
+    // console.log(jsonArray, namesArray, "json and names");
     var schemaStorage = buildSchemaStorage(jsonArray, namesArray);
+    return schemaStorage;
   };
   var replaceAll = function (str, find, replace) {
     return str.replace(new RegExp(find, 'g'), replace);
@@ -64,6 +67,8 @@
     var obj = eval("({"+string+"})");
     return obj;
   };
+// var test = "title:  String,author: String,body:   String,comments: String,date: String,hidden: Boolean,meta: {votes: {number: String},favs:  Number}";
+// console.log(objectify(test));
 
   var schemaArray = [{
     "author": "String",
@@ -125,7 +130,6 @@
         // "Contact Info": "Number Location: Main > Company Info"
         schema.allKeys[keyArray[0]] = keyArray[1] + " Location: " + schema.nestedDocuments[keyArray[2]];
       });
-
       schemaStorage[idCounter] = schema;
       idCounter++;
     });
@@ -176,121 +180,104 @@
     return allKeys;
   };
 
-
-  "depth": {
-    "Main": 1,
-    "Main > Company Info": 2
-  },
-  "nestedDocuments": [
-    "Main",
-    "Main > Company Info"
-  ],
-  "allKeys": {
-    "Company Code": "String Location: Main",
-    "Company Info": "Nested Document Location: Main",
-    "Employees": "Number Location: Main > Company Info",
-    "Contact Info": "Number Location: Main > Company Info",
-    "Share Prices": "Array Location: Main"
-  }
-
-
-
+var mything = reverseMongo(mongoose1);
+console.log(mything);
   
   // SAMPLE SCHEMA STORAGE OBJECT FROM MONGO
 
-  {
-    "0": {
-      "keys": {
-        "author": {
-          "type": "String"
-        },
-        "summary": {
-          "type": "String"
-        },
-        "post": {
-          "type": "String"
-        },
-        "metadata": {
-          "type": "Nested Document",
-          "keys": {
-            "tags": {
-              "type": "Array"
-            },
-            "likes": {
-              "type": "Number"
-            },
-            "shares": {
-              "type": "Number"
-            }
-          }
-        },
-        "category": {
-          "type": "String"
-        }
-      },
-      "name": "blogSchema",
-      "id": 0,
-      "depth": {
-        "Main": 1,
-        "true": 2
-      },
-      "nestedDocuments": {
-        "Main": true,
-        "Main > metadata": true
-      },
-      "allKeys": {
-        "author": {
-          "display": "String",
-          "location": "Main",
-          "type": "String"
-        },
-        "summary": {
-          "display": "String",
-          "location": "Main",
-          "type": "String"
-        },
-        "post": {
-          "display": "String",
-          "location": "Main",
-          "type": "String"
-        },
-        "metadata": {
-          "display": "Nested Document",
-          "location": "Main",
-          "type": "Nested Document",
-          "childKeys": {
-            "tags": true,
-            "likes": true,
-            "shares": true
-          },
-          "childLocations": {
-            "Main > metadata": true,
-            "undefined": true
-          }
-        },
-        "tags": {
-          "display": "Array",
-          "location": "Main > metadata",
-          "type": "Array"
-        },
-        "likes": {
-          "display": "Number",
-          "location": "Main > metadata",
-          "type": "Number"
-        },
-        "shares": {
-          "display": "Number",
-          "location": "Main > metadata",
-          "type": "Number"
-        },
-        "category": {
-          "display": "String",
-          "location": "Main",
-          "type": "String"
-        }
-      }
-    }
-  }
+  // {
+  //   "0": {
+  //     "keys": {
+  //       "author": {
+  //         "type": "String"
+  //       },
+  //       "summary": {
+  //         "type": "String"
+  //       },
+  //       "post": {
+  //         "type": "String"
+  //       },
+  //       "metadata": {
+  //         "type": "Nested Document",
+  //         "keys": {
+  //           "tags": {
+  //             "type": "Array"
+  //           },
+  //           "likes": {
+  //             "type": "Number"
+  //           },
+  //           "shares": {
+  //             "type": "Number"
+  //           }
+  //         }
+  //       },
+  //       "category": {
+  //         "type": "String"
+  //       }
+  //     },
+  //     "name": "blogSchema",
+  //     "id": 0,
+  //     "depth": {
+  //       "Main": 1,
+  //       "true": 2
+  //     },
+  //     "nestedDocuments": {
+  //       "Main": true,
+  //       "Main > metadata": true
+  //     },
+  //     "allKeys": {
+  //       "author": {
+  //         "display": "String",
+  //         "location": "Main",
+  //         "type": "String"
+  //       },
+  //       "summary": {
+  //         "display": "String",
+  //         "location": "Main",
+  //         "type": "String"
+  //       },
+  //       "post": {
+  //         "display": "String",
+  //         "location": "Main",
+  //         "type": "String"
+  //       },
+  //       "metadata": {
+  //         "display": "Nested Document",
+  //         "location": "Main",
+  //         "type": "Nested Document",
+  //         "childKeys": {
+  //           "tags": true,
+  //           "likes": true,
+  //           "shares": true
+  //         },
+  //         "childLocations": {
+  //           "Main > metadata": true,
+  //           "undefined": true
+  //         }
+  //       },
+  //       "tags": {
+  //         "display": "Array",
+  //         "location": "Main > metadata",
+  //         "type": "Array"
+  //       },
+  //       "likes": {
+  //         "display": "Number",
+  //         "location": "Main > metadata",
+  //         "type": "Number"
+  //       },
+  //       "shares": {
+  //         "display": "Number",
+  //         "location": "Main > metadata",
+  //         "type": "Number"
+  //       },
+  //       "category": {
+  //         "display": "String",
+  //         "location": "Main",
+  //         "type": "String"
+  //       }
+  //     }
+  //   }
+  // }
 
 
 // SAMPLE TREE DATA

@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var util = require('./utility');
+var mongoParse = require('./reverseMongo');
 var passport = require('passport');
 var GitHubStrategy = require('passport-github').Strategy;
 
@@ -115,6 +116,10 @@ app.post('/mongoose', function (req, res, next) {
 
 app.post('/build', function (req, res, next) {
   util.buildTables(req, res, next);
+});
+
+app.post('/buildMongo', function (req, res, next) {
+  mongoParse.reverseMongo(req, res, next);
 });
 
 app.post('/bookshelf', function (req, res, next) {
