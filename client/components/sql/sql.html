@@ -101,7 +101,7 @@
             {{currentTable['primaryKey']['id']}}</label>
           <label><span class="fieldLabel">Type: </span>{{currentTable['primaryKey']['type']}}</label>
         </div>
-        <div class="deleteField medium-4 columns" ng-click="deletePrimaryKey()">
+        <div class="deleteField medium-4 columns" ng-click="deletePrimaryKey(); currentField.basicType = null">
           <div class="row">
             <div style="float:left; text-align:right; padding-right:0 !important"
               class="medium-4 columns">
@@ -122,7 +122,7 @@
           <label><span class="fieldLabel">Field: </span>{{key}}</label>
           <label><span class="fieldLabel">Type: </span>{{val.type}}</label>
         </div>
-        <div class="deleteField medium-4 columns" ng-click="deleteField(key)">
+        <div class="deleteField medium-4 columns" ng-click="deleteField(key); ">
           <div class="row">
             <div style="float:left; text-align:right; padding-right:0 !important"
               class="medium-4 columns">
@@ -137,17 +137,28 @@
         <hr>
       </div>
 
-      <div ng-show="seeForeignKeys" class="row" ng-repeat="(key, val) in currentTable.foreignKeys">
-        <div>
-          <hr>
+      <div ng-show="primaryKeyPresent" style="height:5em; margin-bottom:1em !important" class="row"
+        ng-repeat="(key, val) in currentTable.foreignKeys">
+        <div class="medium-8 columns" style="margin-bottom:1em !important">
           <label><span class="fieldLabel">Foreign Key ID: </span>{{key}}</label>
           <label><span class="fieldLabel">Linked To: </span>{{val['tableName']}} table</label>
-          <button ng-click="deleteFK(key)" class="pull-right">Delete Foreign Key</button>
-          <br>
         </div>
+        <div class="deleteField medium-4 columns" ng-click="deleteFK(key)">
+          <div class="row">
+            <div style="float:left; text-align:right; padding-right:0 !important"
+              class="medium-4 columns">
+              <i class="fi-trash deleteKey" class="pull-right"></i>
+            </div>
+            <div style="font-size:11px !important; margin-top:.4em; float:left; text-align:left"
+              class="medium-8 columns">
+              delete foreign key
+            </div>
+          </div>
+        </div>
+        <hr>
       </div>
 
-      <div>
+      <div name="myForm" class="myForm" validate ng-form>
         <div class="row">
           <div ng-model="currentStorage.primaryKey" ng-show="primaryKeyPresent !== true && currentTable.name">
             <label>Create a Primary Key (required) </label>
@@ -157,7 +168,7 @@
             class="row">
             <div class="medium-4 columns">
               <label>Column ID: </label>
-                <input class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
+                <input class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." name="primaryID" required/>
             </div>
             <div class="medium-4 columns">
               <label>Basic Type:</label>
@@ -194,54 +205,64 @@
             </div>
 
             <div class="medium-3 columns" style="float:right">
-              <div class="addKey" ng-show="primaryKeyPresent !== true && currentTable.name" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined">
+              <button class="addKey" ng-show="primaryKeyPresent !== true && currentTable.name" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" ng-disabled="myForm.$invalid">
                 <i class="fi-check addKey"></i><span style="font-size:11px !important; padding-top:0 !important">save primary</span>
-              </div>
-              <div class="addKey" ng-show="primaryKeyPresent === true && addingField === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined">
+              </button>
+              <button class="addKey" ng-show="primaryKeyPresent === true && addingField === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" ng-disabled="myForm.$invalid">
                 <i class="fi-check addKey"></i><span style="font-size:11px !important">save field</span>
-              </div>
-              <div class="cancelKey" ng-show="primaryKeyPresent === true && addingField === true"
-                ng-click="addingField = false">
+              </button>
+              <button class="cancelKey" ng-show="primaryKeyPresent === true && addingField === true"
+                ng-click="addingField = false; currentField = {}">
                 <i class="fi-x cancelKey"></i><span style="font-size:11px !important">  cancel</span>
-              </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="addForeign" ng-show="primaryKeyPresent !== false">
-        <label ng-show="seeForeignKeys === true">Column ID: </label>
-          <input ng-show="seeForeignKeys === true" class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
-
-        <div> <!--ng-repeat="fkey in foreignKeys track by $index"> -->
-          <label ng-show="seeForeignKeys === true">Select which table to connect:</label>
-          <select ng-show="seeForeignKeys === true" ng-model="currentField.FK" style="width: 100px">
+      <div class="row addForeign" ng-show="primaryKeyPresent && seeForeignKeys === true"
+        name="foreignForm" class="foreignForm" validate ng-form>
+        <div class="medium-4 columns">
+          <label>Column ID: </label>
+            <input class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
+        </div>
+        <div class="medium-5 columns">
+          <label>Select which table to connect:</label>
+          <select ng-model="currentField.FK" required>
             <option ng-repeat="key in potentialFKs">{{key.tableName}}</option>
           </select>
         </div>
-        <button "btn btn-default" ng-show="seeForeignKeys === true" ng-click="saveForeignKey(currentField.FK, currentField.fieldID); currentField.FK=undefined; currentField.fieldID=''" class="pull-right">Save Foreign Key</button>
+        <div class="medium-3 columns" style="float:right">
+          <button class="addKey" ng-click="saveForeignKey(currentField.FK, currentField.fieldID); currentField.FK=undefined; currentField.fieldID=''" ng-disabled="foreignForm.$invalid">
+            <i class="fi-check addKey"></i><span style="font-size:11px !important; padding-top:0 !important">save foreign</span>
+          </button>
+          <button class="cancelKey" ng-click="seeForeignKeys = false; currentField = {}">
+            <i class="fi-x cancelKey"></i><span style="font-size:11px !important">  cancel</span>
+          </button>
+        </div>
       </div>
     </form>
 
     <div style="">
       <br>
       <span class="addField">
-        <button ng-click="addField(currentTable.name)" style="float:left; margin-right:.5em; width:114px"
+        <button ng-click="addField(currentTable.name); currentField.basicType = null" style="float:left; margin-right:.5em; width:114px"
           ng-show="primaryKeyPresent === true" ng-disabled="addingField" class="button" >
           <span class="fi-plus"></span> Field</button>
+
+        <button class="button" ng-click="addForeignKey()" ng-show="primaryKeyPresent !== false"
+          style="float:left; margin-right:.5em; width:130px !important" ng-disabled="!canAddForeign">
+          <span class="fi-plus"></span> Foreign Key
+        </button>
       </span>
 
-      <button class="button" ng-click="addForeignKey()" ng-show="primaryKeyPresent !== false"
-        style="float:left; margin-right:.5em; width:130px !important">
-        <span class="fi-plus"></span> Foreign Key
-      </button>
-
       <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn"
-        ng-click="editDone(currentTable.name, oldTable); oldTable='0'; fieldID=''; basicType='0'; size='';" style="float:right; margin-right:0 !important"
+        ng-click="editDone(currentTable.name, oldTable); oldTable='0'; fieldID='';
+        currentField = {}; basicType='0'; size='';" style="float:right; margin-right:0 !important"
         ng-disabled="addingField || (!primaryKeyPresent && currentTable.name)">Done</button>
 
       <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn deleteTable" style="float:right; margin-right:.5em"
-        ng-click="deleteTable(currentTable); oldTable='0'; fieldID=''; basicType='0'; size='';">Delete Table</button>
+        ng-click="deleteTable(currentTable); oldTable='0'; fieldID=''; basicType='0'; size=''; currentField.basicType = null">Delete Table</button>
     </div>
   </div>
 </div>
@@ -274,7 +295,7 @@
   });
 
   function clear(class_name) {
-    jQuery("."+class_name).find(':input').each(function() {
+    jQuery("."+class_name).find(':input').not('.sqlInput').each(function() {
       switch(this.type) {
           case 'password':
           case 'text':
