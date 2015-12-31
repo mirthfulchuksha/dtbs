@@ -21,6 +21,25 @@ angular.module('DTBS.main')
 
     $scope.updateFactory = function (language) {
       $scope.db.lang = language;
+      switch ($scope.db.lang) {
+        case "SQL":
+          $scope.db.fileName = $scope.db.lang + '_Schema.sql';
+          break;
+        case "Bookshelf":
+          $scope.db.fileName = $scope.db.lang + '_Schema.js';
+          break;
+        case "Sequelize":
+          $scope.db.fileName = $scope.db.lang + '_Schema.js';
+          break;
+        case "Mongoose":
+          $scope.db.fileName = $scope.db.lang + '_Schema.js';
+          break;
+        case "Mongo":
+          $scope.db.fileName = $scope.db.lang + '_Schema.txt';
+          break;
+        default:
+          $scope.db.fileName = $scope.db.lang + '_Schema.sql';
+      }
       CodeParser.update($scope.db);
       if(mongoORMS.indexOf($scope.db.lang) > -1) {
         CodeParser.fetchMongo();

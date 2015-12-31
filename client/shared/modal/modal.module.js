@@ -140,6 +140,12 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
       case "Sequelize":
         $scope.db.fileName = $scope.db.lang + '_Schema.js';
         break;
+      case "Mongoose":
+        $scope.db.fileName = $scope.db.lang + '_Schema.js';
+        break;
+      case "Mongo":
+        $scope.db.fileName = $scope.db.lang + '_Schema.txt';
+        break;
       default:
         $scope.db.fileName = $scope.db.lang + '_Schema.sql';
     }
@@ -148,7 +154,6 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   };
 
   $scope.setup = function () {
-    console.log("called, setup", $scope.db)
     $scope.updateFactory();
     var path = $scope.db.lang === 'SQL' ? '/sql' : '/mongo';
     $location.path(path);
