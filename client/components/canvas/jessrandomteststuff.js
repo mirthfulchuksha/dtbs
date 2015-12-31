@@ -21,20 +21,7 @@
   );
 
 
-  var mongoose1 = "var blogSchema = new Schema({
-      title:  String,
-      author: String,
-      body:   String,
-      comments: [{ body: String, date: Date }],
-      date: { type: Date, default: Date.now },
-      hidden: Boolean,
-      meta: {
-        votes: {
-          number: 
-        },
-        favs:  Number
-      }
-    });";
+  var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body:   String,comments: String,date: Date,hidden: Boolean,meta: {votes: {number: },favs:  Number}});";
 
 // Steps:
 // 1. put into single line of code
@@ -51,7 +38,7 @@
       // get the name, put into names array
       var name = schema.slice().split("\n")[0].split(" ")[1];
       namesArray.push(name);
-      // put into a single line of code
+      // put into a single line of code 
       var singleLine = schema.replace(/\r?\n|\r/g, "");
       // slice out between the curly braces and push onto the json array
       var openingIndex = singleLine.indexOf('{');
@@ -115,8 +102,8 @@
     jsonArray.forEach(function (object) {
       var schema = {};
       schema.id = idCounter;
-      // schema.name = namesArray[idCounter];
-      schema.name = "TBD";
+      schema.name = namesArray[idCounter];
+      // schema.name = "TBD";
       schema.keys = {};
       schema.nestedDocuments = buildNestedDocs(object);
       var startDepth = 0;

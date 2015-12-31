@@ -54,7 +54,7 @@ angular.module('DTBS.main')
           //   colors.push(customRange[palette][tableColor]);
           // }
           for (var i = 0; i <= maxHeight; i++) {
-            var tableColor = Math.floor(Math.random() * colorLength);
+            var tableColor = Math.floor(Math.random() * colorLength+1);
             colors.push(tableColor);
           }
           var tick = function () {
@@ -71,7 +71,6 @@ angular.module('DTBS.main')
           };
           var force = d3.layout.force()
             .size([width, height])
-            .gravity(0)
             .linkDistance(function (d) {
               // if it is of type nested document, make its link longer
               if (d.target.type === "Nested Document") {
