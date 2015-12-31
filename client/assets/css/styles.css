@@ -542,6 +542,10 @@ input {
   cursor: pointer;
 }
 
+.addKey:disabled:hover {
+  background-color: transparent !important;
+}
+
 .deleteKey, .deleteField {
   top: 0;
   color:red;
@@ -796,4 +800,10 @@ select[multiple] option {
   margin-top: .2em;
   margin-bottom: .5em;
   font-size: 14px;
+}
+
+input.ng-invalid, select.ng-invalid {
+  -webkit-box-shadow: 0px 0px 1px 1px rgba(147,0,108,.8);
+  -moz-box-shadow: 0px 0px 1px 1px rgba(147,0,108,.8);
+  box-shadow: 0px 0px 1px 1px rgba(147,0,108,.8);
 }

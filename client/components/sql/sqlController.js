@@ -26,6 +26,7 @@ angular.module('DTBS.main')
     $scope.primaryKeyPresent = false;
     $scope.addingField = false;
     $scope.seeForeignKeys = false;
+    $scope.canAddForeign;
     $scope.edit = false;
     $scope.view = true; //related to visualization display
     $scope.typeEdit = 'none';
@@ -194,6 +195,7 @@ angular.module('DTBS.main')
         }
         if ($scope.tableStorage[key]["name"] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
+          $scope.canAddForeign = true;
         }
       }
 
@@ -254,7 +256,6 @@ angular.module('DTBS.main')
 
     //when Add Field button is clicked, sets currentTable.name and shows inputs to add field
     $scope.addField = function (tableName) {
-      console.log("called")
       if (!$scope.currentTable['name']) {
         $scope.currentTable['name'] = name;
       }
@@ -305,12 +306,12 @@ angular.module('DTBS.main')
       for (var key in $scope.tableStorage){
         if ($scope.tableStorage[key]['name'] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
+          $scope.canAddForeign = true;
         }
       }
     };
 
     $scope.saveField = function (id, basicType, type, size, attributes, def){
-
       $scope.currentTable.regFields[id] = {
 
         basicType: basicType,
