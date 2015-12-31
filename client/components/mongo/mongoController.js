@@ -355,6 +355,15 @@ angular.module('DTBS.main')
       findSavedSchemas();
     });
 
+    $scope.$on('schemaService:new-data', function (e, data) {
+      //for some reason the data is buried two levels deep in the response, no big deal
+      console.log(data);
+      $scope.schemaStorage = data;
+      //$scope.id = Object.keys($scope.schemaStorage).length + 1;
+      console.log($scope.schemaStorage);
+      $scope.interactCanvas();
+    });
+
     $scope.$watch('schemaStorage', debounceUpdate, true);
 
     //on set up to check local storage

@@ -21,12 +21,15 @@ angular.module('DTBS.main')
     };
 
     var mongoBuilder = function (code) {
+      console.log(code);
+      var dataObj = {data: code};
       return $http({
         method: 'POST',
         url: '/buildMongo',
-        data: code
+        data: dataObj
       }).then(function (res) {
         console.log(res.data);
+        emit(res.data);
       });
     };
 
@@ -47,6 +50,7 @@ angular.module('DTBS.main')
     return {
       setTempSchema: setTempSchema,
       getTempSchema: getTempSchema,
-      schemaBuilder: schemaBuilder
+      schemaBuilder: schemaBuilder,
+      mongoBuilder: mongoBuilder
     };
   }]);
