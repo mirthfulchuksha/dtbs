@@ -5,7 +5,7 @@
   <div class="nav-buttons">
     <a href="#/" class="button nav">Home</a>
     <a href="/logout" class="button nav">Logout</a>
-    <a href="/setup" class="button nav">New Database</a>
+    <a href="#/setup" class="button nav">New Database</a>
   </div>
 </nav>
 
@@ -28,20 +28,20 @@
           </ul>
         </li>
         <li>
-          <a class="" role="button" id="download"
+          <a id="download"
             target="_self" href="" download="" ng-click="downloadCode()">
             <i class="fi-download"></i><span class="arrow-box-editor">
               Download Code</span>
           </a>
         </li>
         <li>
-          <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+          <a id="download" href="" ng-click="saveSchema()">
             <i class="fi-save"></i><span class="arrow-box-editor">
               Save Schema</span>
           </a>
         </li>
         <li>
-          <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
+          <a id="reflectChanges" href="" ng-click="rebuildSchema()">
             <i class="fi-refresh"></i><span class="arrow-box-editor">
               Refresh</span>
           </a>
@@ -55,7 +55,7 @@
   <div id="code_button">>></div>
 </div>
 
-<div>
+<div class="entireModal">
   <div id='designCanvas'>
     <svg id="designer" d3-sql></svg>
     <svg id="svgout" style="display:none" xmlns="http://www.w3.org/2000/svg" snap-sql></svg>
@@ -79,14 +79,15 @@
 
   <div class="reveal" id="sqlEditModal" data-reveal>
     <h4>Add/Edit Table</h4>
-    <form role="form" name="sqlEdit">
+    <form id="sqlEdit" name="sqlEdit">
       <div class="row">
         <div class="create" ng-show="typeEdit === 'createSQL'">
           <label>Table Name: </label>
-            <input class="sqlInput" type="text" style="width:31em" placeholder="Type name..."
-              ng-model="currentTable.name" required/>
+            <input type="text" placeholder="Type name..."
+              ng-model="currentTable.name" class="sqlInput extended-input" required/>
         </div>
       </div>
+      <hr>
       <div class="edit" ng-show="typeEdit === 'editSQL'">
         <label>Choose Table to Edit:</label>
           <select ng-model="oldTable" ng-change="setTable(oldTable)" required>
@@ -94,99 +95,152 @@
           </select>
       </div>
 
-      <div ng-if="primaryKeyPresent === true" class="row" style="display:inline">
-        <hr>
-        <label>Primary Key ID: {{currentTable['primaryKey']['id']}} Type: {{currentTable['primaryKey']['type']}}</label>
-        <button "button expanded mongoBtn" ng-click="deletePrimaryKey()" class="pull-right">Delete Primary Key</button>
-        <br>
-      </div>
-      <div>
-        <div ng-repeat="(key, val) in currentTable.regFields">
-          <hr>
-          <label>Field: {{key}} Type: {{val.type}}</label>
-          <button ng-click="deleteField(key)" class="pull-right">Delete Field</button>
-          <br>
+      <div class="row" style="height:5em; margin-bottom:1em !important" ng-show="primaryKeyPresent">
+        <div class="medium-8 columns" style="margin-bottom:1em !important">
+          <label><span class="fieldLabel">Primary Key ID: </span>
+            {{currentTable['primaryKey']['id']}}</label>
+          <label><span class="fieldLabel">Type: </span>{{currentTable['primaryKey']['type']}}</label>
         </div>
+        <div class="deleteField medium-4 columns" ng-click="deletePrimaryKey()">
+          <div class="row">
+            <div style="float:left; text-align:right; padding-right:0 !important"
+              class="medium-4 columns">
+              <i class="fi-trash deleteKey" class="pull-right"></i>
+            </div>
+            <div style="font-size:11px !important; margin-top:.4em; float:left; text-align:left"
+              class="medium-8 columns">
+              delete primary key
+            </div>
+          </div>
+        </div>
+        <hr>
       </div>
 
-      <div>
-        <div ng-repeat="(key, val) in currentTable.foreignKeys">
+      <div class="row" style="height:5em; margin-bottom:1em !important" ng-show="primaryKeyPresent"
+        ng-repeat="(key, val) in currentTable.regFields">
+        <div class="medium-8 columns" style="margin-bottom:1em !important">
+          <label><span class="fieldLabel">Field: </span>{{key}}</label>
+          <label><span class="fieldLabel">Type: </span>{{val.type}}</label>
+        </div>
+        <div class="deleteField medium-4 columns" ng-click="deleteField(key)">
+          <div class="row">
+            <div style="float:left; text-align:right; padding-right:0 !important"
+              class="medium-4 columns">
+              <i class="fi-trash deleteKey" class="pull-right"></i>
+            </div>
+            <div style="font-size:11px !important; margin-top:.4em; float:left; text-align:left"
+              class="medium-8 columns">
+              delete field
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div>
+
+      <div ng-show="seeForeignKeys" class="row" ng-repeat="(key, val) in currentTable.foreignKeys">
+        <div>
           <hr>
-          <label>Foreign Key ID: {{key}} Linked to {{val['tableName']}} table</label>
+          <label><span class="fieldLabel">Foreign Key ID: </span>{{key}}</label>
+          <label><span class="fieldLabel">Linked To: </span>{{val['tableName']}} table</label>
           <button ng-click="deleteFK(key)" class="pull-right">Delete Foreign Key</button>
           <br>
         </div>
       </div>
 
-      <div ng-show="primaryKeyPresent !== true && currentTable.name" ng-model="currentStorage.primaryKey">
-        <hr>
-        <label>Create a Primary Key (required) </label>
+      <div>
+        <div class="row">
+          <div ng-model="currentStorage.primaryKey" ng-show="primaryKeyPresent !== true && currentTable.name">
+            <label>Create a Primary Key (required) </label>
+          </div>
+
+          <div ng-show="addingField === true || (primaryKeyPresent !== true && currentTable.name)"
+            class="row">
+            <div class="medium-4 columns">
+              <label>Column ID: </label>
+                <input class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
+            </div>
+            <div class="medium-4 columns">
+              <label>Basic Type:</label>
+                <select ng-model="currentField.basicType" required>
+                  <option>Numeric</option>
+                  <option>String</option>
+                  <option>DateTime</option>
+                  <option>Bit</option>
+                </select>
+            </div>
+            <div class="medium-4 columns" ng-show="currentField.basicType">
+              <label>Type:</label>
+                <select id="basicType" ng-model="currentField.type" required>
+                  <option ng-repeat="option in options[currentField.basicType]">{{option.name}}</option>
+                </select>
+            </div>
+          </div>
+
+          <div class="row" ng-show="addingField === true || (primaryKeyPresent !== true && currentTable.name)">
+            <div class="medium-3 columns" ng-show="currentField.type">
+              <label>Size</label>
+                <input type="text" class="sqlInput" ng-model="currentField.size"
+                  placeholder="Enter size..." required/>
+            </div>
+            <div class="medium-4 columns" ng-show="attributes[currentField.type]">
+              <label>Attributes (multi-select)</label>
+                <select ng-model="currentField.attributes" multiple>
+                  <option ng-repeat="option in attributes[currentField.type]">{{option.attr}}</option>
+                </select>
+            </div>
+            <div class="medium-2 columns" style="float:left" ng-show="currentField.type">
+              <label>Not Null?</label>
+                <input class="sqlInput" type="checkbox" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="currentField.default"/>
+            </div>
+
+            <div class="medium-3 columns" style="float:right">
+              <div class="addKey" ng-show="primaryKeyPresent !== true && currentTable.name" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined">
+                <i class="fi-check addKey"></i><span style="font-size:11px !important; padding-top:0 !important">save primary</span>
+              </div>
+              <div class="addKey" ng-show="primaryKeyPresent === true && addingField === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined">
+                <i class="fi-check addKey"></i><span style="font-size:11px !important">save field</span>
+              </div>
+              <div class="cancelKey" ng-show="primaryKeyPresent === true && addingField === true"
+                ng-click="addingField = false">
+                <i class="fi-x cancelKey"></i><span style="font-size:11px !important">  cancel</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <span class="addField">
-        <button class="button" ng-click="addField(currentTable.name)" ng-show="primaryKeyPresent === true">
-          <span class="fi-plus"></span> Add Field</button>
-      </span>
-      <br>
-
-      <div ng-show="addingField === true || (primaryKeyPresent !== true && currentTable.name)">
-        <label>Column ID: </label>
-          <input class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
-        <label>Basic Type:</label>
-          <select ng-model="currentField.basicType" required>
-            <option>Numeric</option>
-            <option>String</option>
-            <option>DateTime</option>
-            <option>Bit</option>
-          </select>
-        <label ng-if="currentField.basicType">Type:</label>
-          <select ng-model="currentField.type" required>
-            <option ng-repeat="option in options[currentField.basicType]">{{option.name}}</option>
-          </select>
-          <br>
-        <label ng-if="currentField.type">Size</label>
-          <input class="sqlInput" ng-if="currentField.type" ng-model="currentField.size" placeholder="Enter size..." required/>
-        <label ng-if="attributes[currentField.type]">Attributes</label>
-          <select class="dropdown" ng-if="attributes[currentField.type]" class="dropdown" ng-model="currentField.attributes" multiple>
-            <option ng-repeat="option in attributes[currentField.type]">{{option.attr}}</option>
-          </select>
-        <label ng-if="currentField.type">Not Null?</label>
-          <input class="sqlInput" ng-if="currentField.type" type="checkbox" ng-true-value="'NOT NULL'" ng-false-value="'NULL'" ng-model="currentField.default"/>
-      <br>
-        <button "btn btn-default" ng-if="primaryKeyPresent !== true" ng-click="savePrimaryKey(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default, currentTable.name); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" class="pull-right">Save Primary Key</button>
-
-        <button "btn btn-default" ng-if="primaryKeyPresent === true" ng-click="saveField(currentField.fieldID, currentField.basicType, currentField.type, currentField.size, currentField.attributes, currentField.default); currentField.fieldID=''; currentField.basicType='0'; currentField.type=''; currentField.size=''; currentField.attributes=undefined; currentField.default=undefined" class="pull-right">Save Field</button>
-      </div>
-      <br>
-      <div class="addForeign" ng-if="primaryKeyPresent !== false">
-        <hr>
-        <button class="button" ng-click="addForeignKey()">
-          <span class="glyphicon glyphicon-plus-sign"></span> Add Foreign Key
-        </button>
-        <br>
-
-        <label ng-if="seeForeignKeys === true">Column ID: </label>
-          <input ng-if="seeForeignKeys === true" class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
-
+      <div class="addForeign" ng-show="primaryKeyPresent !== false">
+        <label ng-show="seeForeignKeys === true">Column ID: </label>
+          <input ng-show="seeForeignKeys === true" class="sqlInput" ng-model="currentField.fieldID" type="text" placeholder="Enter Column ID..." required/>
 
         <div> <!--ng-repeat="fkey in foreignKeys track by $index"> -->
-          <label ng-if="seeForeignKeys === true">Select which table to connect:</label>
-          <select ng-if="seeForeignKeys === true" ng-model="currentField.FK" style="width: 100px">
+          <label ng-show="seeForeignKeys === true">Select which table to connect:</label>
+          <select ng-show="seeForeignKeys === true" ng-model="currentField.FK" style="width: 100px">
             <option ng-repeat="key in potentialFKs">{{key.tableName}}</option>
           </select>
         </div>
-        <br>
-        <button "btn btn-default" ng-if="seeForeignKeys === true" ng-click="saveForeignKey(currentField.FK, currentField.fieldID); currentField.FK=undefined; currentField.fieldID=''" class="pull-right">Save Foreign Key</button>
+        <button "btn btn-default" ng-show="seeForeignKeys === true" ng-click="saveForeignKey(currentField.FK, currentField.fieldID); currentField.FK=undefined; currentField.fieldID=''" class="pull-right">Save Foreign Key</button>
       </div>
-      <br>
-
     </form>
 
     <div style="">
-      <button type="submit" data-close aria-label="Close reveal" class="button expanded mongoBtn"
-        ng-click="editDone(currentTable.name, oldTable); oldTable='0'; fieldID=''; basicType='0'; size='';" style="float:right">Done</button>
+      <br>
+      <span class="addField">
+        <button ng-click="addField(currentTable.name)" style="float:left; margin-right:.5em; width:114px"
+          ng-show="primaryKeyPresent === true" ng-disabled="addingField" class="button" >
+          <span class="fi-plus"></span> Field</button>
+      </span>
 
-      <button type="submit" class="button expanded mongoBtn pull-right"
+      <button class="button" ng-click="addForeignKey()" ng-show="primaryKeyPresent !== false"
+        style="float:left; margin-right:.5em; width:130px !important">
+        <span class="fi-plus"></span> Foreign Key
+      </button>
+
+      <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn"
+        ng-click="editDone(currentTable.name, oldTable); oldTable='0'; fieldID=''; basicType='0'; size='';" style="float:right; margin-right:0 !important"
+        ng-disabled="addingField || (!primaryKeyPresent && currentTable.name)">Done</button>
+
+      <button type="submit" data-close aria-label="Close reveal" class="button mongoBtn deleteTable" style="float:right; margin-right:.5em"
         ng-click="deleteTable(currentTable); oldTable='0'; fieldID=''; basicType='0'; size='';">Delete Table</button>
     </div>
   </div>
@@ -209,10 +263,31 @@
       $('.output-wrapper').animate({'right':(state ? -400: 0)}, 'slow');
       $('#code_button').text((state ? '<<': '>>'));
     });
+    $('.cancelKey, .deleteTable').on('click', function () {
+      clear('entireModal');
+    });
   });
 
-  $('.sqlInput').on('change', function () {
-    var modal = $("#sqlEditModal");
+  var modal = $("#sqlEditModal");
+  $(':input, span').on('click', function () {
     modal.animate({ scrollTop: modal.prop("scrollHeight") - modal.height() }, 0);
   });
+
+  function clear(class_name) {
+    jQuery("."+class_name).find(':input').each(function() {
+      switch(this.type) {
+          case 'password':
+          case 'text':
+          case 'textarea':
+          case 'file':
+          case 'select-one':
+          case 'select-multiple':
+              jQuery(this).val('');
+              break;
+          case 'checkbox':
+          case 'radio':
+              this.checked = false;
+      }
+    });
+  };
 </script>

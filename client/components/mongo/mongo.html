@@ -27,20 +27,20 @@
           </ul>
         </li>
         <li>
-          <a class="" role="button" id="download"
+          <a role="button" id="download"
             target="_self" href="" download="" ng-click="downloadCode()">
             <i class="fi-download"></i><span class="arrow-box-editor">
               Download Code</span>
           </a>
         </li>
         <li>
-          <a class="btn btn-default" role="button" id="download" href="" ng-click="saveSchema()">
+          <a role="button" id="download" href="" ng-click="saveSchema()">
             <i class="fi-save"></i><span class="arrow-box-editor">
               Save Schema</span>
           </a>
         </li>
         <li>
-          <a class="btn btn-default" role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
+          <a role="button" id="reflectChanges" href="" ng-click="rebuildSchema()">
             <i class="fi-refresh"></i><span class="arrow-box-editor">
               Refresh</span>
           </a>
@@ -54,7 +54,7 @@
   <div id="code_button">>></div>
 </div>
 
-<div>
+<div ng-controller='MongoController'>
   <div id='mongoDesignCanvas'>
     <svg id="tree" d3-mongo-tree></svg>
     <svg id="dendro" style="display:none" d3-mongo-dendro></svg>
@@ -119,7 +119,6 @@
 
         <label>Add To:</label>
           <select ng-model="nestedLocation" class="extended-input" required>
-            <option selected="selected">Main</option>
             <option ng-repeat="(key, val) in nestedDocuments">{{key}}</option>
           </select>
 
@@ -129,11 +128,11 @@
         </div>
         <div class="medium-5 columns dataType" style="float:left; height:5em">
           <label>Data Type:
-            <a class="keyLabel" href="">?
+            <a class="keyLabel" href="">?</a>
               <span class="arrow-box-editor-modal">
                 Choose 'Mixed' for nested document <br>and select 'nested document?' checkbox
               </span>
-            </a></label>
+            </label>
 
             <select ng-model="keyValue" required>
               <option>String</option>
@@ -177,7 +176,7 @@
       <br>
       <span class="addKey">
         <button class="button" ng-click="addKey(currentSchema.name)"
-          ng-show="currentSchema.name || showAddKey === true">
+          ng-show="currentSchema.name || showAddKey === true" ng-disabled="addingKey">
           <span class="fi-plus"></span> Add Key</button>
       </span>
 
@@ -185,7 +184,7 @@
         ng-click="editDone(currentSchema.name, oldSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name='';" style="float:right; margin-right:0 !important"
         ng-disabled="addingKey">Done</button>
 
-      <button type="submit" class="button mongoBtn" class="pull-right"
+      <button type="submit" class="button mongoBtn" data-close aria-label="Close reveal"
         ng-click="deleteSchema(currentSchema); oldSchema='0'; keyValue='0'; keyName=''; currentSchema.name=''" style="float:right; margin-right:.5em">Delete Schema</button>
     </div>
   </div>

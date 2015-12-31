@@ -542,7 +542,7 @@ input {
   cursor: pointer;
 }
 
-.deleteKey {
+.deleteKey, .deleteField {
   top: 0;
   color:red;
   font-size: 18px !important;
@@ -551,12 +551,16 @@ input {
   padding-top: 4%;
 }
 
-.deleteKey:hover {
+.deleteField {
+  padding-top: 2%;
+}
+
+.deleteKey:hover, .deleteField:hover {
   text-shadow: 0px 0px 9px rgba(255, 0, 0, 1);
   cursor: pointer;
 }
 
-.deleteKey i {
+.deleteKey i, .deleteField i {
   margin-top: .5em !important;
 }
 
@@ -574,7 +578,7 @@ input {
   cursor: pointer;
 }
 
-.keyLabel {
+.keyLabel, .fieldLabel {
   text-transform: uppercase;
   color: #93006c;
   font-weight: 600;
@@ -636,7 +640,7 @@ input {
   font-size: 12px;
  }
 
-.editButtonContainer a:hover span, .menu a:hover span, .dataType a:hover span {
+.editButtonContainer a:hover span, .menu a:hover span, .dataType a:hover + span {
   -webkit-transition-delay: 1s; /* Safari */
   transition-delay: 1s;
   opacity: 1;
@@ -765,14 +769,31 @@ a i {
 }
 
 button:disabled {
-/*  background-color: #734968 !important;
-  color: #CC9DC0;*/
   opacity: .5;
 }
 
 button:disabled:hover {
-/*  background-color: #734968 !important;
-  color: #CC9DC0;*/
   background-color: #D10084 !important;
   opacity: .5;
+}
+
+.addKey button:disabled:hover, .addField button:disabled:hover {
+  opacity: .5;
+  background-color: #2199e8 !important;
+}
+
+select {
+  height: auto;
+}
+
+select[multiple] {
+  background-image: none;
+  width: 100%;
+  height: 39px !important;
+}
+
+select[multiple] option {
+  margin-top: .2em;
+  margin-bottom: .5em;
+  font-size: 14px;
 }

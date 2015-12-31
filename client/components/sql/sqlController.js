@@ -7,7 +7,7 @@ angular.module('DTBS.main')
   'canvasSave',
   'AccessSchemaService',
   '$location',
-  function ($scope, $timeout, CodeParser, canvasData, canvasSave, AccessSchemaService, $location) {  
+  function ($scope, $timeout, CodeParser, canvasData, canvasSave, AccessSchemaService, $location) {
     //from Form Controller
 
     //Object to store current collection of tables.
@@ -15,9 +15,9 @@ angular.module('DTBS.main')
     $scope.positions = {};
 
     //Object for storing table that is being created or edited.
-    $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+    $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
 
-    //list of potential foreign keys that populates when a primary key is chosen or when 
+    //list of potential foreign keys that populates when a primary key is chosen or when
     //a table is chosen for editing
     $scope.potentialFKs = {};
     //incrementing id for table creation
@@ -28,7 +28,7 @@ angular.module('DTBS.main')
     $scope.seeForeignKeys = false;
     $scope.edit = false;
     $scope.view = true; //related to visualization display
-    $scope.typeEdit = 'none'; 
+    $scope.typeEdit = 'none';
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
 
@@ -179,7 +179,7 @@ angular.module('DTBS.main')
       if (value) {
         $scope.typeEdit = value;
       }
-      $scope.visibleEditModal = !$scope.visibleEditModal; 
+      $scope.visibleEditModal = !$scope.visibleEditModal;
     };
 
    //this function loads a previously saved table for editing
@@ -189,8 +189,8 @@ angular.module('DTBS.main')
         if ($scope.tableStorage[key]['name'] === tableName){
           $scope.currentTable = $scope.tableStorage[key];
           $scope.primaryKeyPresent = true;
-          $scope.edit = true; 
-                
+          $scope.edit = true;
+
         }
         if ($scope.tableStorage[key]["name"] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
@@ -234,7 +234,7 @@ angular.module('DTBS.main')
       $scope.currentTable['primaryKey'] = {};
       $scope.primaryKeyPresent = false;
       $scope.interactCanvas();
-      
+
     };
 
     //Delete a field
@@ -254,11 +254,11 @@ angular.module('DTBS.main')
 
     //when Add Field button is clicked, sets currentTable.name and shows inputs to add field
     $scope.addField = function (tableName) {
+      console.log("called")
       if (!$scope.currentTable['name']) {
         $scope.currentTable['name'] = name;
       }
       $scope.addingField = true;
-
     };
 
     //when save primary key button is pressed, sets all required information for currentTable's primaryKey object
@@ -295,7 +295,7 @@ angular.module('DTBS.main')
       if (def !== undefined){
         $scope.currentTable.primaryKey.default = def;
       }
-      
+
       $scope.primaryKeyPresent = true;//also, needs to set primaryKeyPresent to TRUE
 
       $scope.addingField = false;
@@ -360,7 +360,7 @@ angular.module('DTBS.main')
         $scope.edit = false;
         $scope.setAttrsArray();
         $scope.tableStorage[$scope.currentTable['id']] = $scope.currentTable;
-        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
         $scope.primaryKeyPresent = false;
@@ -374,8 +374,8 @@ angular.module('DTBS.main')
         $scope.tableStorage[$scope.id] = $scope.currentTable;
         $scope.id++;
 
-        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
-        $scope.toggleEditModal('none'); 
+        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
+        $scope.toggleEditModal('none');
         $scope.primaryKeyPresent = false;
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
@@ -403,7 +403,7 @@ angular.module('DTBS.main')
 
       //if table has not been saved to tableStorage, just reset $scope.currentTable
       if ($scope.currentTable['attrs'].length === 0){
-        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
         $scope.primaryKeyPresent = false;
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
@@ -412,13 +412,13 @@ angular.module('DTBS.main')
         $scope.deletePrimaryKey();
         delete $scope.tableStorage[$scope.currentTable['id']];
 
-        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]}; 
+        $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
         $scope.primaryKeyPresent = false;
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
 
       }
-      
+
       $scope.interactCanvas();
 
     };
@@ -430,7 +430,7 @@ angular.module('DTBS.main')
       updatedData.graph = angular.copy($scope.positions);
       canvasData.push(updatedData);
     };
-    
+
     $scope.toggleCanvasView = function () {
       $('#designCanvas').find('svg').toggle();
       $scope.view = !$scope.view;
@@ -442,7 +442,7 @@ angular.module('DTBS.main')
         svg_xml = document.getElementById('designer');
       } else {
         svg_xml = document.getElementById('svgout');
-      }  
+      }
       var serializer = new XMLSerializer();
       var str = serializer.serializeToString(svg_xml);
 
@@ -498,7 +498,7 @@ angular.module('DTBS.main')
 
         $scope.id = Object.keys($scope.tableStorage).length + 1;
 
-        window.localStorage.removeItem('tempTable');  
+        window.localStorage.removeItem('tempTable');
 
         var amount = Object.keys(parsedRecovered.data).length + 1;
         //rebuild visuals
@@ -560,7 +560,7 @@ angular.module('DTBS.main')
     });
     //event listener for updating or server side calls on save
     $scope.$watch('tableStorage', debounceUpdate, true);
-    
+
     //on set up to check local storage
     $timeout($scope.recoverInfo());
   }
