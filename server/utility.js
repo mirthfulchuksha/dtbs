@@ -160,26 +160,40 @@ module.exports = {
     var schema = "";
     var dbName = req.body.dbName;
     var mongoStruct = req.body.data;
-
-    schema += "\
-  var mongoose = require('mongoose');\n\n";
+    console.log(mongoStruct);
 
     for(var collectionNum = 0; collectionNum < mongoStruct.length; collectionNum++){
       var currentCollection = mongoStruct[collectionNum];
 
       var modelTitle = currentCollection.name + "Model";
       schema += "\
-  var " + modelTitle + " = mongoose.Schema({\n";
+  var " + modelTitle + " = new Schema({\n";
       for(var key in currentCollection.keys) {
-        schema += "\
-    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n"
+        console.log("key", currentCollection.keys[key]);
+        if(currentCollection.keys[key].type === 'Nested Document') {
+          schema += "\
+          {\n";
+          var currentKeySet = currentCollection.keys[key];
+          while(currentKeySet.keys) {
+            for(var eachKey in currentKeySet.keys) {
+              schema += "\
+            " + eachKey + ": " + mongooseTypeDict[currentKeySet.keys[eachKey].type] + ",\n";
+            }
+          }
+          schema += "}\n";
+        } else {
+          schema += "\
+    "+ key + ": " + mongooseTypeDict[currentCollection.keys[key].type] + ",\n";
+        }
       }
       schema +="\
   });\n\n";
 
+  /*
       var capitalizedTitle = capitalize(currentCollection.name);
       schema += "\
   var " + capitalizedTitle + " = mongoose.model('" + capitalizedTitle + "', " + modelTitle + ");\n\n"; 
+  */
     }
     res.send(schema, 200);
   },
