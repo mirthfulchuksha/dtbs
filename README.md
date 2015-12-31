@@ -32,11 +32,15 @@ Visit the page, currently hosted on [dtbs.herokuapp.com](http://dtbs.herokuapp.c
 - [Express](http://expressjs.com/)
 - [MySQL](https://www.mysql.com)
 - [jQuery](http://jquery.com)
+- [D3](http://d3js.org)
+- [Foundation](http://foundation.zurb.com/)
+- [Snap.svg](http://snapsvg.io/)
 - [Heroku Deployment](https://www.heroku.com/)
 
 ## Requirements
 
 - [Node 0.10.x](https://nodejs.org/en/download/)
+- [MongoDB 3.2 x](https://www.mongodb.org/)
 
 ## Development Process
 
