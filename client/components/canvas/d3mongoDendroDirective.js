@@ -55,7 +55,7 @@ angular.module('DTBS.main')
           //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
           //   colors.push(customRange[palette][tableColor]);
           // }
-          for (var i = 0; i <= maxHeight; i++) {
+          for (var i = 0; i <= maxHeight+2; i++) {
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
           }

@@ -49,11 +49,16 @@ module.exports.reverseMongo = function (req, res, next) {
       schema.name = namesArray[idCounter];
       // schema.name = "TBD";
       schema.keys = {};
-      schema.nestedDocuments = buildNestedDocs(object);
+      nestedDocsArray = buildNestedDocs(object);
+      schema.nestedDocuments = {};
+
       var startDepth = 0;
-      schema.depth = {};
-      schema.nestedDocuments.forEach(function (level) {
-        schema.depth[level] = startDepth;
+      schema.depth = {
+        "Main": 1,
+        "true": nestedDocsArray.length
+      };
+      nestedDocsArray.forEach(function (level) {
+        schema.nestedDocuments[level] = true;
         startDepth++;
       });
       var allKeysArray = buildAllKeys(object, 0);
@@ -67,13 +72,34 @@ module.exports.reverseMongo = function (req, res, next) {
       schema.allKeys = {};
       allKeysArray.forEach(function (keyArray) {
         // "Contact Info": "Number Location: Main > Company Info"
-        schema.allKeys[keyArray[0]] = keyArray[1] + " Location: " + schema.nestedDocuments[keyArray[2]];
+        schema.allKeys[keyArray[0]] = {
+          "display": keyArray[1],
+          "location": nestedDocsArray[keyArray[2]],
+          "type": keyArray[1]
+        }
+        if (keyArray[1] === "Nested Document") {
+          schema.allKeys[keyArray[0]].childKeys = {};
+          schema.allKeys[keyArray[0]].childLocations = {};
+        }
       });
       schemaStorage[idCounter] = schema;
       idCounter++;
     });
     return schemaStorage;
   };
+
+  "field2": {
+          "display": "Nested Document",
+          "location": "Main",
+          "type": "Nested Document",
+          "childKeys": {
+            "field3": true
+          },
+          "childLocations": {
+            "Main > field2": true,
+            "undefined": true
+          }
+        }
 
 // takes in json object and returns an array of levels in the format
 //"nestedDocuments": ["Main", "Main > Company Info"]
@@ -118,3 +144,12 @@ module.exports.reverseMongo = function (req, res, next) {
     }
     return allKeys;
   };
+
+
+
+
+
+
+
+
+

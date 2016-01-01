@@ -53,8 +53,8 @@ angular.module('DTBS.main')
           //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
           //   colors.push(customRange[palette][tableColor]);
           // }
-          for (var i = 0; i <= maxHeight; i++) {
-            var tableColor = Math.floor(Math.random() * colorLength+1);
+          for (var i = 0; i <= maxHeight+2; i++) {
+            var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
           }
           var tick = function () {
@@ -217,6 +217,7 @@ angular.module('DTBS.main')
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('mongo:new-data', function (e, data) {
+          console.log(data, "data");
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
@@ -234,4 +235,150 @@ angular.module('DTBS.main')
     }};
 }]);
 
+// correct
+/*{
+  "0": {
+    "keys": {
+      "field1": {
+        "type": "String"
+      },
+      "field2": {
+        "type": "Nested Document",
+        "keys": {
+          "field3": {
+            "type": "Number"
+          }
+        }
+      }
+    },
+    "name": "newSchema",
+    "id": 0,
+    "depth": {
+      "Main": 1,
+      "true": 2
+    },
+    "nestedDocuments": {
+      "Main": true,
+      "Main > field2": true
+    },
+    "allKeys": {
+      "field1": {
+        "display": "String",
+        "location": "Main",
+        "type": "String"
+      },
+      "field2": {
+        "display": "Nested Document",
+        "location": "Main",
+        "type": "Nested Document",
+        "childKeys": {
+          "field3": true
+        },
+        "childLocations": {
+          "Main > field2": true,
+          "undefined": true
+        }
+      },
+      "field3": {
+        "display": "Number",
+        "location": "Main > field2",
+        "type": "Number"
+      }
+    }
+  }
+}
 
+
+// WRONG
+{
+  "0": {
+    "id": 0,
+    "name": "blogSchema",
+    "keys": {
+      "title": {
+        "type": "String"
+      },
+      "author": {
+        "type": "String"
+      },
+      "body": {
+        "type": "String"
+      },
+      "comments": {
+        "type": "Date"
+      },
+      "date": {
+        "type": "String"
+      },
+      "hidden": {
+        "type": "Boolean"
+      },
+      "meta": {
+        "type": "Nested Document",
+        "keys": {
+          "votes": {
+            "type": "Nested Document",
+            "keys": {
+              "amount": {
+                "type": "Number"
+              },
+              "userinfo": {
+                "type": "Nested Document",
+                "keys": {
+                  "name": {
+                    "type": "String"
+                  },
+                  "email": {
+                    "type": "String"
+                  }
+                }
+              }
+            }
+          },
+          "favs": {
+            "type": "Number"
+          }
+        }
+      }
+    },
+    "nestedDocuments": [
+      "Main",
+      "Main > meta",
+      "Main > meta > votes",
+      "Main > meta > votes > userinfo"
+    ],
+    "depth": {
+      "Main": 0,
+      "Main > meta": 1,
+      "Main > meta > votes": 2,
+      "Main > meta > votes > userinfo": 3
+    },
+    "allKeys": {
+      "title": "String Location: Main",
+      "author": "String Location: Main",
+      "body": "String Location: Main",
+      "comments": "Date Location: Main",
+      "date": "String Location: Main",
+      "hidden": "Boolean Location: Main",
+      "meta": "Nested Document Location: Main",
+      "votes": "Nested Document Location: Main > meta",
+      "amount": "Number Location: Main > meta > votes",
+      "userinfo": "Nested Document Location: Main > meta > votes",
+      "name": "String Location: Main > meta > votes > userinfo",
+      "email": "String Location: Main > meta > votes > userinfo",
+      "favs": "Number Location: Main > meta > votes"
+    }
+    "field2": {
+        "display": "Nested Document",
+        "location": "Main",
+        "type": "Nested Document",
+        "childKeys": {
+          "field3": true
+        },
+        "childLocations": {
+          "Main > field2": true,
+          "undefined": true
+        }
+      }
+  }
+}*/
