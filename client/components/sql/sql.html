@@ -5,8 +5,8 @@
   </div>
   <div class="nav-buttons">
     <a href="#/" class="button nav" ng-click="logOut()">Home</a>
-    <a href="/logout" class="button nav" ng-show="dbUser" ng-click="logOut()">Logout</a>
-    <a href="#/signup" class="button nav" ng-show="!dbUser">Signup</a>
+    <a href="/logout" class="button nav" ng-show="user.userName" ng-click="logOut()">Logout</a>
+    <a href="#/signup" class="button nav" ng-show="!user.userName">Signup</a>
     <a href="#/setup" class="button nav">New Database</a>
   </div>
 </nav>
@@ -36,7 +36,7 @@
               Download Code</span>
           </a>
         </li>
-        <li ng-if="dbUser">
+        <li ng-show="user.userName">
           <a id="download" href="" ng-click="saveSchema()">
             <i class="fi-save"></i><span class="arrow-box-editor">
               Save Schema</span>
@@ -305,17 +305,17 @@
   function clear(class_name) {
     jQuery("."+class_name).find(':input').not('.sqlInput').each(function() {
       switch(this.type) {
-          case 'password':
-          case 'text':
-          case 'textarea':
-          case 'file':
-          case 'select-one':
-          case 'select-multiple':
-              jQuery(this).val('');
-              break;
-          case 'checkbox':
-          case 'radio':
-              this.checked = false;
+        case 'password':
+        case 'text':
+        case 'textarea':
+        case 'file':
+        case 'select-one':
+        case 'select-multiple':
+          jQuery(this).val('');
+          break;
+        case 'checkbox':
+        case 'radio':
+          this.checked = false;
       }
     });
   };

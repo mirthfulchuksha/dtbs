@@ -66,7 +66,9 @@ passport.use(new GitHubStrategy({
   }
 ));
 
-app.get('/*', function (req, res) {
+
+var views = ['/sql', '/mongo'];
+app.get(views, function (req, res) {
   var sid = req.sessionID + '';
   sessionStore.get(sid, function (err, session) {
     if (err) console.error(err);
@@ -107,7 +109,6 @@ app.post('/signup', function (req, res) {
 });
 
 app.get('/setup', function (req, res) {
-  console.log("HERE")
   helper.fetchSchemas(req, res);
 });
 
