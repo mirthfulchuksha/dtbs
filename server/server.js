@@ -1,6 +1,6 @@
-
 var express = require('express');
 var app = express();
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('./utility');
 var mongoParse = require('./reverseMongo');
@@ -9,17 +9,26 @@ var GitHubStrategy = require('passport-github').Strategy;
 
 var helper = require('./dbHelper');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var sessionStore = new MongoStore({
+  url: process.env.MONGOLAB_URI || 'mongodb://localhost/dtbs',
+  autoRemove: 'native'
+});
 
 var port = process.env.PORT || 3000;
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client'));
 app.use(session({
+  store: new MongoStore({
+    url: process.env.MONGOLAB_URI || 'mongodb://localhost/dtbs',
+    autoRemove: 'native'
+  }),
   secret: 'nyan cat',
-  resave: false,
-  saveUninitialized: true
+  cookie: {secure: true}
 }));
 
 app.use(passport.initialize());
@@ -57,6 +66,16 @@ passport.use(new GitHubStrategy({
   }
 ));
 
+
+var views = ['/sql', '/mongo'];
+app.get(views, function (req, res) {
+  var sid = req.sessionID + '';
+  sessionStore.get(sid, function (err, session) {
+    if (err) console.error(err);
+    req.session = session;
+  });
+});
+
 app.get('/auth/github',
   passport.authenticate('github'),
   function(req, res){
@@ -90,7 +109,6 @@ app.post('/signup', function (req, res) {
 });
 
 app.get('/setup', function (req, res) {
-  console.log("HERE")
   helper.fetchSchemas(req, res);
 });
 

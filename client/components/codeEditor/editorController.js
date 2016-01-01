@@ -12,7 +12,7 @@ angular.module('DTBS.main')
     $scope.$on('canvas:save-data', function (e, data) {
       $scope.positions = data;
     });
-    
+
     $scope.saveSchema = function () {
       // The call to code parser is made in the snap sql directive
       canvasSave.alertSave();
@@ -53,7 +53,7 @@ angular.module('DTBS.main')
       var newCode = editor.getValue();
       newCode = newCode.trim();
       AccessSchemaService.mongoBuilder(newCode, function (data) {
-        
+
       });
     };
 

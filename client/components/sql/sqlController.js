@@ -30,14 +30,26 @@ angular.module('DTBS.main')
     $scope.edit = false;
     $scope.view = true; //related to visualization display
     $scope.typeEdit = 'none';
+    $scope.user = {};
+    $scope.user.userName = CodeParser.getUser() || localStorage.user;
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
+    var storedRefresh = localStorage.schemas ? JSON.parse(localStorage.schemas) : null;
+    CodeParser.update(null, null, $scope.user);
 
-    $scope.savedSchemas = [];
+    $scope.savedSchemas = storedRefresh || [];
     var findSavedSchemas = function () {
       CodeParser.fetchSchemas(function (schemas) {
         $scope.savedSchemas = schemas;
+        localStorage.schemas = JSON.stringify(schemas);
       });
+    };
+    findSavedSchemas();
+
+    $scope.logOut = function () {
+      localStorage.removeItem("user");
+      localStorage.removeItem("schemas");
+      $scope.user = null;
     };
 
     $scope.loadNewSchema = function (index) {
