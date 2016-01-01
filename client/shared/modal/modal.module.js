@@ -70,6 +70,7 @@ mymodal.controller('ModalCtrl', ['$scope', 'CodeParser', 'SaveAndRedirectFactory
   $scope.user = {};
   $scope.login = function () {
       $scope.user.login = true;
+      localStorage.user = $scope.user.userName;
       CodeParser.update(null, null, $scope.user);
       $scope.sendUserData({
         url: '/login',

@@ -95,7 +95,8 @@ angular.module('DTBS.main')
       console.log(dbFilename);
     };
 
-    var saveSchema = function (graphLayout) {
+    var saveSchema = function (graphLayout, code) {
+      localStorage.code = JSON.stringify(code);
       //console.log('sending scheme to server');
       var saveStuff = {
         dbUser: dbUser,
@@ -161,6 +162,10 @@ angular.module('DTBS.main')
       }
     };
 
+    var getUser = function () {
+      return dbUser || null;
+    };
+
     return {
       fetchCode: fetchCode,
       saveCode: saveCode,
@@ -168,6 +173,7 @@ angular.module('DTBS.main')
       fetchSchemas: fetchSchemas,
       update: update,
       fetchMongo: fetchMongo,
-      fetchOneSchema: fetchOneSchema
+      fetchOneSchema: fetchOneSchema,
+      getUser: getUser
     };
   }]);

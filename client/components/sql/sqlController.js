@@ -30,6 +30,7 @@ angular.module('DTBS.main')
     $scope.edit = false;
     $scope.view = true; //related to visualization display
     $scope.typeEdit = 'none';
+    $scope.dbUser = CodeParser.getUser() || localStorage.user;
     var secondsToWaitBeforeSave = 0;
     var secondsToWaitBeforeRender = 1;
 
@@ -38,6 +39,11 @@ angular.module('DTBS.main')
       CodeParser.fetchSchemas(function (schemas) {
         $scope.savedSchemas = schemas;
       });
+    };
+
+    $scope.logOut = function () {
+      localStorage.removeItem("user");
+      $scope.dbUser = null;
     };
 
     $scope.loadNewSchema = function (index) {

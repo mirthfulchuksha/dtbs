@@ -488,7 +488,7 @@ input {
 }
 
 .menu li {
-  width: 9em !important;
+/*  width: 9em !important;*/
   margin-top:.5em;
   font-weight: 600;
   color: #93006c;
