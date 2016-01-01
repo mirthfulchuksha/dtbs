@@ -156,7 +156,7 @@ angular.module('DTBS.main')
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
     $scope.deleteKey = function (key, val) {
-
+      console.log(val);
       //first, process val to get location information
       var location = val['location'];
       // var locateString = location[1];
