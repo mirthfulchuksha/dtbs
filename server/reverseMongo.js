@@ -78,8 +78,10 @@ module.exports.reverseMongo = function (req, res, next) {
           "type": keyArray[1]
         }
         if (keyArray[1] === "Nested Document") {
-          schema.allKeys[keyArray[0]].childKeys = {};
-          schema.allKeys[keyArray[0]].childLocations = {};
+          var res = getChildKeys(schema.keys, keyArray[0]);
+          console.log(res, "res")
+          // schema.allKeys[keyArray[0]].childKeys = getChildKeys(schema.keys, keyArray[0]);
+          // schema.allKeys[keyArray[0]].childLocations = getChildLocations();
         }
       });
       schemaStorage[idCounter] = schema;
@@ -88,18 +90,33 @@ module.exports.reverseMongo = function (req, res, next) {
     return schemaStorage;
   };
 
-  "field2": {
-          "display": "Nested Document",
-          "location": "Main",
-          "type": "Nested Document",
-          "childKeys": {
-            "field3": true
-          },
-          "childLocations": {
-            "Main > field2": true,
-            "undefined": true
-          }
-        }
+  var getChildKeys = function (schemaKeys, key, childKeys) {
+    childKeys = childKeys || {};
+    for (var field in schemaKeys) {
+      if (field !== key && !schemaKeys[field].keys) {
+        return;
+      } else if (field === key) {
+        childKeys[field] = true;
+        continue;
+      } else {
+        childKeys[field] = getChildKeys(schemaKeys[field], key, childKeys);
+      }
+    }
+    return childKeys;
+  };
+
+  // "field2": {
+  //         "display": "Nested Document",
+  //         "location": "Main",
+  //         "type": "Nested Document",
+  //         "childKeys": {
+  //           "field3": true
+  //         },
+  //         "childLocations": {
+  //           "Main > field2": true,
+  //           "undefined": true
+  //         }
+  //       }
 
 // takes in json object and returns an array of levels in the format
 //"nestedDocuments": ["Main", "Main > Company Info"]
