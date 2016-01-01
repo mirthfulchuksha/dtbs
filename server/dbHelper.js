@@ -6,7 +6,6 @@ var bcrypt = require('bcrypt-nodejs');
 module.exports = {
 
   findUser: function (req, res, username, id) {
-    console.log("??", req.body);
     
     username = req.body.userName;
     password = req.body.password;
@@ -128,7 +127,6 @@ module.exports = {
   },
 
   genSesh: function (req, res, user) {
-    console.log("sesh", req.session);
     if (req.session) {
       req.session.regenerate(function () {
         req.session.user = user;
