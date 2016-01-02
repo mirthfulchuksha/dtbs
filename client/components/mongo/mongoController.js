@@ -156,7 +156,6 @@ angular.module('DTBS.main')
 
     //Delete key/value pairs on the currentSchema object when delete key button is pressed.
     $scope.deleteKey = function (key, val) {
-
       //first, process val to get location information
       var location = val['location'];
       // var locateString = location[1];
@@ -356,7 +355,7 @@ angular.module('DTBS.main')
     });
 
     $scope.$on('schemaService:new-data', function (e, data) {
-      //for some reason the data is buried two levels deep in the response, no big deal
+      //newly constructed data from accessSchemaService, needs to replace schemaStorage to rerender
       $scope.schemaStorage = data;
       $scope.id = Object.keys($scope.schemaStorage).length;
       $scope.interactCanvas();

@@ -130,9 +130,7 @@ module.exports = {
         }
         schema += "\n";
       }
-      /*
-        PRIMARY KEY (uID)\n\
-        */
+      
       schema += "\
   );\n\n";
     }
@@ -211,11 +209,6 @@ module.exports = {
       }
       schema +="\
   });\n\n";
-  /*
-      var capitalizedTitle = capitalize(currentCollection.name);
-      schema += "\
-  var " + capitalizedTitle + " = mongoose.model('" + capitalizedTitle + "', " + modelTitle + ");\n\n"; 
-  */
     }
     res.send(schema, 200);
   },
@@ -365,10 +358,9 @@ var inputParser = function (inputTable, tableId) {
         attr.basicType = type;
       }
     }
-    //attr.basicType = typeFormatter(line[1]);
     
     attr.size = sizeFormatter(line[1]);
-    // attr.default = ; we aren't supporting defaults currently?
+    
     attr.attributes = [];
     if (zeroFill) {
       attr.attributes.push("ZEROFILL");

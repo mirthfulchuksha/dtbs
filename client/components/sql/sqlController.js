@@ -64,13 +64,10 @@ angular.module('DTBS.main')
           $scope.positions = schema.graph;
           $scope.interactCanvas();
         } else {
+          //need to navigate to the other edit page, so put the data in local storage and redirect
           window.localStorage.setItem('tempTable', JSON.stringify(schema));
           $location.path('/mongo');
         }
-        // $scope.tableStorage = schema.data;
-        // load the previous table positions
-        // $scope.positions = schema.graph;
-        // $scope.interactCanvas();
       });
     };
 
@@ -492,7 +489,7 @@ angular.module('DTBS.main')
     };
 
     /*
-      THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD
+      THIS HAS TO BE HERE, IT RECOVERS THE TABLE ON RELOAD AND PAGE SWITCH
     */
 
     $scope.recoverInfo = function () {
@@ -526,11 +523,6 @@ angular.module('DTBS.main')
     $scope.removeKeyFromTable = function (index, table) {
       $scope.tableStorage[table.id].attrs.splice(index,1);
     };
-
-
-    // $scope.modalTitle = function (name) {
-    //   $("#tableTitle .modal-title").html("Add/Edit Fields for '" + name + "'");
-    // };
 
     var timeout = null;
     var saveUpdates = function() {

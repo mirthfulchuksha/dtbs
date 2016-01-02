@@ -52,9 +52,7 @@ angular.module('DTBS.main')
       var editor = ace.edit("editor");
       var newCode = editor.getValue();
       newCode = newCode.trim();
-      AccessSchemaService.mongoBuilder(newCode, function (data) {
-
-      });
+      AccessSchemaService.mongoBuilder(newCode);
     };
 
     $scope.rebuildSchema = function () {
