@@ -5,9 +5,10 @@ angular.module('DTBS.main')
   'CodeParser',
   'canvasData',
   'canvasSave',
+  'saveImage',
   'AccessSchemaService',
   '$location',
-  function ($scope, $timeout, CodeParser, canvasData, canvasSave, AccessSchemaService, $location) {
+  function ($scope, $timeout, CodeParser, canvasData, canvasSave, saveImage, AccessSchemaService, $location) {
 
     //Object to store current collection of tables.
     $scope.tableStorage = {};
@@ -451,38 +452,7 @@ angular.module('DTBS.main')
     };
 
     $scope.saveSVG = function () {
-
-      if ($scope.view) {
-        svg_xml = document.getElementById('svgout');
-      } else {
-        svg_xml = document.getElementById('designer');
-      }
-      var serializer = new XMLSerializer();
-      var str = serializer.serializeToString(svg_xml);
-
-      // Create a canvas
-      var canvas = document.createElement('canvas');
-      canvas.height = 650;
-      canvas.width = 1000;
-      canvas.style.background = 'white';
-
-      canvg(canvas, str);
-      context = canvas.getContext("2d");
-
-      // set to draw behind current content
-      context.globalCompositeOperation = "destination-over";
-
-      // set background color
-      context.fillStyle = '#fff';
-
-      // draw background / rect on entire canvas
-      context.fillRect(0, 0, canvas.width, canvas.height);
-      var a = document.createElement('a');
-      a.href = canvas.toDataURL("schemas/png");
-      a.download = 'schemas.png';
-      a.click();
-      a.remove();
-      canvas.remove();
+      $scope.view === true ? saveImage.saveToPng('svgout') : saveImage.saveToPng('designer');
     };
 
     var changeTableID = function (num) {
