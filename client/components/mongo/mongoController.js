@@ -357,10 +357,8 @@ angular.module('DTBS.main')
 
     $scope.$on('schemaService:new-data', function (e, data) {
       //for some reason the data is buried two levels deep in the response, no big deal
-      console.log(data);
       $scope.schemaStorage = data;
       $scope.id = Object.keys($scope.schemaStorage).length;
-      console.log($scope.schemaStorage);
       $scope.interactCanvas();
     });
 

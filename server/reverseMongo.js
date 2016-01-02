@@ -123,19 +123,6 @@ module.exports.reverseMongo = function (req, res, next) {
     return childKeys;
   };
 
-  // "field2": {
-  //         "display": "Nested Document",
-  //         "location": "Main",
-  //         "type": "Nested Document",
-  //         "childKeys": {
-  //           "field3": true
-  //         },
-  //         "childLocations": {
-  //           "Main > field2": true,
-  //           "undefined": true
-  //         }
-  //       }
-
 // takes in json object and returns an array of levels in the format
 //"nestedDocuments": ["Main", "Main > Company Info"]
 
