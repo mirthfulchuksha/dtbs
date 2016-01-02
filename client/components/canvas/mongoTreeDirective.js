@@ -1,11 +1,7 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoTree', [
-           'd3Service', 
-           'mongoData', 
-           'treeFormat', 
-           'canvasFormat', 
-           function (d3Service, mongoData, treeFormat, canvasFormat) {
+.directive('d3MongoTree', ['d3Service', 'treeFormat', 'canvasFormat', 
+           function (d3Service, treeFormat, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -19,13 +15,6 @@ angular.module('DTBS.main')
         var color = d3.scale.linear().domain([1,colorLength])
                       .interpolate(d3.interpolateHcl)
                       .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
-        // var colors = [],
-        //     customRange = canvasFormat.colorSchema(),
-        //     flattened = [];
-        // customRange.forEach(function (palette) {
-        //   flattened.concat(palette);
-        // });
-        // var color = d3.scale.ordinal().range(flattened);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
@@ -48,11 +37,7 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
-          // for (var k = 0; k <= maxHeight; k++) {
-          //   var palette = Math.floor(Math.random() * 8);
-          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
-          //   colors.push(customRange[palette][tableColor]);
-          // }
+
           for (var i = 0; i <= maxHeight+2; i++) {
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
@@ -124,10 +109,8 @@ angular.module('DTBS.main')
                 .attr("class", "node")
                 .style("fill", function (d) {
                   if (d.name === "Collection") {
-                    // return "#823082";
                     return color(1);
                   } else {
-                    // return colors[d.depth];
                     return color(colors[d.depth]);
                   }
                 })
@@ -136,18 +119,14 @@ angular.module('DTBS.main')
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
                     return 8;
-                  } else if (d.type === "Nested Document") {
-                    return 11.5;
                   } else {
-                    return 15.5;
+                    return 14;
                   }
                 })
                 .attr("stroke", function (d) {
                   if (d.name === "Collection") {
-                    // return "#9da4d9";
                     return color(8);
-                  } else if (d.type === "Nested Document") {
-                    // return d3.rgb(colors[d.depth]).darker();
+                  } else if (d.type === "Nested Document" || !d.type) {
                     return d3.rgb(color(colors[d.depth])).darker();
                   } else {
                     return "white";
@@ -157,8 +136,7 @@ angular.module('DTBS.main')
                   return 4;
                 })
                 .on("click", click)
-                .on("dblclick", function () {
-                  dblclick(this); })
+                .on("dblclick", dblclick)
                 .call(force.drag);
 
             labels = labels.data(nodes, function (d) { return d.idd; })
@@ -182,7 +160,7 @@ angular.module('DTBS.main')
                   }
                 });
             };
-            var click = function (d) {
+            var dblclick = function (d) {
               if (!d3.event.defaultPrevented) {
                 if (d.children) {
                   d._children = d.children;
@@ -210,20 +188,15 @@ angular.module('DTBS.main')
           recurse(root);
           return nodes;
         };
-        var dblclick = function (d) {
-          d3.select(this).classed("fixed", d.fixed = !d.fixed);
-        };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('mongo:new-data', function (e, data) {
-          console.log(data, "data");
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);
           }
           var schemaData = treeFormat.treeFormatter(dataArr);
-          // var schemaData = treeFormat.treeFormatter(schemaStorage);
           svg.selectAll("*").remove();
           var rootNode = {
             "name": "Collection",
@@ -234,151 +207,3 @@ angular.module('DTBS.main')
       });
     }};
 }]);
-
-// correct
-/*{
-  "0": {
-    "keys": {
-      "field1": {
-        "type": "String"
-      },
-      "field2": {
-        "type": "Nested Document",
-        "keys": {
-          "field3": {
-            "type": "Number"
-          }
-        }
-      }
-    },
-    "name": "newSchema",
-    "id": 0,
-    "depth": {
-      "Main": 1,
-      "true": 2
-    },
-    "nestedDocuments": {
-      "Main": true,
-      "Main > field2": true
-    },
-    "allKeys": {
-      "field1": {
-        "display": "String",
-        "location": "Main",
-        "type": "String"
-      },
-      "field2": {
-        "display": "Nested Document",
-        "location": "Main",
-        "type": "Nested Document",
-        "childKeys": {
-          "field3": true
-        },
-        "childLocations": {
-          "Main > field2": true,
-          "undefined": true
-        }
-      },
-      "field3": {
-        "display": "Number",
-        "location": "Main > field2",
-        "type": "Number"
-      }
-    }
-  }
-}
-
-
-// WRONG
-{
-  "0": {
-    "id": 0,
-    "name": "blogSchema",
-    "keys": {
-      "title": {
-        "type": "String"
-      },
-      "author": {
-        "type": "String"
-      },
-      "body": {
-        "type": "String"
-      },
-      "comments": {
-        "type": "Date"
-      },
-      "date": {
-        "type": "String"
-      },
-      "hidden": {
-        "type": "Boolean"
-      },
-      "meta": {
-        "type": "Nested Document",
-        "keys": {
-          "votes": {
-            "type": "Nested Document",
-            "keys": {
-              "amount": {
-                "type": "Number"
-              },
-              "userinfo": {
-                "type": "Nested Document",
-                "keys": {
-                  "name": {
-                    "type": "String"
-                  },
-                  "email": {
-                    "type": "String"
-                  }
-                }
-              }
-            }
-          },
-          "favs": {
-            "type": "Number"
-          }
-        }
-      }
-    },
-    "nestedDocuments": [
-      "Main",
-      "Main > meta",
-      "Main > meta > votes",
-      "Main > meta > votes > userinfo"
-    ],
-    "depth": {
-      "Main": 0,
-      "Main > meta": 1,
-      "Main > meta > votes": 2,
-      "Main > meta > votes > userinfo": 3
-    },
-    "allKeys": {
-      "title": "String Location: Main",
-      "author": "String Location: Main",
-      "body": "String Location: Main",
-      "comments": "Date Location: Main",
-      "date": "String Location: Main",
-      "hidden": "Boolean Location: Main",
-      "meta": "Nested Document Location: Main",
-      "votes": "Nested Document Location: Main > meta",
-      "amount": "Number Location: Main > meta > votes",
-      "userinfo": "Nested Document Location: Main > meta > votes",
-      "name": "String Location: Main > meta > votes > userinfo",
-      "email": "String Location: Main > meta > votes > userinfo",
-      "favs": "Number Location: Main > meta > votes"
-    }
-    "field2": {
-        "display": "Nested Document",
-        "location": "Main",
-        "type": "Nested Document",
-        "childKeys": {
-          "field3": true
-        },
-        "childLocations": {
-          "Main > field2": true,
-          "undefined": true
-        }
-      }
-  }
-}*/

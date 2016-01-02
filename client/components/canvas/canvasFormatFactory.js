@@ -54,6 +54,7 @@ angular.module('DTBS.main')
       var isPrimary = true;
       for (var j = 0; j < table.attrs.length; j++) {
         var field = table.attrs[j];
+
         // Build Field Node =====================================
         var fieldNode;
         if (isPrimary) {
@@ -63,6 +64,7 @@ angular.module('DTBS.main')
           fieldNode = buildFieldNode(table, field, groupNumber, false);
         }
         graph.nodes.push(fieldNode);
+        
         // Add Field to Central Node Link =======================
         var fieldToTableLink = {"source": currentLength, "target": graph.nodes.length-1, "value": 50};
         if (isD3) {
