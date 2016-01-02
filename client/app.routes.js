@@ -28,7 +28,7 @@ angular.module('DTBS', [
     templateUrl: './components/sql/sql.html',
     controller: 'sqlController'
   })
-  .when('/table', {
-    templateUrl: './components/form/formView.html'
+  .when('/tutorial', {
+    templateUrl: './components/tutorial/tutorial.html'
   });
 });

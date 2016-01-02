@@ -12,9 +12,9 @@ body {
   height: 100%;
   width: 100%;
   background: #e8e8e8 !important; /* Old browsers */
-  background: -moz-radial-gradient(center, ellipse cover,  #e8e8e8 51%, #e8e8e8 51%, #afafaf 99%) !important; /* FF3.6-15 */
-  background: -webkit-radial-gradient(center, ellipse cover,  #e8e8e8 51%,#e8e8e8 51%,#afafaf 99%) !important; /* Chrome10-25,Safari5.1-6 */
-  background: radial-gradient(ellipse at center,  #e8e8e8 51%,#e8e8e8 51%,#afafaf 99%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: -moz-radial-gradient(center, ellipse cover,  #e8e8e8 51%, #e8e8e8 51%, #afafaf 99%) !important;
+  background: -webkit-radial-gradient(center, ellipse cover,  #e8e8e8 51%,#e8e8e8 51%,#afafaf 99%) !important;
+  background: radial-gradient(ellipse at center,  #e8e8e8 51%,#e8e8e8 51%,#afafaf 99%) !important;
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e8e8', endColorstr='#afafaf',GradientType=1 ) !important; /* IE6-9 fallback on horizontal gradient */
 }
 
@@ -289,7 +289,6 @@ input {
 .team {
   width: 100%;
   text-align: center;
-  margin-top: 2em;
   padding: 4em 0 4em 0;
   background-color: #E8E8E8;
 }
@@ -370,7 +369,7 @@ input {
 }
 
 /**/
-.github {
+.github, .screenshots h4, .screenshots a {
   color: #93006c;
   text-transform: uppercase;
   font-weight: 600;
@@ -382,7 +381,7 @@ input {
   font-weight: 600;
 }
 
-.profile-card, .login{
+.profile-card, .login, .tutorial {
   padding: 1rem !important;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   margin: 2rem 0;
@@ -483,11 +482,20 @@ input {
 }
 
 .menu li {
-/*  width: 9em !important;*/
   margin-top:.5em;
   font-weight: 600;
   color: #93006c;
   padding: 0 0 .3em .5em;
+  width: auto !important;
+}
+
+.menu-options li {
+  width: 100% !important;
+}
+
+.menu-options ul {
+  margin-top:-.25em;
+  width: auto !important;
 }
 
 #output {
@@ -508,7 +516,13 @@ input {
 
 .dropdown.menu .is-dropdown-submenu-parent.is-down-arrow > a::after {
   border-color: #C96C9E transparent transparent !important;
+  float: left;
   margin-left: 1em;
+}
+
+.dropdown.menu .submenu {
+  min-width: 8em !important;
+  padding-right: .25em;
 }
 
 .code-options {
@@ -585,7 +599,7 @@ input {
   font-weight: 600;
 }
 
-.editButtonContainer span {
+.editButtonContainer span, .navbar span {
   min-width: 8em;
   width: auto !important;
   height: auto;
@@ -599,6 +613,20 @@ input {
   margin-left: 10px;
   z-index: 5;
   font-size: 12px;
+}
+
+.navbar span {
+  margin-top: 20px !important;
+  margin-left: -55px !important;
+  color: white;
+  text-transform: none;
+  font-weight: 400;
+  text-align: center;
+  font-size: 12px;
+}
+
+.button.nav.tutorial-link {
+  margin-top: .2em !important;
 }
 
 .menu span {
@@ -641,7 +669,7 @@ input {
   font-size: 12px;
  }
 
-.editButtonContainer a:hover span, .menu a:hover span, .dataType a:hover + span {
+.editButtonContainer a:hover span, .menu a:hover span, .dataType a:hover + span, .navbar a:hover span{
   -webkit-transition-delay: 1s; /* Safari */
   transition-delay: 1s;
   opacity: 1;
@@ -757,8 +785,10 @@ input {
 }
 
 .dropdown-head {
-  width: 7em;
-  margin-right: 1em;
+  width: auto;
+  margin-right: 0;
+  margin-bottom: -.25em;
+  text-align: right;
 }
 
 a i {
@@ -807,4 +837,56 @@ input.ng-invalid, select.ng-invalid {
 
 button:focus {
   outline: 0;
+}
+
+.tutorial {
+  height: auto;
+  margin: 4em;
+  padding: 2em 4em 2em 4em !important;
+}
+
+.screenshots {
+  margin-top: 3em;
+  background-color: #FAFAFA;
+  margin-bottom: 0;
+  padding: 4em 0 4em 0;
+}
+
+.screenshots img {
+  display: block;
+  height: 225px;
+  width: 315px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.screenshots h3 {
+  text-align: center;
+}
+
+.screenshot-text {
+  padding-left: 2em;
+  margin-left: 2em;
+  border-left: 1px solid #cacaca;
+  height: 100%;
+  float: left !important;
+  font-size: 14px;
+}
+
+.small {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+.screenshots h4 {
+  padding-left: 0.9375rem;
+  font-size: 16px;
+}
+
+.screenshots a {
+  font-size: 14px;
+}
+
+.learn a {
+  background-color: none !important;
+  color: #C5E7C6;
 }
