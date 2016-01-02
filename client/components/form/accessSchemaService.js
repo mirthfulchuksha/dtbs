@@ -21,6 +21,7 @@ angular.module('DTBS.main')
     };
 
     var mongoBuilder = function (code) {
+      console.log(code, "code")
       var dataObj = {data: code};
       return $http({
         method: 'POST',

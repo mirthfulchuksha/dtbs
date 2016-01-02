@@ -1,6 +1,7 @@
 
 module.exports.reverseMongo = function (req, res, next) {
     // split into schemas
+    console.log(req.body.data);
     var schemaArray = req.body.data.split("\n\n");
     var namesArray = [];
     var jsonArray = [];
@@ -77,7 +78,9 @@ module.exports.reverseMongo = function (req, res, next) {
           "type": keyArray[1]
         }
         if (keyArray[1] === "Nested Document") {
+          console.log(schema.keys, keyArray[0], "input to subdoc")
           var subDoc = findMatch(schema.keys, keyArray[0]);
+          console.log(subDoc, "subDoc")
           schema.allKeys[keyArray[0]].childKeys = getChildKeys(subDoc.keys);
           schema.allKeys[keyArray[0]].childLocations = getChildLocations(schema.allKeys[keyArray[0]].childKeys, keyArray[0]);
         }
@@ -166,7 +169,6 @@ module.exports.reverseMongo = function (req, res, next) {
     }
     return allKeys;
   };
-
 
 
 
