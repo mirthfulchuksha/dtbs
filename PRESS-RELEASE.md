@@ -10,7 +10,7 @@
   > Signup, login, or just get started straight away. Select a database type and choose between the forms or type straight into the expandable code editor on the right - you can even use both! Toggle between views to look at different representations of your database. Drag nodes and tables around, and collapse/anchor them as needed. When your work is done, export generated code to the correct file formats, download canvas images, or save your work in our database - if using SQL tables, your positions won't be lost.
 
 ## Customer Review ##
-  > "When we needed a database design tool, we searched the web for affordable applications. dtbs has helped us produce gorgeous visualisations, helping us help them make the web a better place. Between the multiple views offered, ORMs supported, the ability to save and download images and code in various formats, reverse engineering of code, tutorial videos, creating multiple databases — there’s very little we can’t do with this tool."
+  > "When we needed a database design tool, we searched the web for affordable applications. dtbs has helped us produce colorful and unique visualisations, helping us help them make the web a better place. Between the multiple views offered, ORMs supported, the ability to save and download images and code in various formats, reverse engineering of code, tutorial videos, creating multiple databases — there’s very little we can’t do with this tool."
 
 ## Summary ##
   > dtbs is your solution for database design and visualisation. Online ER and schema diagrams, database and ORM code have never been easier. Open a free account today!
