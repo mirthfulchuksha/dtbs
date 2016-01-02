@@ -7,7 +7,12 @@ angular.module('DTBS.main')
   'saveImage',
   'AccessSchemaService',
   '$location',
-  function ($scope, $timeout, CodeParser, canvasData, saveImage, AccessSchemaService, $location) {
+  function ($scope, $timeout, CodeParser, mongoData, AccessSchemaService, $location) {
+    //Stores user info for persistence on page refresh
+    $scope.user = {};
+    $scope.user.userName = CodeParser.getUser() || localStorage.user;
+    var storedRefresh = localStorage.schemas ? JSON.parse(localStorage.schemas) : null;
+    CodeParser.update(null, null, $scope.user);
 
     //Object to store current collection of schemas.
     $scope.schemaStorage = {};
@@ -52,11 +57,19 @@ angular.module('DTBS.main')
       $scope.visibleEditModal = !$scope.visibleEditModal;
     };
 
-    $scope.savedSchemas = [];
+    $scope.savedSchemas = storedRefresh || [];
     var findSavedSchemas = function () {
       CodeParser.fetchSchemas(function (schemas) {
         $scope.savedSchemas = schemas;
+        localStorage.schemas = JSON.stringify(schemas);
       });
+    };
+    findSavedSchemas();
+
+    $scope.logOut = function () {
+      localStorage.removeItem("user");
+      localStorage.removeItem("schemas");
+      $scope.user = null;
     };
 
     $scope.loadNewSchema = function (index) {
