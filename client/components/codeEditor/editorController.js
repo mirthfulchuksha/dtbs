@@ -9,15 +9,16 @@ angular.module('DTBS.main')
 
     var mongoORMS = ['Mongo', 'Mongoose', 'Active Record'];
 
-    $scope.$on('canvas:save-data', function (e, data) {
-      $scope.positions = data;
-    });
-
     $scope.saveSchema = function () {
-      // The call to code parser is made in the snap sql directive
+      // Request location data from the canvas
       canvasData.alertSave();
       CodeParser.saveSchema($scope.positions);
     };
+
+    // When location data comes through, set positions
+    $scope.$on('canvas:save-data', function (e, data) {
+      $scope.positions = data;
+    });
 
     $scope.updateFactory = function (language) {
       $scope.db.lang = language;
