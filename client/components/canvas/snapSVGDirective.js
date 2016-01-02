@@ -22,21 +22,22 @@ angular.module('DTBS.main')
             var snapMatrix = Snap.matrix( transformMatrix );
 
             var transformedBB = { x: snapMatrix.x( bb.x, bb.y ), y: snapMatrix.y( bb.x, bb.y ), x2: snapMatrix.x( bb.x2, bb.y2 ), y2: snapMatrix.y( bb.x2, bb.y2 ),
-                        cx: snapMatrix.x( bb.cx, bb.cy ), cy: snapMatrix.y( bb.cy, bb.cy ) }
+                        cx: snapMatrix.x( bb.cx, bb.cy ), cy: snapMatrix.y( bb.cy, bb.cy ) };
+
             transformedBB['width'] =  transformedBB.x2 - transformedBB.x;
             transformedBB['height'] = transformedBB.y2 - transformedBB.y;
             return transformedBB;
           };
 
-          Paper.prototype.connection = function (obj1, obj2, line, bg) {
-            if (obj1.line && obj1.from && obj1.to) {
-              line = obj1;
-              obj1 = line.from;
-              obj2 = line.to;
+          Paper.prototype.connection = function (field1, field2, line, bg) {
+            if (field1.line && field1.from && field1.to) {
+              line = field1;
+              field1 = line.from;
+              field2 = line.to;
             }
             
-            var bb1 = obj1.getTransformedBB(),
-                bb2 = obj2.getTransformedBB(),
+            var bb1 = field1.getTransformedBB(),
+                bb2 = field2.getTransformedBB(),
                 p = [{x: bb1.x + bb1.width / 2, y: bb1.y - 1},
                 {x: bb1.x + bb1.width / 2, y: bb1.y + bb1.height + 1},
                 {x: bb1.x - 1, y: bb1.y + bb1.height / 2},
@@ -81,8 +82,8 @@ angular.module('DTBS.main')
               return {
                 bg: bg && bg.split && this.path(path).attr({stroke: bg.split("|")[0], fill: "none", "stroke-width": bg.split("|")[1] || 3 }),
                 line: this.path(path).attr({stroke: color, fill: "none" }),
-                from: obj1,
-                to: obj2
+                from: field1,
+                to: field2
               };
             }
           }
@@ -162,7 +163,6 @@ angular.module('DTBS.main')
         };
         var shapes;
         scope.$on('canvas:new-data', function (e, data) {
-          console.log(data, "data")
           $("#svgout").empty();
           var dataArr = [];
           for (var key in data.data) {
@@ -176,16 +176,18 @@ angular.module('DTBS.main')
             return Math.floor(Math.random()*(max-min+1)+min);
           };
           var dragGroups = [];
-          var counter = 0;
+          var counter = 0; // to check table locations
           for (var i = 0; i < dataArr.length; i++) {
             var dragGroup = [];
             var table = dataArr[i];
             var width = tableWidth(dataArr[i]) * 8;
             var startX, startY;
+            // If there is no data saved yet, calculate random initial position
             if (data.graph === null || Object.keys(data.graph).length === 0) {
               startX = randomIntFromInterval(40, 600);
               startY = randomIntFromInterval(40, 300);
             } else {
+              // There may be data for some tables but not all, so check each individually
               if (data.graph.startXs[counter] === undefined) {
                 startX = randomIntFromInterval(40, 600);
                 startY = randomIntFromInterval(40, 300);
@@ -194,7 +196,8 @@ angular.module('DTBS.main')
                 startY = parseInt(data.graph.startYs[counter]);
               }
             }
-
+            // All of the other elements (text elements and field rects) start positions are
+            // calculated based on the x/y of the header field, cascading down
             var startYText = startY+15, startXText = startX+10;
             var tableText = s.text(startXText, startYText, table.name);
             var tableShape = s.rect(startX, startY, width, 20);
@@ -238,7 +241,6 @@ angular.module('DTBS.main')
             var fkConnection = [shapes[link.source], shapes[link.target]];
             fkConnections.push(fkConnection);
           });
-
           scope.render(s, shapes, texts, dragGroups, fkConnections, tableReferences, fieldTypes);
         });
         
@@ -246,13 +248,14 @@ angular.module('DTBS.main')
           var positions = {};
           positions.startXs = [];
           positions.startYs = [];
-          // if it's a header field, it will be grey
           for (var i = 0; i < shapes.length; i++) {
+          // if it's a header field, it will be grey
             if ((shapes[i].attr("fill")).toString() === "rgb(211, 211, 211)") {
               positions.startXs.push(shapes[i].getTransformedBB().x);
               positions.startYs.push(shapes[i].getTransformedBB().y);
             }
           }
+          // pass header x/y coords through to front end
           var saveGraph = angular.copy(positions);
           canvasData.push('canvas:save-data', saveGraph);
         });

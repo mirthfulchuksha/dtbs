@@ -1,9 +1,6 @@
 angular.module('DTBS.main')
 
-.directive('d3MongoTree', [
-           'd3Service', 
-           'treeFormat', 
-           'canvasFormat', 
+.directive('d3MongoTree', ['d3Service', 'treeFormat', 'canvasFormat', 
            function (d3Service, treeFormat, canvasFormat) {
   return {
     restrict: 'EA',

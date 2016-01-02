@@ -58,7 +58,6 @@ angular.module('DTBS.main')
         if (schema.keys[key].type !== "Nested Document") {
           field.size = 5000;
         } else {
-          // depth++;
           field.children = buildNested(schema.keys[key], field.name, schema.id, depth);
         }
         jsonSchema.children.push(field);
