@@ -20,7 +20,7 @@
   //   FOREIGN KEY (chats_id) REFERENCES chats(id)
   // );
 
-var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body:   String,comments: String,date: String,hidden: Boolean,meta: {votes: {number: String},favs:  Number}});";
+var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body:   String,comments: String,date: String,hidden: Boolean,meta: {votes: {number: String, something: String},favs:  Number}});";
 
 
 
@@ -109,11 +109,11 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
             "type": keyArray[1]
           }
           if (keyArray[1] === "Nested Document") {
-            var res = getChildKeys(schema.keys, keyArray[0]);
-            if (keyArray[0] === "meta") {
-              console.log(res, "res")
-            }
-            // schema.allKeys[keyArray[0]].childKeys = getChildKeys(schema.keys, keyArray[0]);
+            var subDoc = findMatch(schema.keys, keyArray[0]);
+            console.log(subDoc)
+            schema.allKeys[keyArray[0]].childKeys = getChildKeys(subDoc);
+            // console.log(subDoc, "subDoc")
+
             // schema.allKeys[keyArray[0]].childLocations = getChildLocations();
           }
         });
@@ -123,27 +123,33 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
       return schemaStorage;
     };
 
-    var getChildKeys = function (schemaKeys, key, childKeys) {
-      childKeys = childKeys || {};
-      for (var field in schemaKeys) {
-        console.log(schemaKeys, "schemaKeys")
-        console.log(field, "field")
-        if (schemaKeys[field] === key) {
-          // have found the parent key: get all of its children
-          for (var child in schemaKeys[field]) {
-            childKeys[child] = true;
-            if (schemaKeys[field].type === "Nested Document") {
-              getChildKeys(schemaKeys[field], child, childKeys);
-            }
-          }
-        } else if (field.type === "Nested Document") {
-          // recurse down through the children to see if its down there
-          for (var child in schemaKeys[field]) {
-            getChildKeys(schemaKeys[field], key, childKeys)
-          }
+    // function that takes in an object and a key and returns all of the child keys
+    // of that property
+    // loop through keys, check for match
+      // if match, return allKeys[key]
+        // get all of that one's children
+      // if no match, recurse until match
+
+    // function that finds the object to pass to getChildKeys
+    var findMatch = function (allKeys, property) {
+      for (var key in allKeys) {
+        if (key === property) {
+          return allKeys[key].keys;
+        } else if (allKeys[key].type === "Nested Document") {
+          return findMatch(allKeys[key].keys, property);
         }
       }
-      console.log(childKeys, "childkeys")
+    }
+
+    // function that returns all children of a key
+    var getChildKeys = function (obj, childKeys) {
+      childKeys = childKeys || {};
+      for (var key in obj) {
+        childKeys[key] = true;
+        if (obj[key].type === "Nested Document") {
+          getChildKeys(obj[key], childKeys);
+        }
+      }
       return childKeys;
     };
 
@@ -212,7 +218,7 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
     };
 
 var mything = reverseMongo(mongoose1);
-// console.log(mything);
+console.log(mything['0'].allKeys);
   
   // SAMPLE SCHEMA STORAGE OBJECT FROM MONGO
 
@@ -278,7 +284,7 @@ var mything = reverseMongo(mongoose1);
   //         "type": "Nested Document",
   //         "childKeys": {
   //           "tags": true,
-  //           "likes": true,
+  //           "likes": true,   
   //           "shares": true
   //         },
   //         "childLocations": {
