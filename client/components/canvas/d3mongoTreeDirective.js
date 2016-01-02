@@ -139,8 +139,7 @@ angular.module('DTBS.main')
                   return 4;
                 })
                 .on("click", click)
-                .on("dblclick", function () {
-                  dblclick(this); })
+                .on("dblclick", dblclick)
                 .call(force.drag);
 
             labels = labels.data(nodes, function (d) { return d.idd; })
@@ -164,7 +163,7 @@ angular.module('DTBS.main')
                   }
                 });
             };
-            var click = function (d) {
+            var dblclick = function (d) {
               if (!d3.event.defaultPrevented) {
                 if (d.children) {
                   d._children = d.children;
@@ -192,14 +191,10 @@ angular.module('DTBS.main')
           recurse(root);
           return nodes;
         };
-        var dblclick = function (d) {
-          d3.select(this).classed("fixed", d.fixed = !d.fixed);
-        };
         var click = function (d) {
           d3.select(this).classed("fixed", d.fixed = !d.fixed);
         };
         scope.$on('mongo:new-data', function (e, data) {
-          console.log(data, "data");
           var dataArr = [];
           for (var key in data) {
             dataArr.push(data[key]);

@@ -34,7 +34,7 @@ angular.module('DTBS.main')
         };
 
         // Create the SVG
-        var svg = d3.selectAll("#dendro")
+        var svg = d3.selectAll("#dendrogram")
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 

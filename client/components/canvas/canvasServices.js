@@ -20,24 +20,6 @@ angular.module('DTBS.main')
   return api;
 }]);
 
-// .service('canvasSave', ['$rootScope', function($rootScope) {
-//   var data;
-
-//   var save = function(data) { $rootScope.$broadcast('canvas:save-data', data); }
-//   var alert = function() { $rootScope.$broadcast('canvas:alert-data'); }
-//   var api = {
-//     push: function(datum) {
-//       data = datum;
-//       save(data);
-//       return data;
-//     },
-//     alertSave: function () {
-//       alert();
-//     }
-//   }
-//   return api;
-// }]);
-
 
 
 

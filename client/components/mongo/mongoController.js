@@ -261,7 +261,7 @@ angular.module('DTBS.main')
     };
 
     $scope.saveSVG = function () {
-      $scope.view === true ? saveImage.saveToPng('dendro') : saveImage.saveToPng('tree');
+      $scope.view === true ? saveImage.saveToPng('dendrogram') : saveImage.saveToPng('tree');
     };
 
     var timeout = null;
