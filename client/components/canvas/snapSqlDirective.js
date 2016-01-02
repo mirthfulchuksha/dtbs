@@ -12,14 +12,20 @@ angular.module('DTBS.main')
         
         Snap.plugin(  function( Snap, Element, Paper, global ) {  
           Element.prototype.getTransformedBB = function() {
+            // Each graphical element in an SVG document has a function called bbox() which returns the objects bounding box.
+
+            //This function returns an SVGRect, which stores the data for a rectangle, accessible from an object named rect by writing rect.x, rect.y, rect.width and rect.height.
             var bb = this.getBBox(1);
-            var t = this.node.getTransformToElement( this.paper.node );
-            var m = Snap.matrix( t );
-            var obj = { x: m.x( bb.x, bb.y ), y: m.y( bb.x, bb.y ), x2: m.x( bb.x2, bb.y2 ), y2: m.y( bb.x2, bb.y2 ),
-                        cx: m.x( bb.cx, bb.cy ), cy: m.y( bb.cy, bb.cy ) }
-            obj['width'] =  obj.x2 - obj.x;
-            obj['height'] = obj.y2 - obj.y;
-            return obj;
+
+            //Gets the transformation matrix that transforms from the user coordinate system on the current element to the user coordinate system on the specified target element
+            var transformMatrix = this.node.getTransformToElement( this.paper.node );
+            var snapMatrix = Snap.matrix( transformMatrix );
+
+            var transformedBB = { x: snapMatrix.x( bb.x, bb.y ), y: snapMatrix.y( bb.x, bb.y ), x2: snapMatrix.x( bb.x2, bb.y2 ), y2: snapMatrix.y( bb.x2, bb.y2 ),
+                        cx: snapMatrix.x( bb.cx, bb.cy ), cy: snapMatrix.y( bb.cy, bb.cy ) }
+            transformedBB['width'] =  transformedBB.x2 - transformedBB.x;
+            transformedBB['height'] = transformedBB.y2 - transformedBB.y;
+            return transformedBB;
           };
 
           Paper.prototype.connection = function (obj1, obj2, line, bg) {
