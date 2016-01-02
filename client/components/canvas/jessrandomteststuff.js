@@ -102,7 +102,7 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
         }
         schema.allKeys = {};
         allKeysArray.forEach(function (keyArray) {
-          // "Contact Info": "Number Location: Main > Company Info"
+          
           schema.allKeys[keyArray[0]] = {
             "display": keyArray[1],
             "location": nestedDocsArray[keyArray[2]],
@@ -110,11 +110,8 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
           }
           if (keyArray[1] === "Nested Document") {
             var subDoc = findMatch(schema.keys, keyArray[0]);
-            console.log(subDoc)
             schema.allKeys[keyArray[0]].childKeys = getChildKeys(subDoc);
-            // console.log(subDoc, "subDoc")
-
-            // schema.allKeys[keyArray[0]].childLocations = getChildLocations();
+            schema.allKeys[keyArray[0]].childLocations = getChildLocations(schema.allKeys[keyArray[0]].childKeys, keyArray[0]);
           }
         });
         schemaStorage[idCounter] = schema;
@@ -123,6 +120,19 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
       return schemaStorage;
     };
 
+    var getChildLocations = function (childKeys, startKey) {
+      var childLocations = {};
+      var level = "Main > " + startKey;
+      childLocations[level] = true;
+      var childKeysArray = Object.keys(childKeys);
+      for (var i = 0; i < childKeysArray.length-1; i++) {
+        if (childKeysArray[i] !== 'type' && childKeysArray[i] !== 'keys') {
+          level += " > " +childKeysArray[i];
+          childLocations[level] = true;
+        }
+      }
+      return childLocations;
+    };
     // function that takes in an object and a key and returns all of the child keys
     // of that property
     // loop through keys, check for match
@@ -218,7 +228,7 @@ var mongoose1 = "var blogSchema = new Schema({title:  String,author: String,body
     };
 
 var mything = reverseMongo(mongoose1);
-console.log(mything['0'].allKeys);
+console.log(mything['0'], "locations");
   
   // SAMPLE SCHEMA STORAGE OBJECT FROM MONGO
 
