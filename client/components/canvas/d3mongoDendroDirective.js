@@ -15,14 +15,6 @@ angular.module('DTBS.main')
         var width = 1000, height = 650, root;
 
         // Set up the custom colour scale
-        // var colors = [],
-        //     customRange = canvasFormat.colorSchema(),
-        //     flattened = [];
-        // customRange.forEach(function (palette) {
-        //   flattened.concat(palette);
-        // });
-        // var color = d3.scale.ordinal().range(flattened);
-
         var colorLength = 75, colors = [];
         var color = d3.scale.linear().domain([1,colorLength])
                       .interpolate(d3.interpolateHcl)
@@ -49,12 +41,6 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
-
-          // for (var k = 0; k <= maxHeight; k++) {
-          //   var palette = Math.floor(Math.random() * 8);
-          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
-          //   colors.push(customRange[palette][tableColor]);
-          // }
           for (var i = 0; i <= maxHeight+2; i++) {
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);

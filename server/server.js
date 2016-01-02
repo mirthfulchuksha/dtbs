@@ -9,7 +9,7 @@ var GitHubStrategy = require('passport-github').Strategy;
 
 var helper = require('./dbHelper');
 var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo/es5')(session);
 var sessionStore = new MongoStore({
   url: process.env.MONGOLAB_URI || 'mongodb://localhost/dtbs',
   autoRemove: 'native'

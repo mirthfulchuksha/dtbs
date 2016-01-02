@@ -19,13 +19,6 @@ angular.module('DTBS.main')
         var color = d3.scale.linear().domain([1,colorLength])
                       .interpolate(d3.interpolateHcl)
                       .range([d3.rgb("#007bff"), d3.rgb('#ffa543')]);
-        // var colors = [],
-        //     customRange = canvasFormat.colorSchema(),
-        //     flattened = [];
-        // customRange.forEach(function (palette) {
-        //   flattened.concat(palette);
-        // });
-        // var color = d3.scale.ordinal().range(flattened);
 
         // Create the SVG
         var svg = d3.selectAll("#tree")
@@ -48,11 +41,7 @@ angular.module('DTBS.main')
 
         scope.render = function (root) {
           var maxHeight = maxDepth(root);
-          // for (var k = 0; k <= maxHeight; k++) {
-          //   var palette = Math.floor(Math.random() * 8);
-          //   var tableColor = Math.floor(Math.random() * customRange[palette].length);
-          //   colors.push(customRange[palette][tableColor]);
-          // }
+
           for (var i = 0; i <= maxHeight+2; i++) {
             var tableColor = Math.floor(Math.random() * colorLength);
             colors.push(tableColor);
@@ -124,10 +113,9 @@ angular.module('DTBS.main')
                 .attr("class", "node")
                 .style("fill", function (d) {
                   if (d.name === "Collection") {
-                    // return "#823082";
                     return color(1);
                   } else {
-                    // return colors[d.depth];
+                    console.log(d, "d")
                     return color(colors[d.depth]);
                   }
                 })
@@ -136,18 +124,14 @@ angular.module('DTBS.main')
                 .attr("r", function (d) {
                   if (d.name === "Collection") {
                     return 8;
-                  } else if (d.type === "Nested Document") {
-                    return 11.5;
                   } else {
-                    return 15.5;
+                    return 14;
                   }
                 })
                 .attr("stroke", function (d) {
                   if (d.name === "Collection") {
-                    // return "#9da4d9";
                     return color(8);
-                  } else if (d.type === "Nested Document") {
-                    // return d3.rgb(colors[d.depth]).darker();
+                  } else if (d.type === "Nested Document" || !d.type) {
                     return d3.rgb(color(colors[d.depth])).darker();
                   } else {
                     return "white";
