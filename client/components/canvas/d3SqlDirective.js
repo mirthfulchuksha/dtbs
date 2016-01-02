@@ -2,10 +2,8 @@ angular.module('DTBS.main')
 
 .directive('d3Sql', [
    'd3Service',
-   'canvasData',
-   'canvasSave',
    'canvasFormat',
-   function (d3Service, canvasData, canvasSave, canvasFormat) {
+   function (d3Service, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},

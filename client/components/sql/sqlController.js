@@ -4,11 +4,10 @@ angular.module('DTBS.main')
   '$timeout',
   'CodeParser',
   'canvasData',
-  'canvasSave',
   'saveImage',
   'AccessSchemaService',
   '$location',
-  function ($scope, $timeout, CodeParser, canvasData, canvasSave, saveImage, AccessSchemaService, $location) {
+  function ($scope, $timeout, CodeParser, canvasData, saveImage, AccessSchemaService, $location) {
 
     //Object to store current collection of tables.
     $scope.tableStorage = {};
@@ -443,7 +442,7 @@ angular.module('DTBS.main')
       var updatedData = {};
       updatedData.data = angular.copy($scope.tableStorage);
       updatedData.graph = angular.copy($scope.positions);
-      canvasData.push(updatedData);
+      canvasData.push('canvas:new-data', updatedData);
     };
 
     $scope.toggleCanvasView = function () {

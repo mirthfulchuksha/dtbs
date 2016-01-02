@@ -1,10 +1,9 @@
 angular.module('DTBS.main')
 .directive('snapSql', [
            'SnapService', 
-           'canvasData', 
-           'canvasSave',
+           'canvasData',
            'CodeParser',
-           'canvasFormat', function (SnapService, canvasData, canvasSave, CodeParser, canvasFormat) {
+           'canvasFormat', function (SnapService, canvasData, CodeParser, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},
@@ -157,8 +156,7 @@ angular.module('DTBS.main')
         };
         var shapes;
         scope.$on('canvas:new-data', function (e, data) {
-          console.log(data, "data");
-
+          console.log(data, "data")
           $("#svgout").empty();
           var dataArr = [];
           for (var key in data.data) {
@@ -178,7 +176,7 @@ angular.module('DTBS.main')
             var table = dataArr[i];
             var width = tableWidth(dataArr[i]) * 8;
             var startX, startY;
-            if (!Object.keys(data.graph).length > 0) {
+            if (data.graph === null || Object.keys(data.graph).length === 0) {
               startX = randomIntFromInterval(40, 600);
               startY = randomIntFromInterval(40, 300);
             } else {
@@ -250,7 +248,7 @@ angular.module('DTBS.main')
             }
           }
           var saveGraph = angular.copy(positions);
-          canvasSave.push(saveGraph);
+          canvasData.push('canvas:save-data', saveGraph);
         });
       });
     }

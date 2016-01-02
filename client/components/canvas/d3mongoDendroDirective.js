@@ -2,10 +2,9 @@ angular.module('DTBS.main')
 
 .directive('d3MongoDendro', [
            'd3Service', 
-           'mongoData', 
            'treeFormat', 
            'canvasFormat', 
-           function (d3Service, mongoData, treeFormat, canvasFormat) {
+           function (d3Service, treeFormat, canvasFormat) {
   return {
     restrict: 'EA',
     scope: {},

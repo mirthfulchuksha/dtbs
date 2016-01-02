@@ -7,8 +7,7 @@ angular.module('DTBS.main')
       // Load client in the browser
       $rootScope.$apply(function() { d.resolve(window.d3); });
     }
-    // Create a script tag with d3 as the source
-    // and call our onScriptLoad callback when it
+    // Create a script tag with d3 as the source and call onScriptLoad callback when it
     // has been loaded
     var scriptTag = $document[0].createElement('script');
     scriptTag.type = 'text/javascript'; 
@@ -30,12 +29,9 @@ angular.module('DTBS.main')
   function($document, $q, $rootScope) {
     var d = $q.defer();
     function onScriptLoad() {
-      // Load client in the browser
       $rootScope.$apply(function() { d.resolve(window.Snap); });
     }
-    // Create a script tag with d3 as the source
-    // and call our onScriptLoad callback when it
-    // has been loaded
+
     var scriptTag = $document[0].createElement('script');
     scriptTag.type = 'text/javascript'; 
     scriptTag.async = true;

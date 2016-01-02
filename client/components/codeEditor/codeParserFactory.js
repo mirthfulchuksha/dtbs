@@ -1,5 +1,5 @@
 angular.module('DTBS.main')
-  .factory('CodeParser', [ '$http', '$rootScope', 'canvasSave', function ($http, $rootScope, canvasSave) {
+  .factory('CodeParser', [ '$http', '$rootScope', 'canvasData', function ($http, $rootScope, canvasData) {
     var dbName = "",
         dbLang = "",
         dbFilename = "",
