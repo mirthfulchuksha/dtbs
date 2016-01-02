@@ -8,7 +8,6 @@ angular.module('DTBS.main')
   'AccessSchemaService',
   '$location',
   function ($scope, $timeout, CodeParser, canvasData, canvasSave, AccessSchemaService, $location) {
-    //from Form Controller
 
     //Object to store current collection of tables.
     $scope.tableStorage = {};
@@ -28,7 +27,7 @@ angular.module('DTBS.main')
     $scope.seeForeignKeys = false;
     $scope.canAddForeign;
     $scope.edit = false;
-    $scope.view = true; //related to visualization display
+    $scope.view = true; 
     $scope.typeEdit = 'none';
     $scope.user = {};
     $scope.user.userName = CodeParser.getUser() || localStorage.user;
@@ -192,7 +191,7 @@ angular.module('DTBS.main')
       $scope.visibleEditModal = !$scope.visibleEditModal;
     };
 
-   //this function loads a previously saved table for editing
+   //Load a previously saved table for editing
     $scope.setTable = function (tableName) {
 
       for (var key in $scope.tableStorage) {
@@ -210,7 +209,7 @@ angular.module('DTBS.main')
 
     };
 
-    //delete primary key and any associated foreign keys on other tables
+    //Delete primary key and any associated foreign keys on other tables
     $scope.deletePrimaryKey = function () {
 
       var deleted = false;
@@ -257,12 +256,11 @@ angular.module('DTBS.main')
     //Delete a foreign key
     $scope.deleteFK = function (key) {
 
-      //need to do something here to replace it in the $scope.potentialFKs object ****************
       delete $scope.currentTable['foreignKeys'][key];
 
     };
 
-    //when Add Field button is clicked, sets currentTable.name and shows inputs to add field
+    //Shows input fields/selections for adding a new field
     $scope.addField = function (tableName) {
       if (!$scope.currentTable['name']) {
         $scope.currentTable['name'] = name;
@@ -270,12 +268,12 @@ angular.module('DTBS.main')
       $scope.addingField = true;
     };
 
-    //when save primary key button is pressed, sets all required information for currentTable's primaryKey object
+    //Saves required information to currentTable's primaryKey object
     $scope.savePrimaryKey = function (id, basicType, type, size, attributes, def, tableName) {
       tableName = tableName.replace('<script>', '').replace('</script>', '');
       $scope.currentTable['name'] = tableName;
 
-      //if table is being edited when PK is created, set origin on fK format to the table's id # rather than $scope.id.
+      //If table is being edited when PK is created, set origin on fK format to the table's id # rather than $scope.id.
       if ($scope.edit === true) {
         var currentID = $scope.currentTable['id'];
       } else {
@@ -305,12 +303,12 @@ angular.module('DTBS.main')
         $scope.currentTable.primaryKey.default = def;
       }
 
-      $scope.primaryKeyPresent = true;//also, needs to set primaryKeyPresent to TRUE
+      $scope.primaryKeyPresent = true;
 
       $scope.addingField = false;
 
 
-      //add all potential foreign keys (primary keys from all other tables) to $scope.potentialFKs
+      //Adds all potential foreign keys (primary keys from all other tables) to $scope.potentialFKs
       for (var key in $scope.tableStorage){
         if ($scope.tableStorage[key]['name'] !== tableName) {
           $scope.potentialFKs[$scope.tableStorage[key]['name']] = $scope.tableStorage[key]['primaryKey'];
@@ -319,6 +317,7 @@ angular.module('DTBS.main')
       }
     };
 
+    //Saves required information to currentTable's regFields object
     $scope.saveField = function (id, basicType, type, size, attributes, def){
       $scope.currentTable.regFields[id] = {
 
@@ -341,12 +340,14 @@ angular.module('DTBS.main')
 
     };
 
+    //Shows input fields/selections for adding a new foreign key
     $scope.addForeignKey = function () {
 
       $scope.seeForeignKeys = true;
 
     };
 
+    //Saves required information to currentTable's foreignKeys object
     $scope.saveForeignKey = function (tableName, keyName) {
       keyName = keyName.replace('<script>','').replace('</script>', '');
       //working, foreign key can be saved with value that is in the PK, also add FK to the PK
@@ -357,6 +358,7 @@ angular.module('DTBS.main')
 
     };
 
+    //Saves all required information and resets variables once adding/editing a table id done
     $scope.editDone = function (currentTable, oldTable) {
 
       if ($scope.currentTable['name'] === '' || $scope.currentTable['name'] === undefined){
@@ -394,6 +396,7 @@ angular.module('DTBS.main')
 
     };
 
+    //Clears attrs array and pushes contents of primaryKey object, regFields object, and foreignKeys object to the array
     $scope.setAttrsArray = function () {
       $scope.currentTable['attrs'] = [];
       $scope.currentTable['attrs'][0] = $scope.currentTable.primaryKey;
@@ -410,15 +413,17 @@ angular.module('DTBS.main')
 
       $scope.toggleEditModal('none');
 
-      //if table has not been saved to tableStorage, just reset $scope.currentTable
+      //if table has not been saved to tableStorage, just reset $scope.currentTable and other variables
       if ($scope.currentTable['attrs'].length === 0){
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
         $scope.primaryKeyPresent = false;
         $scope.potentialFKs = {};
         $scope.seeForeignKeys = false;
       } else {
-
+        //if table has been saved, delete primary key and any associated foreign keys
         $scope.deletePrimaryKey();
+
+        //delete table and reset other variables
         delete $scope.tableStorage[$scope.currentTable['id']];
 
         $scope.currentTable = {primaryKey:{}, regFields:{}, foreignKeys: {}, attrs:[]};
