@@ -21,14 +21,12 @@ angular.module('DTBS.main')
     };
 
     var mongoBuilder = function (code) {
-      console.log(code);
       var dataObj = {data: code};
       return $http({
         method: 'POST',
         url: '/buildMongo',
         data: dataObj
       }).then(function (res) {
-        console.log(res.data);
         emit(res.data);
       });
     };
