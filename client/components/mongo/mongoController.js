@@ -7,7 +7,7 @@ angular.module('DTBS.main')
   'saveImage',
   'AccessSchemaService',
   '$location',
-  function ($scope, $timeout, CodeParser, mongoData, AccessSchemaService, $location) {
+  function ($scope, $timeout, CodeParser, canvasData, saveImage, AccessSchemaService, $location) {
     //Stores user info for persistence on page refresh
     $scope.user = {};
     $scope.user.userName = CodeParser.getUser() || localStorage.user;
