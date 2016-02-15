@@ -8,9 +8,18 @@ angular.module('DTBS.main')
     restrict: 'EA',
     scope: {},
     link: function(scope, element, attrs) {
+
+      // Unfortunately the most recent beta version of chrome (48.0.2564.23) removes SVGElement.prototype.getTransformToElement which is used when creating edges.
+      // This is a polyfill for the method posted by JointJS
+      SVGElement.prototype.getTransformToElement = SVGElement.prototype.getTransformToElement || function(elem) {
+        return elem.getScreenCTM().inverse().multiply(this.getScreenCTM());
+      };
+      
       SnapService.Snap().then(function (Snap) {
         
-        Snap.plugin(  function( Snap, Element, Paper, global ) {  
+        Snap.plugin(  function( Snap, Element, Paper, global ) { 
+
+
           Element.prototype.getTransformedBB = function() {
             // Each graphical element in an SVG document has a function called bbox() which returns the objects bounding box.
 
