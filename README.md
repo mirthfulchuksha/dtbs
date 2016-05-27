@@ -8,8 +8,8 @@
 ## Team
 
   - __Product Owner__: Joy Johnson
-  - __Scrum Master__: Jessica O'Brien
-  - __Development Team Members__: Cheyenne Kellis, Alex Mclean
+  - __Scrum Master__: Cheyenne Kellis
+  - __Development Team Members__: Jessica O'Brien, Alex Mclean
 
 ## Table of Contents
 
